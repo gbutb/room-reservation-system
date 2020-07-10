@@ -14,6 +14,7 @@ CREATE TABLE room_comment (
 CREATE TABLE room (
 	room_id INT PRIMARY KEY,
 	room_size INT,
+	floor INT,
 	conditioner BOOLEAN,
 	projector BOOLEAN,
 	comment_id INT,
@@ -40,7 +41,7 @@ INSERT INTO room_comment VALUES
 	(0, STR_TO_DATE("9,7,2020 14,30,0", "%d,%m,%Y %H,%i,%s"), "Hello room!");
 
 INSERT INTO room VALUES
-	(200, 25, true, true, 0);
+	(200, 25, 2, true, true, 0);
 	
 INSERT INTO account VALUES
 	(0, "Human");
