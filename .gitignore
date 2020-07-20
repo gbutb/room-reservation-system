@@ -102,3 +102,11 @@ fabric.properties
 
 # Ignore build files
 target/*
+
+
+## VScode ##
+.vscode/*
+
+
+## Any OS specific stuff ##
+.DS_Store
