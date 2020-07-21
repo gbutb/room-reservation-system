@@ -13,9 +13,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class RRSConfig implements WebMvcConfigurer {
 	public void addViewControllers(ViewControllerRegistry registry) {
+        // Index page
 		registry.addViewController("/home").setViewName("index");
-		registry.addViewController("/").setViewName("index");
-		registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/").setViewName("index");
+
+        // Authentication
+        registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/register").setViewName("registration");
 	}
 
     /**

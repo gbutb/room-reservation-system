@@ -17,7 +17,7 @@ public class RRSSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-				.antMatchers("/").permitAll()
+				.antMatchers("/register").permitAll()
 				.anyRequest().authenticated()
 				.and()
 			.formLogin()
@@ -31,6 +31,7 @@ public class RRSSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	@Override
 	public UserDetailsService userDetailsService() {
+		// TODO: Load users.
 		UserDetails user =
 			 User.withDefaultPasswordEncoder()
 				.username("user")
