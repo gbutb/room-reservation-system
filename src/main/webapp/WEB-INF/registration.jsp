@@ -1,42 +1,56 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- create Register page -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
-    <title>Login Page</title>
+    <title>Register Page</title>
 
 </head>
 <body>
 
-<div id="login">
+<div id="register">
     <br>
     <div class="container">
-        <div id="login-row" class="row justify-content-center">
-            <div id="login-column" class="col-md-6">
+        <div id="register-row" class="row justify-content-center">
+            <div id="register-column" class="col-md-6">
 
-                <div id="login-box" class="col-md-10">
-                <form id="login-form" class="form" action="POST" >
-                    <h2 class="text-center text-info">Login</h2>
+                <div  id="register-box" class="col-md-10">
+                <form id="register-form" class="form" action="POST" >
+                    <h2 class="text-center text-dark">Register</h2>
                     <div class="form-group">
-                        <label  for="username" class="text-info">Username: </label><br>
+                        <label  for="username" class="text-primary">Username: </label><br>
                         <input type="text" placeholder ="type username" name="username" id="username" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label  for="username" class="text-info">Mail: </label><br>
+                        <input type="text" placeholder ="type mail" name="username" id="mail" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="password"  class="text-info">Password: </label>
                         <br>
                         <input type="text" placeholder = "type password" name="password" id="password" class="form-control">
                     </div>
+                    <div class="form-group">
+                        <label for="password"  class="text-primary">Repeat Password: </label>
+                        <br>
+                        <input type="text" placeholder = "type password" name="password" id="repeatpassword" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="number"  class="text-info">Phone Number: </label>
+                        <br>
+                        <input type="text" placeholder = "type number" name="number" id="number" class="form-control">
+                    </div>
 
                     <div class="form-group">
 
-                        <input type="submit" name="submit" class="btn btn-info btn-md" value="submit">
+                        <input type="submit" name="submit" class="btn btn-info btn-md" value="register">
                     </div>
-                    <div id="register-link" class="text-right">
-                        <a href="/register"  class="text-info">Register</a>
+                    <div id="login-link" class="text-right">
+                        <a href="/login"  class="text-info">Login to existing account</a>
                     </div>
                 </form>
             </div>
@@ -50,4 +64,3 @@
 </body>
 
 </html>
-
