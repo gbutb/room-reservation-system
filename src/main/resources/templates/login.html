@@ -1,5 +1,6 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -17,9 +18,8 @@
     <div class="container">
         <div id="login-row" class="row justify-content-center">
             <div id="login-column" class="col-md-6">
-
                 <div id="login-box" class="col-md-10">
-                <form id="login-form" class="form" action="POST" >
+                <form th:action="@{/login}" id="login-form" class="form">
                     <h2 class="text-center text-info">Login</h2>
                     <div class="form-group">
                         <label  for="username" class="text-info">Username: </label><br>
