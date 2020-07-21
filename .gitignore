@@ -110,3 +110,7 @@ target/*
 
 ## Any OS specific stuff ##
 .DS_Store
+
+
+## Other stuff
+garbage/*
