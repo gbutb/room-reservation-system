@@ -1,9 +1,12 @@
+// DBConnection.java
+package ge.rrs;
+
 import java.sql.*;
 
 public class DBConnection{
     private static final  String SERVER = "localhost";
     private static final String USER = "root";
-    private static final String PASSWORD = "123456";
+    private static final String PASSWORD = "12345678";
     private static final String DB_NAME = "reservations_db";
     private static DBConnection dbConnection;
     private Connection connection;
