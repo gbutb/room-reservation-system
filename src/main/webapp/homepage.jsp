@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
-    <title>Title</title>
+    <title>Floor ${param.floor}</title>
 </head>
 
 <body>
@@ -58,24 +58,15 @@
     <div class="d-flex flex-row justify-content-between align-items-start bg-light" style="width: 100%; height: 90%;">
         <div class="d-flex bg-secondary shadow" style="width: 10%; height: 100%;">
             <ul class="nav d-flex flex-column justify-content-center align-items-center w-100 h-100">
-                <li class="nav-item pb-3">
-                    <button type="button" class="btn btn-dark" style="width: 80px; height: 80px; font-size: 2rem;">
-                        4
-                    </button>
-                <li class="nav-item pb-3">
-                    <button type="button" class="btn btn-dark" style="width: 80px; height: 80px; font-size: 2rem;">
-                        3
-                    </button>
-                </li>
-                <li class="nav-item pb-3">
-                    <button type="button" class="btn btn-primary" style="width: 80px; height: 80px; font-size: 2rem;">
-                        2
-                    </button>
-                </li>
-                <li class="nav-item">
-                    <button type="button" class="btn btn-dark" style="width: 80px; height: 80px; font-size: 2rem;">1
-                    </button>
-                </li>
+                <c:forEach var="btnId" begin="1" end="4">
+                    <li class="nav-item pb-3">
+                        <a href="?floor=${btnId}">
+                            <button type="button" class="btn ${param.floor == btnId ? 'btn-primary' : 'btn-dark'}" style="width: 80px; height: 80px; font-size: 2rem;">
+                                ${btnId}
+                            </button>
+                        </a>
+                    </li>
+                </c:forEach>
             </ul>
         </div>
 
@@ -89,7 +80,7 @@
             <span class="d-flex justify-content-center align-items-center border rounded"
                   style="border-width: 1.5px !important; width: 1050px; height: 506px;">
 
-                <img src="${pageContext.request.contextPath}/resources/images/floor-2.png" class="img"
+                <img src="${pageContext.request.contextPath}/resources/images/floor-${param.floor}.png" class="img"
                      style="width: 1030px; height: 486px;" alt="..."/>
 
                 <svg class="position-absolute" width="1024" height="480">
