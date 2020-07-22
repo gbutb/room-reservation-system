@@ -102,6 +102,9 @@ fabric.properties
 
 # Ignore build files
 target/*
+.settings/*
+.project
+.classpath
 
 
 ## VScode ##
