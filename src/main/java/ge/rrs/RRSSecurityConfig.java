@@ -1,26 +1,35 @@
 package ge.rrs;
 
+// Spring
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
 public class RRSSecurityConfig extends WebSecurityConfigurerAdapter {
-	/*@Bean
+	// User service, for handling authentication
+	private RRSUserService userService;
+
+	/**
+	 * Initializes Security configuration.
+	 */
+	public RRSSecurityConfig() {
+		userService = new RRSUserService();
+	}
+
+	@Bean
     public PasswordEncoder passwordEncoder() {
 		// Set up password encoder
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder;
-	}*/
+	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -37,17 +46,11 @@ public class RRSSecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll();
 	}
 
-	@Bean
-	@Override
-	public UserDetailsService userDetailsService() {
-		// TODO: Load users.
-		UserDetails user =
-			 User.withDefaultPasswordEncoder()
-				.username("user")
-				.password("password")
-				.roles("USER")
-				.build();
-
-		return new InMemoryUserDetailsManager(user);
+	@Autowired
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		// Initialize service
+		auth.userDetailsService(
+			userService).passwordEncoder(
+				passwordEncoder());
 	}
 }
