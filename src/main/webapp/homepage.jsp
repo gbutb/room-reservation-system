@@ -56,7 +56,7 @@
     </div>
 
     <div class="d-flex flex-row justify-content-between align-items-start bg-light" style="width: 100%; height: 90%;">
-        <div class="d-flex bg-secondary shadow" style="width: 10%; height: 100%;">
+        <div class="d-flex bg-secondary shadow" style="width: 8%; height: 100%;">
             <ul class="nav d-flex flex-column justify-content-center align-items-center w-100 h-100">
                 <c:forEach var="btnId" begin="1" end="4">
                     <li class="nav-item pb-3">
@@ -71,14 +71,14 @@
         </div>
 
         <div class="d-flex flex-column bg-light justify-content-center align-items-center"
-             style="width: 90%; height: 100%;">
+             style="width: 92%; height: 100%;">
 
-            <div class="d-flex justify-content-start align-items-center" style="width: 1152px;">
+            <div class="d-flex justify-content-start align-items-center" style="width: 1162px;">
                 <h2>Placeholder</h2>
             </div>
 
             <span class="d-flex justify-content-center align-items-center border rounded"
-                  style="border-width: 1.5px !important; width: 1172px; height: 560px;">
+                  style="border-width: 1.5px !important; width: 1162px; height: 550px;">
 
                 <img src="${pageContext.request.contextPath}/resources/images/floor-${param.floor}.png" class="img"
                      style="width: 1152px; height: 540px;" alt="..."/>
