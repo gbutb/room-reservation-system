@@ -73,17 +73,17 @@
         <div class="d-flex flex-column bg-light justify-content-center align-items-center"
              style="width: 90%; height: 100%;">
 
-            <div class="d-flex justify-content-start align-items-center" style="width: 1024px;">
+            <div class="d-flex justify-content-start align-items-center" style="width: 1152px;">
                 <h2>Placeholder</h2>
             </div>
 
             <span class="d-flex justify-content-center align-items-center border rounded"
-                  style="border-width: 1.5px !important; width: 1050px; height: 506px;">
+                  style="border-width: 1.5px !important; width: 1172px; height: 560px;">
 
                 <img src="${pageContext.request.contextPath}/resources/images/floor-${param.floor}.png" class="img"
-                     style="width: 1030px; height: 486px;" alt="..."/>
+                     style="width: 1152px; height: 540px;" alt="..."/>
 
-                <svg class="position-absolute" width="1024" height="480">
+                <svg class="position-absolute" width="1152" height="540">
                     <c:forEach var="roomID" items="${rooms.keySet()}">
                         <svg x="${rooms.get(roomID).get(0)}"
                              y="${rooms.get(roomID).get(1)}"
