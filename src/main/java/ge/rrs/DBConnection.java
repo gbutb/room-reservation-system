@@ -16,7 +16,6 @@ public class DBConnection{
         connect();
     }
 
-
     /**
      *If connection doesn't exist, new connection is created.
      * @return DBConnection

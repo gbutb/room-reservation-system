@@ -117,3 +117,4 @@ target/*
 
 ## Other stuff
 garbage/*
+*_ignore*
