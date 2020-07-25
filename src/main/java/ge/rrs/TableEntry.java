@@ -18,10 +18,25 @@ public interface TableEntry {
      * Returns all table entries which match
      * the search parameters.
      * @param parameters An array of search parameters.
-     * @return An elements which correspond to the table entry.
-     * @throws SQLException Should there be any SQL errors.
+     * @return A collection of table entries which
+     *  satisfy the relations defined by search parameters.
+     * @throws SQLException Should there be any SQL error.
      */
     public default Collection<TableEntry> filter(Collection<SearchParameter> parameters) throws SQLException {
+        // Redirect to static call
+        return filter(parameters, getConnection());
+    }
+
+    /**
+     * Returns all table entries which match
+     * the search parameters.
+     * @param parameters An array of search parameters.
+     * @param connection A reference to DBConnection
+     * @return A collection of table entries which
+     *  satisfy the relations defined by search parameters.
+     * @throws SQLException Should there be any SQL error.
+     */
+    public static Collection<TableEntry> filter(Collection<SearchParameter> parameters, DBConnection connection) throws SQLException {
         // TODO: Implement-this;
         return null;
     }
