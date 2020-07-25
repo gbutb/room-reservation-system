@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
  */
 public class RRSUser extends org.springframework.security.core.userdetails.User implements TableEntry {
     private static final long serialVersionUID = 1L;
+    private static String TABLE_NAME = "accounts";
 
     // Email of the user
     private String email;
@@ -55,7 +56,11 @@ public class RRSUser extends org.springframework.security.core.userdetails.User 
 
     @Override
     public String getTableName() {
+        return TABLE_NAME;
+    }
+
+    @Override
+    public void save() {
         // TODO: Implement this.
-        return null;
     }
 }

@@ -3,7 +3,7 @@ USE reservations_db;
 DROP TABLE IF EXISTS reservations;
 DROP TABLE IF EXISTS room;
 DROP TABLE IF EXISTS room_comment;
-DROP TABLE IF EXISTS account;
+DROP TABLE IF EXISTS accounts;
 
 CREATE TABLE room_comment (
 	comment_id INT PRIMARY KEY,
@@ -21,7 +21,7 @@ CREATE TABLE room (
 	FOREIGN KEY (comment_id) REFERENCES room_comment(comment_id)
 );
 
-CREATE TABLE account (
+CREATE TABLE accounts (
 	account_id INT PRIMARY KEY,
 	username VARCHAR(25)
 );
@@ -34,7 +34,7 @@ CREATE TABLE reservations (
 	do_repeat BOOLEAN,
 	account_id INT,
 	FOREIGN KEY (room_id) REFERENCES room(room_id),
-	FOREIGN KEY (account_id) REFERENCES account(account_id)
+	FOREIGN KEY (account_id) REFERENCES accounts(account_id)
 );
 	
 INSERT INTO room_comment VALUES
@@ -43,7 +43,7 @@ INSERT INTO room_comment VALUES
 INSERT INTO room VALUES
 	(200, 25, 2, true, true, 0);
 	
-INSERT INTO account VALUES
+INSERT INTO accounts VALUES
 	(0, "Human");
 	
 INSERT INTO reservations VALUES

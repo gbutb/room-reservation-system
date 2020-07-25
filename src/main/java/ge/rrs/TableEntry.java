@@ -40,4 +40,10 @@ public interface TableEntry {
      *  which this table entry corresponds to.
      */
     public String getTableName();
+
+    /**
+     * Saves any changes that have
+     * been done to the table entry.
+     */
+    public void save();
 }
