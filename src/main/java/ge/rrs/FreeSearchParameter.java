@@ -13,13 +13,13 @@ public class FreeSearchParameter implements SearchParameter {
      * FreeSearchParameter is a search parameter
      * with no constraints on the types of key/value and relation.
      * @param key Key of the entry
-     * @param value value of the entry
      * @param relation relation between the key and value.
+     * @param value value of the entry
      */
-    public FreeSearchParameter(String key, String value, String relation) {
+    public FreeSearchParameter(String key, String relation, String value) {
         this.key = key;
-        this.value = value;
         this.relation = relation;
+        this.value = value;
 
         this.empty = false;
     }

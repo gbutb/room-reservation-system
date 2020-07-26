@@ -3,6 +3,7 @@ package ge.rrs;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -28,17 +29,21 @@ public abstract class TableEntry {
         // Build an SQL command
         StringBuilder sqlCommand = new StringBuilder();
 
+        // Arguments
+        ArrayList<String> args = new ArrayList<>();
+        
         int numAppended = 0;
         for (SearchParameter param : parameters) {
             if (param.isEmpty()) continue;
 
             // Try to construct search query
             String searchQuery = "";
+            
             try {
                 searchQuery =
                     param.getKey() +
-                    param.getRelation() +
-                    '"' + param.getValue() + '"';
+                    param.getRelation() + "?";
+                args.add(param.getValue());
             } catch (Exception _) {
                 continue;
             }
@@ -52,7 +57,7 @@ public abstract class TableEntry {
 
         // Add where
         if (sqlCommand.length() > 0)
-            sqlCommand.insert(0, "WHERE ");
+            sqlCommand.insert(0, " WHERE ");
 
         // Prepend all values
         sqlCommand.insert(0, "SELECT * FROM " + getTableName());
@@ -60,8 +65,10 @@ public abstract class TableEntry {
         System.out.println("Command is: " + sqlCommand.toString());
 
         // Execute query
+        String[] argsArray = new String[args.size()];
+        argsArray = args.toArray(argsArray);
         return fromResultSet(
-            connection.executeQuery(sqlCommand.toString(), new String[]{}));
+            connection.executeQuery(sqlCommand.toString(), argsArray));
     }
 
 

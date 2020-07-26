@@ -25,13 +25,13 @@ public class UserTest {
     }
 
     @Test
-    public void testDatabase() throws Exception {
+    public void testAllQuery() throws Exception {
         DBConnection connection = new DBConnection();
         Collection<SearchParameter> params = new ArrayList<>();
         params.add(new FreeSearchParameter());
         RRSUser nullUser = new RRSUser(connection);
         Collection<? extends TableEntry> users = nullUser.filter(params);
-        assertEquals(users.size(), 2);
+        assertEquals(2, users.size());
 
         Set<String> usernames = new HashSet<>();
         usernames.add("Human");
@@ -49,7 +49,65 @@ public class UserTest {
                 ((RRSUser)user).getEmail());
         }
 
-        assertEquals(usernames.size(), 0);
-        assertEquals(emails.size(), 0);
+        assertEquals(0, usernames.size());
+        assertEquals(0, emails.size());
+        assertEquals(2, users.size());
+    }
+
+    @Test
+    public void testUserQuery() throws Exception {
+        DBConnection connection = new DBConnection();
+        Collection<SearchParameter> params = new ArrayList<>();
+        params.add(new FreeSearchParameter("username", "=", "Human 1"));
+        RRSUser nullUser = new RRSUser(connection);
+        Collection<? extends TableEntry> users = nullUser.filter(params);
+        assertEquals(1, users.size());
+
+        Set<String> usernames = new HashSet<>();
+        usernames.add("Human 1");
+
+        Set<String> emails = new HashSet<>();
+        emails.add("human1@humans.org");
+
+        for (TableEntry user : users) {
+            usernames.remove(
+                ((RRSUser)user).getUsername());
+
+            emails.remove(
+                ((RRSUser)user).getEmail());
+        }
+
+        assertEquals(0, usernames.size());
+        assertEquals(0, emails.size());
+        assertEquals(1, users.size());
+    }
+
+    @Test
+    public void testUserMultiQuery() throws SQLException {
+        DBConnection connection = new DBConnection();
+        Collection<SearchParameter> params = new ArrayList<>();
+        params.add(new FreeSearchParameter("username", "=", "Human 1"));
+        params.add(new FreeSearchParameter("email", "=", "human1@humans.org"));
+        RRSUser nullUser = new RRSUser(connection);
+        Collection<? extends TableEntry> users = nullUser.filter(params);
+        assertEquals(1, users.size());
+
+        Set<String> usernames = new HashSet<>();
+        usernames.add("Human 1");
+
+        Set<String> emails = new HashSet<>();
+        emails.add("human1@humans.org");
+
+        for (TableEntry user : users) {
+            usernames.remove(
+                ((RRSUser)user).getUsername());
+
+            emails.remove(
+                ((RRSUser)user).getEmail());
+        }
+
+        assertEquals(0, usernames.size());
+        assertEquals(0, emails.size());
+        assertEquals(1, users.size());
     }
 }
