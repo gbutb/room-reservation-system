@@ -1,17 +1,26 @@
 package ge.rrs;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Configuration class for Spring framework.
  * Takes the responsibility of rrs-servlet.xml configuration file.
  */
 @Configuration
-@ComponentScan({"ge.rrs"})
-public class RRSConfig {
+public class RRSConfig implements WebMvcConfigurer {
+	public void addViewControllers(ViewControllerRegistry registry) {
+        // Index page
+		registry.addViewController("/home").setViewName("index");
+        registry.addViewController("/").setViewName("index");
+
+        // Authentication
+        registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/register").setViewName("registration");
+	}
 
     /**
      * Filenames returned by Spring controllers will be suffixed with '.jsp'.

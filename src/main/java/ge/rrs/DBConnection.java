@@ -1,9 +1,13 @@
+// DBConnection.java
+package ge.rrs;
+
+
 import java.sql.*;
 
-public class DBConnection{
-    private static final  String SERVER = "localhost";
+public class DBConnection {
+    private static final String SERVER = "localhost";
     private static final String USER = "root";
-    private static final String PASSWORD = "123456";
+    private static final String PASSWORD = "12345678";
     private static final String DB_NAME = "reservations_db";
     private static DBConnection dbConnection;
     private Connection connection;
@@ -30,6 +34,7 @@ public class DBConnection{
      * @throws SQLException
      */
     public static DBConnection getDBConnection() throws SQLException {
+
         if (dbConnection == null){
             dbConnection = new DBConnection();
         }
@@ -66,7 +71,7 @@ public class DBConnection{
      */
     public ResultSet executeQuery(String command, String[] args) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(command);
-        for (int i = 0; i < args.length; i++){
+        for (int i = 0; i < args.length; i++) {
             ps.setString(i+1, args[i]);
         }
         ResultSet set = ps.executeQuery();
@@ -83,7 +88,7 @@ public class DBConnection{
      */
     public void executeUpdate(String command, String[] args)  throws SQLException {
         PreparedStatement ps = connection.prepareStatement(command);
-        for (int i = 0; i < args.length; i++){
+        for (int i = 0; i < args.length; i++) {
             ps.setString(i+1, args[i]);
         }
         ps.executeUpdate();
