@@ -11,7 +11,7 @@ CREATE TABLE room_comment (
 	user_comment VARCHAR(1000)
 );
 
-CREATE TABLE room (
+CREATE TABLE rooms (
 	room_id INT PRIMARY KEY,
 	room_size INT,
 	floor INT,
