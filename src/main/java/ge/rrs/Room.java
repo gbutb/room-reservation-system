@@ -21,7 +21,7 @@ public class Room extends TableEntry {
     private boolean projector;
 
     Room(int roomID) {
-        //
+        // TODO: implement this;
     }
 
     Room(int roomID, int roomSize, int floor, int commentID,
@@ -32,6 +32,16 @@ public class Room extends TableEntry {
         this.commentID = commentID;
         this.conditioner = conditioner;
         this.projector = projector;
+
+        this.connection = connection;
+    }
+
+    /**
+     * Null Constructor.
+     * @param connection A reference to DB connection.
+     */
+    Room(DBConnection connection) {
+        this.connection = connection;
     }
 
     @Override
