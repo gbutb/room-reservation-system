@@ -27,8 +27,7 @@ public class RRSUserService implements UserDetailsService {
         // Dummy user
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         RRSUser user = new RRSUser(
-            username,  encoder.encode("password"),
-            true, true, true, true, authorities);
+            username,  encoder.encode("password"), "email", null);
         return user;
     }
 

@@ -1,5 +1,6 @@
 package ge.rrs;
 
+import java.sql.SQLException;
 import java.util.*;
 
 // JUnit
@@ -15,9 +16,7 @@ public class UserTest {
     public void testInitialization() {
         // Initialize User
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        RRSUser user = new RRSUser(
-            "username", "password",
-            true, true, true, true, authorities);
+        RRSUser user = new RRSUser("username", "password", "username", null);
 
         assertEquals(user.getUsername(), "username");
         assertEquals(user.getPassword(), "password");
@@ -26,14 +25,31 @@ public class UserTest {
     }
 
     @Test
-    public void testUser() {
-        // Initialize User
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        RRSUser user = new RRSUser(
-            "username", "password",
-            true, true, true, true, authorities);
+    public void testDatabase() throws Exception {
+        DBConnection connection = new DBConnection();
+        Collection<SearchParameter> params = new ArrayList<>();
+        params.add(new FreeSearchParameter());
+        RRSUser nullUser = new RRSUser(connection);
+        Collection<? extends TableEntry> users = nullUser.filter(params);
+        assertEquals(users.size(), 2);
 
-        user.setEmail("email@email.com");
-        assertEquals(user.getEmail(), "email@email.com");
+        Set<String> usernames = new HashSet<>();
+        usernames.add("Human");
+        usernames.add("Human 1");
+
+        Set<String> emails = new HashSet<>();
+        emails.add("human@humans.org");
+        emails.add("human1@humans.org");
+
+        for (TableEntry user : users) {
+            usernames.remove(
+                ((RRSUser)user).getUsername());
+
+            emails.remove(
+                ((RRSUser)user).getEmail());
+        }
+
+        assertEquals(usernames.size(), 0);
+        assertEquals(emails.size(), 0);
     }
 }

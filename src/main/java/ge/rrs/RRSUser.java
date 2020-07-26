@@ -2,65 +2,143 @@
 package ge.rrs;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * A container for storing user data
  */
-public class RRSUser extends org.springframework.security.core.userdetails.User implements TableEntry {
+public class RRSUser extends TableEntry implements UserDetails {
     private static final long serialVersionUID = 1L;
     private static String TABLE_NAME = "accounts";
 
-    // Email of the user
+    // Reference to DBConnection
+    private DBConnection connection;
+
+    // User Details
+    private String username;
+    private String encryptedPassword;
     private String email;
 
+    // User status
+    private boolean nonExpired;
+    private boolean nonLocked;
+    private boolean credentialsNonExpired;
+    private boolean enabled;
+
+    // Meta
+    private boolean isNull;
+
+    // Authorities
+    private Collection<GrantedAuthority> authorities;
+
     /**
-     * Initializes new RRS user.
+     * Initializes new RRS User.
+     * @param username username of the account
+     * @param encryptedPassword BCrypt encrypted password.
+     * @param email Email of the account.
+     * @param connection a reference to the DBConnection.
      */
-    public RRSUser(String username, String password, boolean enabled, boolean accountNonExpired,
-            boolean credentialsNonExpired, boolean accountNonLocked,
-            Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-        this.email = username;
-    }
-
-    /////////////
-    // Getters //
-    /////////////
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    /////////////
-    // Setters //
-    /////////////
-
-    public void setEmail(String email) {
+    public RRSUser(String username, String encryptedPassword, String email, DBConnection connection) {
+        this.username = username;
+        this.encryptedPassword = encryptedPassword;
         this.email = email;
+        this.authorities = new ArrayList<>();
+
+        this.connection = connection;
+        this.isNull = false;
+    }
+
+    /**
+     * Null user constructor.
+     */
+    public RRSUser(DBConnection connection) {
+        this(null, null, null, connection);
+        this.isNull = true;
+    }
+
+    /**
+     * @param connection A reference to DBConnection.
+     */
+    public void setDBConnection(DBConnection connection) {
+        this.connection = connection;
     }
 
     @Override
     public DBConnection getConnection() {
-        // TODO: Implement this.
-        return null;
+        return this.connection;
     }
 
-    @Override
-    public Collection<TableEntry> fromResultSet(ResultSet rs) {
-        // TODO: Implement this.
-        return null;
+    /////////////////
+    // Table Entry //
+    /////////////////
+
+    public Collection<? extends TableEntry> fromResultSet(ResultSet rs) throws SQLException {
+        Collection<RRSUser> entries = new ArrayList<>();
+        while (rs.next()) {
+            // Add new netry
+            entries.add(new RRSUser(
+                rs.getString("username"),
+                rs.getString("encryptedPassword"),
+                rs.getString("email"),
+                null));
+        }
+        return entries;
     }
 
-    @Override
     public String getTableName() {
         return TABLE_NAME;
     }
 
     @Override
-    public void save() {
-        // TODO: Implement this.
+    public void save() throws Exception {
+        throw new Exception("Not implemented yet");
+    }
+
+    /////////////////
+    // UserDetails //
+    /////////////////
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return encryptedPassword;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return nonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return nonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 }

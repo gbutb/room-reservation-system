@@ -8,11 +8,11 @@ import java.util.Collection;
 /**
  * An abstraction of an entry in the table.
  */
-public interface TableEntry {
+public abstract class TableEntry {
     /**
      * @return A reference to the DBConnection.
      */
-    public DBConnection getConnection();
+    public abstract DBConnection getConnection();
 
     /**
      * Returns all table entries which match
@@ -22,24 +22,48 @@ public interface TableEntry {
      *  satisfy the relations defined by search parameters.
      * @throws SQLException Should there be any SQL error.
      */
-    public default Collection<TableEntry> filter(Collection<SearchParameter> parameters) throws SQLException {
-        // Redirect to static call
-        return filter(parameters, getConnection());
+    public Collection<? extends TableEntry> filter(Collection<SearchParameter> parameters) throws SQLException {
+        DBConnection connection = getConnection();
+
+        // Build an SQL command
+        StringBuilder sqlCommand = new StringBuilder();
+
+        int numAppended = 0;
+        for (SearchParameter param : parameters) {
+            if (param.isEmpty()) continue;
+
+            // Try to construct search query
+            String searchQuery = "";
+            try {
+                searchQuery =
+                    param.getKey() +
+                    param.getRelation() +
+                    '"' + param.getValue() + '"';
+            } catch (Exception _) {
+                continue;
+            }
+
+            // Append search query
+            if (numAppended > 0) sqlCommand.append(" AND ");
+            sqlCommand.append(searchQuery);
+            
+            ++numAppended;
+        }
+
+        // Add where
+        if (sqlCommand.length() > 0)
+            sqlCommand.insert(0, "WHERE ");
+
+        // Prepend all values
+        sqlCommand.insert(0, "SELECT * FROM " + getTableName());
+
+        System.out.println("Command is: " + sqlCommand.toString());
+
+        // Execute query
+        return fromResultSet(
+            connection.executeQuery(sqlCommand.toString(), new String[]{}));
     }
 
-    /**
-     * Returns all table entries which match
-     * the search parameters.
-     * @param parameters An array of search parameters.
-     * @param connection A reference to DBConnection
-     * @return A collection of table entries which
-     *  satisfy the relations defined by search parameters.
-     * @throws SQLException Should there be any SQL error.
-     */
-    public static Collection<TableEntry> filter(Collection<SearchParameter> parameters, DBConnection connection) throws SQLException {
-        // TODO: Implement-this;
-        return null;
-    }
 
     /**
      * Initializes Table entries by parsing
@@ -47,18 +71,20 @@ public interface TableEntry {
      * @param rs Result set containing the
      *  raw SQL rows of this table entry.
      * @return An array of table entry instances.
+     * @throws SQLException
      */
-    public Collection<TableEntry> fromResultSet(ResultSet rs);
+    public abstract Collection<? extends TableEntry> fromResultSet(ResultSet rs) throws SQLException;
 
     /**
      * @return The name of the table to
      *  which this table entry corresponds to.
      */
-    public String getTableName();
+    public abstract String getTableName();
 
     /**
      * Saves any changes that have
      * been done to the table entry.
+     * @throws Exception if unable to save.
      */
-    public void save();
+    public abstract void save() throws Exception;
 }

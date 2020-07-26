@@ -1,0 +1,59 @@
+// FreeSearchParameter
+package ge.rrs;
+
+public class FreeSearchParameter implements SearchParameter {
+    // Search parameters
+    private String key;
+    private String value;
+    private String relation;
+
+    private boolean empty;
+
+    /**
+     * FreeSearchParameter is a search parameter
+     * with no constraints on the types of key/value and relation.
+     * @param key Key of the entry
+     * @param value value of the entry
+     * @param relation relation between the key and value.
+     */
+    public FreeSearchParameter(String key, String value, String relation) {
+        this.key = key;
+        this.value = value;
+        this.relation = relation;
+
+        this.empty = false;
+    }
+
+    /**
+     * Empty constructor.
+     */
+    public FreeSearchParameter() {
+        this.key = null;
+        this.value = null;
+        this.relation = null;
+
+        this.empty = true;
+    }
+
+    public String getKey() throws Exception {
+        if (isEmpty())
+            throw new Exception("Unable to access key: the parameter is empty.");
+        return key;
+    }
+
+    public String getValue() throws Exception {
+        if (isEmpty())
+            throw new Exception("Unable to access value: the parameter is empty.");
+        return value;
+    }
+
+    public String getRelation() throws Exception {
+        if (isEmpty())
+            throw new Exception("Unable to access relation: the parameter is empty.");
+        return relation;
+    }
+
+    public boolean isEmpty() {
+        return empty;
+    }
+}

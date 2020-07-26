@@ -23,7 +23,9 @@ CREATE TABLE room (
 
 CREATE TABLE accounts (
 	account_id INT PRIMARY KEY,
-	username VARCHAR(25)
+	username VARCHAR(255),
+	encryptedPassword VARCHAR(255),
+	email VARCHAR(255)
 );
 
 CREATE TABLE reservations (
@@ -44,7 +46,8 @@ INSERT INTO room VALUES
 	(200, 25, 2, true, true, 0);
 	
 INSERT INTO accounts VALUES
-	(0, "Human");
+	(0, "Human", "human_password", "human@humans.org"),
+	(1, "Human 1", "human_1_password", "human1@humans.org");
 	
 INSERT INTO reservations VALUES
 	(0, 200, STR_TO_DATE("10,7,2020 14,40,0", "%d,%m,%Y %H,%i,%s"), 
