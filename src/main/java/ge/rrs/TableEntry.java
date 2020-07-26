@@ -62,8 +62,6 @@ public abstract class TableEntry {
         // Prepend all values
         sqlCommand.insert(0, "SELECT * FROM " + getTableName());
 
-        System.out.println("Command is: " + sqlCommand.toString());
-
         // Execute query
         String[] argsArray = new String[args.size()];
         argsArray = args.toArray(argsArray);

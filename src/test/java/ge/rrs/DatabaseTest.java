@@ -8,7 +8,13 @@ import static org.junit.Assert.*;
 public class DatabaseTest {
     @Test
     public void testDatabase() {
-        // TODO: Allow DB connection to throw an error.
-        DBConnection connection = new DBConnection();
+        boolean threwError = false;
+        try {
+            DBConnection connection = new DBConnection();
+        } catch (Exception _) {
+            threwError = true;
+        }
+
+        assertFalse(threwError);
     }
 }
