@@ -80,12 +80,12 @@ public class RRSUser extends TableEntry implements UserDetails {
     public Collection<? extends TableEntry> fromResultSet(ResultSet rs) throws SQLException {
         Collection<RRSUser> entries = new ArrayList<>();
         while (rs.next()) {
-            // Add new netry
+            // Add new entry
             entries.add(new RRSUser(
                 rs.getString("username"),
                 rs.getString("encryptedPassword"),
                 rs.getString("email"),
-                null));
+                getConnection()));
         }
         return entries;
     }
