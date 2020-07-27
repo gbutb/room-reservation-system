@@ -9,6 +9,8 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.Table;
+
 /**
  * A container for storing user data
  */
@@ -77,7 +79,9 @@ public class RRSUser extends TableEntry implements UserDetails {
     // Table Entry //
     /////////////////
 
-    public Collection<? extends TableEntry> fromResultSet(ResultSet rs) throws SQLException {
+    static Collection<RRSUser> getFileteredUsers(Collection<SearchParameter> parameters,
+                                                 DBConnection connection) throws SQLException {
+        ResultSet rs = TableEntry.filter(parameters, connection, RRSUser.TABLE_NAME);
         Collection<RRSUser> entries = new ArrayList<>();
         while (rs.next()) {
             // Add new entry
@@ -85,7 +89,7 @@ public class RRSUser extends TableEntry implements UserDetails {
                 rs.getString("username"),
                 rs.getString("encryptedPassword"),
                 rs.getString("email"),
-                getConnection()));
+                    connection));
         }
         return entries;
     }
