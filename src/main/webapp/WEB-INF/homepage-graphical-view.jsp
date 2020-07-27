@@ -37,18 +37,18 @@
         <div class="d-flex justify-content-center align-items-center" style="width: 1000px; height: 100%;">
 
             <%-- Search by room number --%>
-            <form class="form-inline flex-nowrap m-0">
+            <form class="form-inline flex-nowrap m-0" action="${pageContext.request.contextPath}/room" method="get">
                 <label for="roomSearch" class="text-light bg-dark mr-2">Room:</label>
-                <input id="roomSearch" class="form-control mr-2" type="number" required style="width: 100px;">
-                <button class="btn btn-primary mr-5" type="button">Search</button>
+                <input id="roomSearch" class="form-control mr-2" name="id" type="number" required style="width: 100px;">
+                <button class="btn btn-primary mr-5" type="submit">Search</button>
             </form>
 
             <%-- Time based search and advanced search --%>
-            <form class="form-inline flex-nowrap m-0" action="filter" method="post">
+            <form class="form-inline flex-nowrap m-0" action="${pageContext.request.contextPath}/homepage-gv" method="post">
                 <label for="startTime" class="text-light bg-dark mr-2">From:</label>
-                <input id="startTime" class="form-control mr-2" type="time">
+                <input id="startTime" class="form-control mr-2" name="startTime" type="time">
                 <label for="endTime" class="text-light bg-dark mr-2">To:</label>
-                <input id="endTime" class="form-control mr-2" type="time">
+                <input id="endTime" class="form-control mr-2" name="endTime" type="time">
 
                 <div class="btn-group">
                     <button class="btn btn-primary" type="submit">Filter</button>
@@ -57,35 +57,35 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="advancedSearch">
                         <h6 class="dropdown-header p-0 ml-2 mb-1">Must include:</h6>
                         <div class="d-flex justify-content-start align-items-center" style="width: 315px;">
-                            <input type="checkbox" class="form-check-input ml-3" id="hasProjector">
+                            <input type="checkbox" name="hasProjector" class="form-check-input ml-3" id="hasProjector">
                             <label class="form-check-label" for="hasProjector">
                                 Projector
                             </label>
                         </div>
                         <div class="d-flex justify-content-start align-items-center">
-                            <input type="checkbox" class="form-check-input ml-3" id="hasConditioner">
+                            <input type="checkbox" name="hasConditioner" class="form-check-input ml-3" id="hasConditioner">
                             <label class="form-check-label" for="hasConditioner">
                                 Air Conditioner
                             </label>
                         </div>
                         <h6 class="dropdown-header p-0 ml-2 mb-1 mt-2">Room size:</h6>
                         <div class="d-flex justify-content-start align-items-center">
-                            <input type="checkbox" class="form-check-input ml-3" id="roomSize1">
+                            <input type="checkbox" name="roomSize1" class="form-check-input ml-3" id="roomSize1">
                             <label class="form-check-label" for="roomSize1">
                                 Mini
                             </label>
 
-                            <input type="checkbox" class="form-check-input ml-3" id="roomSize2">
+                            <input type="checkbox" name="roomSize2" class="form-check-input ml-3" id="roomSize2">
                             <label class="form-check-label" for="roomSize2">
                                 Small
                             </label>
 
-                            <input type="checkbox" class="form-check-input ml-3" id="roomSize3">
+                            <input type="checkbox" name="roomSize3" class="form-check-input ml-3" id="roomSize3">
                             <label class="form-check-label" for="roomSize3">
                                 Medium
                             </label>
 
-                            <input type="checkbox" class="form-check-input ml-3" id="roomSize4">
+                            <input type="checkbox" name="roomSize4" class="form-check-input ml-3" id="roomSize4">
                             <label class="form-check-label" for="roomSize4">
                                 Large
                             </label>
@@ -152,7 +152,7 @@
                              y="${rooms.get(roomId).get(1)}"
                              width="${rooms.get(roomId).get(2)}"
                              height="${rooms.get(roomId).get(3)}">
-                            <a href="#">
+                            <a href="${pageContext.request.contextPath}/room?id=${roomId}">
                                 <rect x="0" y="0" rx="5" ry="5"
                                       width="${rooms.get(roomId).get(2)}"
                                       height="${rooms.get(roomId).get(3)}"
