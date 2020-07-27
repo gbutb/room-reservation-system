@@ -47,6 +47,12 @@ public class RRSUser extends TableEntry implements UserDetails {
         this.username = username;
         this.encryptedPassword = encryptedPassword;
         this.email = email;
+        
+        this.nonExpired = true;
+        this.nonLocked = true;
+        this.credentialsNonExpired = true;
+        this.enabled = true;
+        
         this.authorities = new ArrayList<>();
 
         this.connection = connection;

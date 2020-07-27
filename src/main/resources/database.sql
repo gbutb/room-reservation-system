@@ -47,8 +47,8 @@ INSERT INTO rooms VALUES
 	(315, 20, 3, false, true, 0);
 	
 INSERT INTO accounts VALUES
-	(0, "Human", "human_password", "human@humans.org"),
-	(1, "Human 1", "human_1_password", "human1@humans.org");
+	(0, "Human", "$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO", "human@humans.org"),
+	(1, "Human 1", "$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO", "human1@humans.org");
 	
 INSERT INTO reservations VALUES
 	(0, 200, STR_TO_DATE("10,7,2020 14,40,0", "%d,%m,%Y %H,%i,%s"), 
