@@ -13,12 +13,12 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 /**
- * For testing purposes only.
+ * Initial implementation of homepage graphical view controller
  */
 @Controller
-public class RenderTest {
+public class RRSGraphicalView {
 
-    @RequestMapping("/homepage")
+    @RequestMapping("/homepage-gv")
     public ModelAndView renderDashboard(HttpServletRequest req) throws IOException {
         ModelAndView mv = new ModelAndView();
         String floorParam = req.getParameter("floor");
@@ -27,6 +27,10 @@ public class RenderTest {
         mv.addObject("rooms", fetchData(floorParam));
 
         return mv;
+    }
+
+    public void filterRooms() {
+        System.out.println("filter");
     }
 
     private HashMap<String, ArrayList<String>> fetchData(String floorParam) throws IOException {
