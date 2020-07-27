@@ -108,9 +108,9 @@
                     User
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
-                    <a class="dropdown-item" href="#">Settings</a>
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/settings">Settings</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Log Out</a>
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Log Out</a>
                 </div>
             </div>
         </div>
