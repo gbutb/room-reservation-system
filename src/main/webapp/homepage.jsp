@@ -17,52 +17,112 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
-    <title>Floor ${param.floor}</title>
+    <title>Title</title>
 </head>
 
 <body>
-<div class="d-flex flex-column bg-success" style="width: 100%; height: 100vh; min-width: 1280px; min-height: 720px;">
+<%-- Container for entire screen --%>
+<div class="d-flex flex-column" style="width: 100%; height: 100vh; min-width: 1280px; min-height: 720px;">
+
+    <%-- Container for top navigation bar --%>
     <div class="d-flex flex-row justify-content-between align-items-center sticky-top bg-dark"
          style="width: 100%; height: 10%;">
-        <div class="d-flex justify-content-start align-items-center p-4" style="width: 390px; height: 100%;">
-            <a class="text-light" style="font-size: 1.25rem" href="#">Room Reservation System</a>
+
+        <%-- Container for navigation bar branding --%>
+        <div class="d-flex justify-content-start align-items-center p-4" style="width: 100px; height: 100%;">
+            <a class="text-light" style="font-size: 1.2rem;" href="#">RRS</a>
         </div>
 
-        <div class="d-flex justify-content-center align-items-center" style="width: 500px; height: 100%;">
-            <form class="form-inline flex-nowrap m-0">
-                <label for="fromFilter" class="text-light bg-dark mr-2">From:</label>
-                <input id="fromFilter" class="form-control mr-4" type="time">
-                <label for="toFilter" class="text-light bg-dark mr-2">To:</label>
-                <input id="toFilter" class="form-control mr-2" type="time">
-                <button class="btn btn-primary" type="submit">Filter</button>
+        <%-- Container for search --%>
+        <div class="d-flex justify-content-center align-items-center" style="width: 1000px; height: 100%;">
+
+            <%-- Search by room number --%>
+            <form class="form-inline flex-nowrap m-0" action="search" method="post">
+                <label for="roomSearch" class="text-light bg-dark mr-2">Room:</label>
+                <input id="roomSearch" class="form-control mr-2" type="number" required style="width: 100px;">
+                <button class="btn btn-primary mr-5" type="submit">Search</button>
+            </form>
+
+            <%-- Time based search and advanced search --%>
+            <form class="form-inline flex-nowrap m-0" action="filter" method="post">
+                <label for="startTime" class="text-light bg-dark mr-2">From:</label>
+                <input id="startTime" class="form-control mr-2" type="time">
+                <label for="endTime" class="text-light bg-dark mr-2">To:</label>
+                <input id="endTime" class="form-control mr-2" type="time">
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" type="submit">Filter</button>
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="advancedSearch"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="advancedSearch">
+                        <h6 class="dropdown-header p-0 ml-2 mb-1">Must include:</h6>
+                        <div class="d-flex justify-content-start align-items-center" style="width: 315px;">
+                            <input type="checkbox" class="form-check-input ml-3" id="hasProjector">
+                            <label class="form-check-label" for="hasProjector">
+                                Projector
+                            </label>
+                        </div>
+                        <div class="d-flex justify-content-start align-items-center">
+                            <input type="checkbox" class="form-check-input ml-3" id="hasConditioner">
+                            <label class="form-check-label" for="hasConditioner">
+                                Air Conditioner
+                            </label>
+                        </div>
+                        <h6 class="dropdown-header p-0 ml-2 mb-1 mt-2">Room size:</h6>
+                        <div class="d-flex justify-content-start align-items-center">
+                            <input type="checkbox" class="form-check-input ml-3" id="roomSize1">
+                            <label class="form-check-label" for="roomSize1">
+                                Mini
+                            </label>
+
+                            <input type="checkbox" class="form-check-input ml-3" id="roomSize2">
+                            <label class="form-check-label" for="roomSize2">
+                                Small
+                            </label>
+
+                            <input type="checkbox" class="form-check-input ml-3" id="roomSize3">
+                            <label class="form-check-label" for="roomSize3">
+                                Medium
+                            </label>
+
+                            <input type="checkbox" class="form-check-input ml-3" id="roomSize4">
+                            <label class="form-check-label" for="roomSize4">
+                                Large
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
 
-        <div class="d-flex justify-content-end align-items-center p-4" style="width: 390px; height: 100%;">
-            <ul class="navbar-nav">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-muted" href="#" style="font-size: 1.2rem"
-                       id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        User
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">Settings</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Log Out</a>
-                    </div>
-                </li>
-            </ul>
+        <%-- Container for user dropdown toggler --%>
+        <div class="d-flex justify-content-end align-items-center p-4" style="width: 100px; height: 100%;">
+            <div class="dropdown">
+                <a class="dropdown-toggle text-muted" href="#" style="font-size: 1.2rem" id="userMenu"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    User
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
+                    <a class="dropdown-item" href="#">Settings</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Log Out</a>
+                </div>
+            </div>
         </div>
     </div>
 
+    <%-- Container for bottom space after navigation bar --%>
     <div class="d-flex flex-row justify-content-between align-items-start bg-light" style="width: 100%; height: 90%;">
+
+        <%-- Container for left sidebar --%>
         <div class="d-flex bg-secondary shadow" style="width: 8%; height: 100%;">
             <ul class="nav d-flex flex-column justify-content-center align-items-center w-100 h-100">
                 <c:forEach var="btnId" begin="1" end="4">
                     <li class="nav-item pb-3">
                         <a href="?floor=${btnId}">
-                            <button type="button" class="btn ${param.floor == btnId ? 'btn-primary' : 'btn-dark'}" style="width: 80px; height: 80px; font-size: 2rem;">
-                                ${btnId}
+                            <button type="button" class="btn ${param.floor == btnId ? 'btn-primary' : 'btn-dark'}"
+                                    style="width: 80px; height: 80px; font-size: 2rem;">
+                                    ${btnId}
                             </button>
                         </a>
                     </li>
@@ -70,13 +130,16 @@
             </ul>
         </div>
 
+        <%-- Container for right space after sidebar --%>
         <div class="d-flex flex-column bg-light justify-content-center align-items-center"
              style="width: 92%; height: 100%;">
 
+            <%-- Container for dashboard title --%>
             <div class="d-flex justify-content-start align-items-center" style="width: 1162px;">
                 <h2>Placeholder</h2>
             </div>
 
+            <%-- Container for dashboard --%>
             <span class="d-flex justify-content-center align-items-center border rounded"
                   style="border-width: 1.5px !important; width: 1162px; height: 550px;">
 
@@ -84,19 +147,19 @@
                      style="width: 1152px; height: 540px;" alt="..."/>
 
                 <svg class="position-absolute" width="1152" height="540">
-                    <c:forEach var="roomID" items="${rooms.keySet()}">
-                        <svg x="${rooms.get(roomID).get(0)}"
-                             y="${rooms.get(roomID).get(1)}"
-                             width="${rooms.get(roomID).get(2)}"
-                             height="${rooms.get(roomID).get(3)}">
+                    <c:forEach var="roomId" items="${rooms.keySet()}">
+                        <svg x="${rooms.get(roomId).get(0)}"
+                             y="${rooms.get(roomId).get(1)}"
+                             width="${rooms.get(roomId).get(2)}"
+                             height="${rooms.get(roomId).get(3)}">
                             <a href="#">
                                 <rect x="0" y="0" rx="5" ry="5"
-                                      width="${rooms.get(roomID).get(2)}"
-                                      height="${rooms.get(roomID).get(3)}"
+                                      width="${rooms.get(roomId).get(2)}"
+                                      height="${rooms.get(roomId).get(3)}"
                                       style="fill: mediumseagreen;">
                                 </rect>
                                 <text class="text text-primary" x="50%" y="50%" dominant-baseline="middle"
-                                      text-anchor="middle">${roomID}</text>
+                                      text-anchor="middle">${roomId}</text>
                             </a>
                         </svg>
                     </c:forEach>
