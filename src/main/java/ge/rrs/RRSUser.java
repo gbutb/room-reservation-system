@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public class RRSUser extends TableEntry implements UserDetails {
     private static final long serialVersionUID = 1L;
-    private static String TABLE_NAME = "accounts";
+    private static final String TABLE_NAME = "accounts";
 
     // Reference to DBConnection
     private DBConnection connection;

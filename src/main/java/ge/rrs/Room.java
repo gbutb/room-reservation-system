@@ -13,23 +13,23 @@ public class Room extends TableEntry {
     private DBConnection connection;
 
     // Room Details
-    private int roomID;
+    private int roomId;
     private int roomSize;
     private int floor;
-    private int commentID;
+    private int commentId;
     private boolean conditioner;
     private boolean projector;
 
-    Room(int roomID) {
+    Room(int roomId) {
         // TODO: implement this;
     }
 
-    Room(int roomID, int roomSize, int floor, int commentID,
+    Room(int roomId, int roomSize, int floor, int commentId,
          boolean conditioner, boolean projector, DBConnection connection) {
-        this.roomID =  roomID;
+        this.roomId =  roomId;
         this.roomSize = roomSize;
         this.floor = floor;
-        this.commentID = commentID;
+        this.commentId = commentId;
         this.conditioner = conditioner;
         this.projector = projector;
 
@@ -86,8 +86,8 @@ public class Room extends TableEntry {
 
     // Getter Methods
 
-    public int getRoomID() {
-        return roomID;
+    public int getRoomId() {
+        return roomId;
     }
 
     public int getRoomSize() {
@@ -98,8 +98,8 @@ public class Room extends TableEntry {
         return floor;
     }
 
-    public int getCommentID() {
-        return commentID;
+    public int getCommentId() {
+        return commentId;
     }
 
     public boolean isConditioner() {

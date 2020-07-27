@@ -36,6 +36,11 @@ public class RoomSearchParameter implements SearchParameter {
         return param;
     }
 
+    static RoomSearchParameter fromDateTimeRange(String dateFrom, String dateTo) {
+
+        return new RoomSearchParameter("", "", "", new String[] {});
+    }
+
     @Override
     public String getKey() throws Exception {
         return key;
