@@ -44,7 +44,8 @@
             </form>
 
             <%-- Time based search and advanced search --%>
-            <form class="form-inline flex-nowrap m-0" action="${pageContext.request.contextPath}/homepage-gv?floor=${param.floor}"
+            <form class="form-inline flex-nowrap m-0"
+                  action="${pageContext.request.contextPath}/homepage-gv?floor=${param.floor}"
                   method="post">
                 <label for="startTime" class="text-light bg-dark mr-2">From:</label>
                 <input id="startTime" class="form-control mr-2" name="startTime" type="time">
@@ -139,8 +140,10 @@
              style="width: 92%; height: 100%;">
 
             <%-- Container for dashboard title --%>
-            <div class="d-flex justify-content-start align-items-center" style="width: 1162px;">
-                <h2>Placeholder</h2>
+            <div class="d-flex justify-content-between align-items-center" style="width: 1162px;">
+                <h2>Graphical View</h2>
+
+                <button type="button" class="btn btn-outline-secondary btn-sm">List View</button>
             </div>
 
             <%-- Container for dashboard --%>
@@ -160,10 +163,11 @@
                                 <rect x="0" y="0" rx="5" ry="5"
                                       width="${rooms.get(roomId).get(2)}"
                                       height="${rooms.get(roomId).get(3)}"
-                                      style="fill: mediumseagreen;">
+                                      style="fill: #28a745;">
                                 </rect>
-                                <text class="text text-primary" x="50%" y="50%" dominant-baseline="middle"
-                                      text-anchor="middle">${roomId}</text>
+
+                                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+                                      style="fill: #f8f9fa;">${roomId}</text>
                             </a>
                         </svg>
                     </c:forEach>

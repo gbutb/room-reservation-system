@@ -34,11 +34,7 @@ public class RRSGraphicalView {
         return mv;
     }
 
-    public void filterRooms() {
-        System.out.println("filter");
-    }
-
-    private HashMap<String, ArrayList<String>> fetchData(String floorParam) throws IOException {
+    public HashMap<String, ArrayList<String>> fetchData(String floorParam) throws IOException {
         BufferedReader rd = new BufferedReader(new FileReader("src/main/resources/floor-" + floorParam + "-rooms.txt"));
         HashMap<String, ArrayList<String>> rooms = new HashMap<>();
 
