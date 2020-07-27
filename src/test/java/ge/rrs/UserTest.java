@@ -5,12 +5,25 @@ import java.util.*;
 
 // JUnit
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.junit.jupiter.api.BeforeEach;
 import static org.junit.Assert.*;
 
 // Spring
 import org.springframework.security.core.GrantedAuthority;
 
 public class UserTest {
+    // Database credentials
+    private DBConnection connection;
+
+    @BeforeEach
+    public void initialize() throws SQLException {
+        connection = new DBConnection(
+            MockDatabaseCredentials.SERVER,
+            MockDatabaseCredentials.USER,
+            MockDatabaseCredentials.PASSWORD,
+            MockDatabaseCredentials.DB_NAME);
+    }
 
     @Test
     public void testInitialization() {
@@ -26,7 +39,6 @@ public class UserTest {
 
     @Test
     public void testAllQuery() throws Exception {
-        DBConnection connection = new DBConnection();
         Collection<SearchParameter> params = new ArrayList<>();
         params.add(new FreeSearchParameter());
         RRSUser nullUser = new RRSUser(connection);
@@ -56,7 +68,6 @@ public class UserTest {
 
     @Test
     public void testUserQuery() throws Exception {
-        DBConnection connection = new DBConnection();
         Collection<SearchParameter> params = new ArrayList<>();
         params.add(new FreeSearchParameter("username", "=", "Human 1"));
         RRSUser nullUser = new RRSUser(connection);
@@ -84,7 +95,6 @@ public class UserTest {
 
     @Test
     public void testUserMultiQuery() throws SQLException {
-        DBConnection connection = new DBConnection();
         Collection<SearchParameter> params = new ArrayList<>();
         params.add(new FreeSearchParameter("username", "=", "Human 1"));
         params.add(new FreeSearchParameter("email", "=", "human1@humans.org"));
