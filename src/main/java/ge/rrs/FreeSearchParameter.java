@@ -47,6 +47,18 @@ public class FreeSearchParameter implements SearchParameter {
         return value;
     }
 
+    public String getValueExpression() throws Exception {
+        if (isEmpty())
+            throw new Exception("Unable to access value expression: the parameter is empty.");
+        return "?";
+    }
+
+    public String[] getValueArgs() throws Exception {
+        if (isEmpty())
+            throw new Exception("Unable to access value args: the parameter is empty.");
+        return new String[]{ getValue() };
+    }
+
     public String getRelation() throws Exception {
         if (isEmpty())
             throw new Exception("Unable to access relation: the parameter is empty.");

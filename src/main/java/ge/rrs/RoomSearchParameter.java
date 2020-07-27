@@ -4,13 +4,22 @@ package ge.rrs;
 public class RoomSearchParameter implements SearchParameter {
     // Search parameters
     private String key;
-    private String value;
     private String relation;
+    private String valueExpression;
+    private String[] args;
 
-    RoomSearchParameter(String key, String relation, String value) {
+    /**
+     * Initializes Room Search parameter.
+     * @param key The key of the query.
+     * @param relation Relation between the key and value.
+     * @param valueExpression Expression, with arguments replaced with '?'
+     * @param args Arguments.
+     */
+    RoomSearchParameter(String key, String relation, String valueExpression, String[] args) {
         this.key = key;
         this.relation = relation;
-        this.value = value;
+        this.valueExpression = valueExpression;
+        this.args = args;
     }
 
     /**
@@ -21,10 +30,9 @@ public class RoomSearchParameter implements SearchParameter {
      * @return: Room Search Parameter.
      */
     static RoomSearchParameter fromFloorRange(int start, int end) {
-        // TODO: fix this.
         RoomSearchParameter param = new RoomSearchParameter(
-            "floor", " BETWEEN ", String.format(
-                "%d AND %d", start, end));
+            "floor", " BETWEEN ", "? AND ?", new String[] {
+                ""+start, ""+end});
         return param;
     }
 
@@ -35,7 +43,18 @@ public class RoomSearchParameter implements SearchParameter {
 
     @Override
     public String getValue() throws Exception {
-        return value;
+        return String.format(
+            valueExpression.replace("?", "%s"), (Object[])args);
+    }
+
+    @Override
+    public String getValueExpression() throws Exception {
+        return valueExpression;
+    }
+
+    @Override
+    public String[] getValueArgs() throws Exception {
+        return args;
     }
 
     @Override
