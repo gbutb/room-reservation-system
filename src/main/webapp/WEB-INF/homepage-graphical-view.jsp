@@ -44,11 +44,14 @@
             </form>
 
             <%-- Time based search and advanced search --%>
-            <form class="form-inline flex-nowrap m-0" action="${pageContext.request.contextPath}/homepage-gv" method="post">
+            <form class="form-inline flex-nowrap m-0" action="${pageContext.request.contextPath}/homepage-gv?floor=${param.floor}"
+                  method="post">
                 <label for="startTime" class="text-light bg-dark mr-2">From:</label>
                 <input id="startTime" class="form-control mr-2" name="startTime" type="time">
                 <label for="endTime" class="text-light bg-dark mr-2">To:</label>
                 <input id="endTime" class="form-control mr-2" name="endTime" type="time">
+
+                <input name="filter" type="hidden">
 
                 <div class="btn-group">
                     <button class="btn btn-primary" type="submit">Filter</button>
@@ -63,7 +66,8 @@
                             </label>
                         </div>
                         <div class="d-flex justify-content-start align-items-center">
-                            <input type="checkbox" name="hasConditioner" class="form-check-input ml-3" id="hasConditioner">
+                            <input type="checkbox" name="hasConditioner" class="form-check-input ml-3"
+                                   id="hasConditioner">
                             <label class="form-check-label" for="hasConditioner">
                                 Air Conditioner
                             </label>

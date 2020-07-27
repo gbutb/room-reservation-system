@@ -22,6 +22,11 @@ public class RRSGraphicalView {
     public ModelAndView renderDashboard(HttpServletRequest req) throws IOException {
         ModelAndView mv = new ModelAndView();
         String floorParam = req.getParameter("floor");
+        String isFiltered = req.getParameter("filter");
+
+        if (isFiltered != null) {
+            // TODO: implement filterRooms()...
+        }
 
         mv.setViewName("/homepage-graphical-view");
         mv.addObject("rooms", fetchData(floorParam));
