@@ -1,20 +1,25 @@
 // FreeSearchParameter
 package ge.rrs;
 
-public class FreeSearchParameter implements SearchParameter {
-    // Search parameters
-    private String key;
-    private String value;
-    private String relation;
+import java.util.ArrayList;
+import java.util.List;
 
-    private boolean empty;
+public class FreeSearchParameter implements SearchParameter {
+    
+    // Search parameters
+    private final String key;
+    private final String value;
+    private final String relation;
+
+    private final boolean empty;
 
     /**
      * FreeSearchParameter is a search parameter
      * with no constraints on the types of key/value and relation.
-     * @param key Key of the entry
+     *
+     * @param key      Key of the entry
      * @param relation relation between the key and value.
-     * @param value value of the entry
+     * @param value    value of the entry
      */
     public FreeSearchParameter(String key, String relation, String value) {
         this.key = key;
@@ -53,10 +58,14 @@ public class FreeSearchParameter implements SearchParameter {
         return "?";
     }
 
-    public String[] getValueArgs() throws Exception {
+    public List<String> getValueArgs() throws Exception {
         if (isEmpty())
             throw new Exception("Unable to access value args: the parameter is empty.");
-        return new String[]{ getValue() };
+        return new ArrayList<String>() {
+            {
+                add(getValue());
+            }
+        };
     }
 
     public String getRelation() throws Exception {
