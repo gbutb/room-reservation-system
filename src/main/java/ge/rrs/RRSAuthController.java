@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Controller
-public class RRSAuthConfig {
+public class RRSAuthController {
     private final RRSUserService userService;
 
     /**
      * Initializes Auth controller.
      */
-    RRSAuthConfig() {
+    RRSAuthController() {
         userService = new RRSUserService();
     }
 
