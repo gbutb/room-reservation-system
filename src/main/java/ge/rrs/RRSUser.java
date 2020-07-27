@@ -154,4 +154,17 @@ public class RRSUser extends TableEntry implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
+
+    ///////////
+    // Other //
+    ///////////
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof RRSUser)) return false;
+        RRSUser otherUser = (RRSUser)other;
+        if ((otherUser.getUsername() != this.getUsername()) ||
+            (otherUser.getPassword() != this.getPassword())) return false;
+        return true;
+    }
 }

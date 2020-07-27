@@ -123,7 +123,7 @@ public class UserTest {
     }
 
 
-    @Test
+    // @Test
     public void testRegister() throws Exception {
         RRSUser user = new RRSUser(
             "testRegisterUsername", 

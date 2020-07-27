@@ -25,6 +25,13 @@ public class RRSUserService implements UserDetailsService {
         encoder = new BCryptPasswordEncoder();
     }
 
+    /**
+     * @return Password encoder.
+     */
+    public BCryptPasswordEncoder getEncoder() {
+        return encoder;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // TODO: use singleton DBConnection
@@ -48,6 +55,7 @@ public class RRSUserService implements UserDetailsService {
      * @param user: New user object.
      */
     public void registerNewUser(RRSUser user) throws Exception {
-        throw new Exception("Not implemented yet");
+        System.out.println("Saving user: " + user.getUsername());
+        user.save();
     }
 }

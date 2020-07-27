@@ -16,10 +16,6 @@ public class RRSConfig implements WebMvcConfigurer {
         // Index page
 		registry.addViewController("/home").setViewName("index");
         registry.addViewController("/").setViewName("index");
-
-        // Authentication
-        registry.addViewController("/login").setViewName("login");
-        registry.addViewController("/register").setViewName("registration");
 	}
 
     /**
