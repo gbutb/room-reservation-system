@@ -4,6 +4,7 @@ package ge.rrs;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -42,8 +43,11 @@ public abstract class TableEntry {
             try {
                 searchQuery =
                     param.getKey() +
-                    param.getRelation() + "?";
-                args.add(param.getValue());
+                    param.getRelation() +
+                    param.getValueExpression();
+                args.addAll(
+                    Arrays.asList(
+                        param.getValueArgs()));
             } catch (Exception _) {
                 continue;
             }

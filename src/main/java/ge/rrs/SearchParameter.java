@@ -20,6 +20,20 @@ public interface SearchParameter {
     public String getValue() throws Exception;
 
     /**
+     * @return Value where all arguments
+     *  are replaced with placeholders.
+     * @throws Exception
+     */
+    public String getValueExpression() throws Exception;
+
+    /**
+     * @return Arguments which are to be
+     *  placed into the value expression.
+     * @throws Exception
+     */
+    public String[] getValueArgs() throws Exception;
+
+    /**
      * @return an operator that corresponds
      *  to the relation between the key and
      *  the value to be used for search. 
