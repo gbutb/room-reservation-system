@@ -102,19 +102,3 @@ fabric.properties
 
 # Ignore build files
 target/*
-.settings/*
-.project
-.classpath
-
-
-## VScode ##
-.vscode/*
-
-
-## Any OS specific stuff ##
-.DS_Store
-
-
-## Other stuff
-garbage/*
-*_ignore*
