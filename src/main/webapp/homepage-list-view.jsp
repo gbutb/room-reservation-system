@@ -37,10 +37,10 @@
         <div class="d-flex justify-content-center align-items-center" style="width: 1000px; height: 100%;">
 
             <%-- Search by room number --%>
-            <form class="form-inline flex-nowrap m-0" action="search" method="post">
+            <form class="form-inline flex-nowrap m-0">
                 <label for="roomSearch" class="text-light bg-dark mr-2">Room:</label>
                 <input id="roomSearch" class="form-control mr-2" type="number" required style="width: 100px;">
-                <button class="btn btn-primary mr-5" type="submit">Search</button>
+                <button class="btn btn-primary mr-5" type="button">Search</button>
             </form>
 
             <%-- Time based search and advanced search --%>
@@ -112,60 +112,24 @@
     </div>
 
     <%-- Container for bottom space after navigation bar --%>
-    <div class="d-flex flex-row justify-content-between align-items-start bg-light" style="width: 100%; height: 90%;">
+    <div class="d-flex flex-column justify-content-center align-items-center bg-light" style="width: 100%; height: 90%;">
 
-        <%-- Container for left sidebar --%>
-        <div class="d-flex bg-secondary shadow" style="width: 8%; height: 100%;">
-            <ul class="nav d-flex flex-column justify-content-center align-items-center w-100 h-100">
-                <c:forEach var="btnId" begin="1" end="4">
-                    <li class="nav-item pb-3">
-                        <a href="?floor=${btnId}">
-                            <button type="button" class="btn ${param.floor == btnId ? 'btn-primary' : 'btn-dark'}"
-                                    style="width: 80px; height: 80px; font-size: 2rem;">
-                                    ${btnId}
-                            </button>
-                        </a>
-                    </li>
-                </c:forEach>
-            </ul>
+        <%-- Container for dashboard title --%>
+        <div class="d-flex justify-content-start align-items-center" style="width: 90%;">
+            <h2>List View</h2>
         </div>
 
-        <%-- Container for right space after sidebar --%>
-        <div class="d-flex flex-column bg-light justify-content-center align-items-center"
-             style="width: 92%; height: 100%;">
+        <%-- Container for list view --%>
+        <span class="d-flex justify-content-center align-items-center border rounded"
+              style="border-width: 1.5px !important; width: 90%; height: 550px;">
 
-            <%-- Container for dashboard title --%>
-            <div class="d-flex justify-content-start align-items-center" style="width: 1162px;">
-                <h2>Placeholder</h2>
-            </div>
+            <%--TODO: USER CODE START--%>
 
-            <%-- Container for dashboard --%>
-            <span class="d-flex justify-content-center align-items-center border rounded"
-                  style="border-width: 1.5px !important; width: 1162px; height: 550px;">
 
-                <img src="${pageContext.request.contextPath}/resources/images/floor-${param.floor}.png" class="img"
-                     style="width: 1152px; height: 540px;" alt="..."/>
 
-                <svg class="position-absolute" width="1152" height="540">
-                    <c:forEach var="roomId" items="${rooms.keySet()}">
-                        <svg x="${rooms.get(roomId).get(0)}"
-                             y="${rooms.get(roomId).get(1)}"
-                             width="${rooms.get(roomId).get(2)}"
-                             height="${rooms.get(roomId).get(3)}">
-                            <a href="#">
-                                <rect x="0" y="0" rx="5" ry="5"
-                                      width="${rooms.get(roomId).get(2)}"
-                                      height="${rooms.get(roomId).get(3)}"
-                                      style="fill: mediumseagreen;">
-                                </rect>
-                                <text class="text text-primary" x="50%" y="50%" dominant-baseline="middle"
-                                      text-anchor="middle">${roomId}</text>
-                            </a>
-                        </svg>
-                    </c:forEach>
-                </svg>
-            </span>
-        </div>
+            <%--TODO: USER CODE END--%>
+
+        </span>
     </div>
 </div>
 
