@@ -139,14 +139,15 @@
         <div class="d-flex flex-column bg-light justify-content-center align-items-center"
              style="width: 92%; height: 100%;">
 
-            <%-- Container for dashboard title --%>
+            <%-- Container for graphical view title --%>
             <div class="d-flex justify-content-between align-items-center" style="width: 1162px;">
                 <h2>Graphical View</h2>
 
-                <button type="button" class="btn btn-outline-secondary btn-sm">List View</button>
+                <a href="${pageContext.request.contextPath}/homepage-lv" role="button"
+                   class="btn btn-outline-secondary btn-sm">List View</a>
             </div>
 
-            <%-- Container for dashboard --%>
+            <%-- Container for graphical view --%>
             <span class="d-flex justify-content-center align-items-center border rounded"
                   style="border-width: 1.5px !important; width: 1162px; height: 550px;">
 
