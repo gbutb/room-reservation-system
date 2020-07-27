@@ -120,11 +120,82 @@
         </div>
 
         <%-- Container for list view --%>
-        <span class="d-flex justify-content-center align-items-center border rounded"
+        <span class="d-flex justify-content-center align-items-start border rounded  p-4"
               style="border-width: 1.5px !important; width: 90%; height: 550px;">
 
             <%--TODO: USER CODE START--%>
 
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 10%">Room</th>
+                        <th style="width: 10%">Status</th>
+                        <th style="width: 10%">Floor</th>
+                        <th style="width: 10%">Size</th>
+                        <th style="width: 10%">Air Conditioner</th>
+                        <th>Projector</th>
+                        <th style="width: 6.5%">Room Link</th>
+                     </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                            <td>205</td>
+                            <td>
+                                <svg height="20" width="20">
+                                    <circle cx="10" cy="10" r="8" fill="#dc3545" />
+                                </svg>
+                            </td>
+                            <td>2</td>
+                            <td>medium</td>
+                            <td>yes</td>
+                            <td>yes</td>
+                            <td>
+                                <a class="btn btn-primary"  style="width: 87px" role="button" href="#">
+                                    Enter
+                                </a>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>208</td>
+                            <td>
+                                <svg height="20" width="20">
+                                    <circle cx="10" cy="10" r="8" fill="#28a745" />
+                                </svg>
+                            </td>
+                            <td>2</td>
+                            <td>large</td>
+                            <td>no</td>
+                            <td>yes</td>
+                            <td>
+                                <a class="btn btn-primary" style="width: 87px" role="button" href="#">
+                                    Enter
+                                </a>
+
+                            </td>
+                        </tr>
+                    <c:forEach var="room" items="${rooms}">
+                        <tr>
+                            <td>${room.getId()}</td>
+                            <td>
+                                <svg height="20" width="20">
+                                    <circle cx="10" cy="10" r="8" fill="#28a745" />
+                                </svg>
+                            </td>
+                            <td>${room.getFloor()}</td>
+                            <td>${room.getSize()}</td>
+                            <td>${room.getConditioner()}</td>
+                            <td>${room.getProjector()}</td>
+                            <td>
+                                <a class="btn btn-primary" style="width: 87px" role="button" href="/room?id=${room.getId()}">
+                                    Enter
+                                </a>
+
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+              </table>
 
 
             <%--TODO: USER CODE END--%>
