@@ -1,12 +1,15 @@
 package ge.rrs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReservationSearchParameter implements SearchParameter {
 
     // Search parameters
-    private String key;
-    private String valueExpression;
-    private String relation;
-    private String[] args;
+    private final String key;
+    private final String valueExpression;
+    private final String relation;
+    private final List<String> args;
 
     private boolean empty;
 
@@ -18,63 +21,97 @@ public class ReservationSearchParameter implements SearchParameter {
      * @param valueExpression Expression, with arguments replaced with '?'
      * @param args            Arguments.
      */
-    public ReservationSearchParameter(String key, String relation, String valueExpression, String[] args) {
+    public ReservationSearchParameter(String key, String relation, String valueExpression, List<String> args) {
         this.key = key;
         this.relation = relation;
         this.valueExpression = valueExpression;
         this.args = args;
     }
 
-    static ReservationSearchParameter startsAfter(String dateTime) {
+    static ReservationSearchParameter startsBefore(String dateTime, boolean inclusive) {
+        String relation = " < ";
+        if (inclusive) relation = " <= ";
         return new ReservationSearchParameter(
-                "start_date", " > ", "?", new String[] {dateTime});
+                "start_date", relation, "?",
+                new ArrayList<String>() {
+                    {
+                        add(dateTime);
+                    }
+                });
     }
 
-    static ReservationSearchParameter endsBefore(String dateTime) {
+    static ReservationSearchParameter endsAfter(String dateTime, boolean inclusive) {
+        String relation = " > ";
+        if (inclusive) relation = " >= ";
         return new ReservationSearchParameter(
-                "end_date", " < ", "?", new String[] {dateTime});
+                "end_date", relation, "?",
+                new ArrayList<String>() {
+                    {
+                        add(dateTime);
+                    }
+                });
     }
 
-    static ReservationSearchParameter startsAfterTime(String time) {
+    static ReservationSearchParameter startsBeforeTime(String time, boolean inclusive) {
+        String relation = " < ";
+        if (inclusive) relation = " <= ";
         return new ReservationSearchParameter(
-                "start_date", " > ", "TIME(?)", new String[] {time});
+                "end_date", relation, "TIME(?)",
+                new ArrayList<String>() {
+                    {
+                        add(time);
+                    }
+                });
     }
 
-    static ReservationSearchParameter endsBeforeTime(String time) {
+    static ReservationSearchParameter endsAfterTime(String time, boolean inclusive) {
+        String relation = " > ";
+        if (inclusive) relation = " >= ";
         return new ReservationSearchParameter(
-                "end_date", " < ", "TIME(?)", new String[] {time});
+                "end_date", relation, "TIME(?)",
+                new ArrayList<String>() {
+                    {
+                        add(time);
+                    }
+                });
     }
 
     static ReservationSearchParameter isRepeated(boolean repeated) {
         String repeatedStr = "FALSE";
         if (repeated) repeatedStr = "TRUE";
+
+        List<String> arguments = new ArrayList<>();
+        arguments.add(repeatedStr);
+
         return new ReservationSearchParameter(
-                "do_repeat", " = ", "?", new String[] {repeatedStr});
+                "do_repeat", " = ", "?", arguments);
     }
 
+    // Getter Methods
+
     @Override
-    public String getKey() throws Exception {
+    public String getKey() {
         return key;
     }
 
     @Override
-    public String getValue() throws Exception {
+    public String getValue() {
         return String.format(
-                valueExpression.replace("?", "%s"), (Object) args);
+                valueExpression.replace("?", "%s"), args);
     }
 
     @Override
-    public String getValueExpression() throws Exception {
+    public String getValueExpression() {
         return valueExpression;
     }
 
     @Override
-    public String[] getValueArgs() throws Exception {
+    public List<String> getValueArgs() {
         return args;
     }
 
     @Override
-    public String getRelation() throws Exception {
+    public String getRelation() {
         return relation;
     }
 }
