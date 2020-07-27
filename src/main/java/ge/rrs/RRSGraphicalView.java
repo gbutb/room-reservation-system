@@ -44,7 +44,7 @@ public class RRSGraphicalView {
 
             StringTokenizer stringTokenizer = new StringTokenizer(line, " ");
 
-            rooms.put(String.valueOf(roomId), new ArrayList<String>());
+            rooms.put(String.valueOf(roomId), new ArrayList<>());
             while (stringTokenizer.hasMoreElements()) {
                 String currElement = stringTokenizer.nextToken();
                 rooms.get(String.valueOf(roomId)).add(currElement);

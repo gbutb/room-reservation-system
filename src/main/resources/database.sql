@@ -154,5 +154,5 @@ VALUES (0, 'Human', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqt
        (1, 'Human 1', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO', 'human1@humans.org');
 
 INSERT INTO reservations
-VALUES (0, 200, STR_TO_DATE('10,7,2020 14,40,0', '%d,%m,%Y %H,%i,%s'),
-        STR_TO_DATE('10,7,2020 15,40,0', '%d,%m,%Y %H,%i,%s'), false, 0);
+VALUES (0, 200, STR_TO_DATE('10-7-2020 14:40:00', '%d-%m-%Y %H:%i:%s'),
+        STR_TO_DATE('10-7-2020 15:40:00', '%d-%m-%Y %H:%i:%s'), false, 0);
