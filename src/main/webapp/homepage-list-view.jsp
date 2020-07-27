@@ -120,10 +120,10 @@
     <div class="d-flex flex-column justify-content-center align-items-center bg-light" style="width: 100%; height: 90%;">
 
         <%-- Container for dashboard title --%>
-        <div class="d-flex justify-content-start align-items-center" style="width: 90%;">
+        <div class="d-flex justify-content-between align-items-center" style="width: 90%;">
             <h2>List View</h2>
 
-            <button type="button" class="btn btn-outline-secondary btn-sm">Graphical View</button>
+            <a href="${pageContext.request.contextPath}/homepage-gv?floor=1" role="button" class="btn btn-outline-secondary btn-sm">Graphical View</a>
         </div>
 
         <%-- Container for list view --%>
