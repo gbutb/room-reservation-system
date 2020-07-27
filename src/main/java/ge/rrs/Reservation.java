@@ -2,7 +2,7 @@ package ge.rrs;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class Reservation extends TableEntry {
@@ -34,7 +34,7 @@ public class Reservation extends TableEntry {
 
     @Override
     public Collection<? extends TableEntry> fromResultSet(ResultSet rs) throws SQLException {
-        Collection<Reservation> entries = new ArrayDeque<>();
+        Collection<Reservation> entries = new ArrayList<>();
         while (rs.next()) {
             // Add new entry
             entries.add(new Reservation(
