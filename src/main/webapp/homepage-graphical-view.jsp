@@ -37,10 +37,10 @@
         <div class="d-flex justify-content-center align-items-center" style="width: 1000px; height: 100%;">
 
             <%-- Search by room number --%>
-            <form class="form-inline flex-nowrap m-0" action="search" method="post">
+            <form class="form-inline flex-nowrap m-0">
                 <label for="roomSearch" class="text-light bg-dark mr-2">Room:</label>
                 <input id="roomSearch" class="form-control mr-2" type="number" required style="width: 100px;">
-                <button class="btn btn-primary mr-5" type="submit">Search</button>
+                <button class="btn btn-primary mr-5" type="button">Search</button>
             </form>
 
             <%-- Time based search and advanced search --%>

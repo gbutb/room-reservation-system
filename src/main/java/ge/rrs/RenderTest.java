@@ -20,9 +20,16 @@ public class RenderTest {
 
     @RequestMapping("/homepage")
     public ModelAndView renderDashboard(HttpServletRequest req) throws IOException {
+        ModelAndView mv = new ModelAndView();
         String floorParam = req.getParameter("floor");
 
-        ModelAndView mv = new ModelAndView();
+        mv.setViewName("/homepage-graphical-view");
+        mv.addObject("rooms", fetchData(floorParam));
+
+        return mv;
+    }
+
+    private HashMap<String, ArrayList<String>> fetchData(String floorParam) throws IOException {
         BufferedReader rd = new BufferedReader(new FileReader("src/main/resources/floor-" + floorParam + "-rooms.txt"));
         HashMap<String, ArrayList<String>> rooms = new HashMap<>();
 
@@ -43,9 +50,6 @@ public class RenderTest {
 
         rd.close();
 
-        mv.setViewName("homepage");
-        mv.addObject("rooms", rooms);
-
-        return mv;
+        return rooms;
     }
 }
