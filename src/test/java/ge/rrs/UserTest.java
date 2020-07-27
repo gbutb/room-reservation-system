@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 
 // Spring
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class UserTest {
     // Database credentials
@@ -119,5 +120,29 @@ public class UserTest {
         assertEquals(0, usernames.size());
         assertEquals(0, emails.size());
         assertEquals(1, users.size());
+    }
+
+
+    @Test
+    public void testRegister() throws Exception {
+        RRSUser user = new RRSUser(
+            "testRegisterUsername", 
+            (new BCryptPasswordEncoder()).encode("testRegisterPassword"),
+            "registeredUsers@humans.org",
+            connection);
+        user.save();
+
+
+        // Check if the user registered
+        Collection<SearchParameter> params = new ArrayList<>();
+        params.add(new FreeSearchParameter("username", "=", "testRegisterUsername"));
+        Collection<? extends TableEntry> users = (new RRSUser(connection)).filter(params);
+        assertEquals(1, users.size());
+
+        for (TableEntry found_user : users) {
+            assertEquals(user.getUsername(), ((RRSUser)found_user).getUsername());
+            assertEquals(user.getPassword(), ((RRSUser)found_user).getPassword());
+            assertEquals(user.getEmail(), ((RRSUser)found_user).getEmail());
+        }
     }
 }

@@ -102,7 +102,14 @@ public class RRSUser extends TableEntry implements UserDetails {
 
     @Override
     public void save() throws Exception {
-        throw new Exception("Not implemented yet");
+        // TODO: move this to DBConnection
+        getConnection().executeUpdate(
+            "INSERT INTO accounts VALUES (?, ?, ?, ?)",
+            new String[] {
+                filter(new ArrayList<SearchParameter>()).size() + "",
+                getUsername(),
+                getPassword(),
+                getEmail() });
     }
 
     /////////////////
