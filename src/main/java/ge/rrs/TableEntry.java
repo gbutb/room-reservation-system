@@ -24,8 +24,8 @@ public abstract class TableEntry {
      *  satisfy the relations defined by search parameters.
      * @throws SQLException Should there be any SQL error.
      */
-    public Collection<? extends TableEntry> filter(Collection<SearchParameter> parameters) throws SQLException {
-        DBConnection connection = getConnection();
+    protected static ResultSet filter(Collection<SearchParameter> parameters, DBConnection connection,
+                                    String tableName) throws SQLException {
 
         // Build an SQL command
         StringBuilder sqlCommand = new StringBuilder();
@@ -64,13 +64,12 @@ public abstract class TableEntry {
             sqlCommand.insert(0, " WHERE ");
 
         // Prepend all values
-        sqlCommand.insert(0, "SELECT * FROM " + getTableName());
+        sqlCommand.insert(0, "SELECT * FROM " + tableName);
 
         // Execute query
         String[] argsArray = new String[args.size()];
         argsArray = args.toArray(argsArray);
-        return fromResultSet(
-            connection.executeQuery(sqlCommand.toString(), argsArray));
+        return connection.executeQuery(sqlCommand.toString(), argsArray);
     }
 
 
@@ -82,7 +81,7 @@ public abstract class TableEntry {
      * @return An array of table entry instances.
      * @throws SQLException
      */
-    public abstract Collection<? extends TableEntry> fromResultSet(ResultSet rs) throws SQLException;
+//    public abstract Collection<? extends TableEntry> fromResultSet(ResultSet rs) throws SQLException;
 
     /**
      * @return The name of the table to
