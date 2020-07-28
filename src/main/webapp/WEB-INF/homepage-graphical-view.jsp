@@ -24,6 +24,27 @@
 <%-- Container for entire screen --%>
 <div class="d-flex flex-column" style="width: 100%; height: 100vh; min-width: 1280px; min-height: 720px;">
 
+    <%-- Modal for wrong time inputs --%>
+    <div class="modal fade" id="timeInputsModal" tabindex="-1" role="dialog"
+         aria-labelledby="timeInputsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger" id="timeInputsModalLabel">Incorrect Time Range!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    You can only filter rooms from 09:00 o'clock to 09:00 o'clock of the next day.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <%-- Container for top navigation bar --%>
     <div class="d-flex flex-row justify-content-between align-items-center sticky-top bg-dark"
          style="width: 100%; height: 10%;">
@@ -44,14 +65,15 @@
             </form>
 
             <%-- Time based search and advanced search --%>
-            <form class="form-inline flex-nowrap m-0"
+            <form class="form-inline flex-nowrap m-0 needs-validation" novalidate
                   action="${pageContext.request.contextPath}/homepage-gv?floor=${param.floor}"
                   method="post"
                   id="filterForm">
-                <label for="startTime" class="text-light bg-dark mr-2">From:</label>
-                <input id="startTime" class="form-control mr-2" name="startTime" type="time">
-                <label for="endTime" class="text-light bg-dark mr-2">To:</label>
-                <input id="endTime" class="form-control mr-2" name="endTime" type="time">
+
+                <label for="fromTime" class="text-light bg-dark mr-2">From:</label>
+                <input id="fromTime" class="form-control mr-2" name="fromTime" type="time">
+                <label for="toTime" class="text-light bg-dark mr-2">To:</label>
+                <input id="toTime" class="form-control mr-2" name="toTime" type="time">
 
                 <input name="filter" type="hidden">
 
@@ -190,56 +212,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
-
-<script>
-    $(function () {
-        $('#startTime').change(function () {
-            var startTime = $('#startTime').val();
-            var endTime = $('#endTime').val();
-
-            if (endTime.length === 0) {
-                document.getElementById("endTime").value = startTime;
-            }
-
-            // if (endTime < startTime && endTime > Date.parse('10/02/2020 09:00')) {
-            //     $('#filterBtn').attr("disabled", true);
-            //     alert('hello');
-            // }
-        });
-
-        $('#endTime').change(function () {
-            var startTime = $('#startTime').val();
-            var endTime = $('#endTime').val();
-
-            if (startTime.length === 0) {
-                document.getElementById("startTime").value = endTime;
-            }
-        });
-    });
-
-    function checkTime() {
-        var startTime = $('#startTime').val();
-        var endTime = $('#endTime').val();
-
-        if (startTime.length === 0 && endTime.length === 0) {
-            document.getElementById("filterForm").submit();
-        } else {
-            var startTimeDate = Date.parse('09/02/2020 ' + startTime);
-            var endTimeDate = Date.parse('09/02/2020 ' + endTime);
-
-            if (startTimeDate > Date.parse('09/02/2020 00:00') && startTimeDate < Date.parse('09/02/2020 09:00')) {
-                startTimeDate = Date.parse('10/02/2020 ' + startTime);
-            }
-
-            if (endTimeDate > Date.parse('09/02/2020 00:00') && endTimeDate < Date.parse('09/02/2020 09:00')) {
-                endTimeDate = Date.parse('10/02/2020 ' + endTime);
-            }
-
-            if (endTimeDate < startTimeDate) {
-                alert("...");
-            }
-        }
-    }
-</script>
+<script src="../resources/homepage-graphical-view.js"></script>
 </body>
 </html>
