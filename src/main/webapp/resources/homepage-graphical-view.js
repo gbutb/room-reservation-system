@@ -46,6 +46,8 @@ function checkTime() {
 
         if (toTimeDate < fromTimeDate) {
             $('#timeInputsModal').modal();
+        } else {
+            document.getElementById("filterForm").submit();
         }
     }
 }

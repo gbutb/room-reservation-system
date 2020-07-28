@@ -35,8 +35,8 @@ public class RRSGraphicalView {
     }
 
     private void filterRooms(HttpServletRequest req) {
-        String startTime = req.getParameter("startTime");
-        String endTime = req.getParameter("endTime");
+        String startTime = req.getParameter("fromTime");
+        String endTime = req.getParameter("toTime");
 
         String hasProjector = req.getParameter("hasProjector");
         String hasAirConditioner = req.getParameter("hasAirConditioner");
