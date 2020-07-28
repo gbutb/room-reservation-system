@@ -2,12 +2,26 @@ package ge.rrs;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class Room extends TableEntry {
 
+    // The name of the table to which
+    // this table entry corresponds to.
     private static final String TABLE_NAME = "rooms";
+
+    // Names of the table columns to which
+    // the instance objects of this class correspond to.
+    private static final String ROOM_ID_NAME = "room_id";
+    private static final String ROOM_SIZE_NAME = "room_size";
+    private static final String FLOOR_NAME = "floor";
+    private static final String COMMENT_ID_NAME = "comment_id";
+    private static final String CONDITIONER_NAME = "conditioner";
+    private static final String PROJECTOR_NAME = "projector";
+    private static final String RENDER_DATA_NAME = "render_data";
 
     // Reference to DBConnection
     private DBConnection connection;
@@ -23,6 +37,24 @@ public class Room extends TableEntry {
 
     public Room(int roomId) {
         // TODO: implement this;
+    }
+
+    /**
+     * Initializes Room using given ResultSet's current row
+     *
+     * @param rSet       user given ResultSet of a database query of filtered rooms
+     * @param connection DBConnection
+     * @throws SQLException SQL database error
+     */
+    public Room(ResultSet rSet, DBConnection connection) throws SQLException {
+        roomId = rSet.getInt(ROOM_ID_NAME);
+        roomSize = rSet.getInt(ROOM_SIZE_NAME);
+        floor = rSet.getInt(FLOOR_NAME);
+        commentId = rSet.getInt(COMMENT_ID_NAME);
+        conditioner = rSet.getBoolean(CONDITIONER_NAME);
+        projector = rSet.getBoolean(PROJECTOR_NAME);
+        renderData = rSet.getString(RENDER_DATA_NAME);
+        this.connection = connection;
     }
 
     public Room(int roomId, int roomSize, int floor, int commentId,
@@ -53,42 +85,44 @@ public class Room extends TableEntry {
     }
 
     @Override
-    public Collection<? extends TableEntry> fromResultSet(ResultSet rs) throws SQLException {
-        Collection<Room> entries = new ArrayList<>();
-        while (rs.next()) {
-            // Add new entry
-            entries.add(new Room(
-                    rs.getInt("room_id"),
-                    rs.getInt("room_size"),
-                    rs.getInt("floor"),
-                    rs.getInt("comment_id"),
-                    rs.getBoolean("conditioner"),
-                    rs.getBoolean("projector"),
-                    rs.getString("render_data"),
-                    getConnection()
-            ));
-        }
-        return entries;
-    }
-
-    @Override
     public String getTableName() {
         return TABLE_NAME;
     }
 
-    @Override
-    public void save() throws Exception {
-
+    public static Collection<Room> getFilteredRooms(SearchParameters parameters,
+                                                     DBConnection connection) throws SQLException {
+        ResultSet rs = TableEntry.filter(parameters, connection, Room.TABLE_NAME);
+        Collection<Room> entries = new ArrayList<>();
+        while (rs.next()) {
+            // Add new entry
+            entries.add(new Room(rs, connection));
+        }
+        return entries;
     }
 
-//    public Collection getReservations() {
-//
-//    }
-
-    public boolean isOccupied() {
-        return true;
+    /**
+     * Returns a collection of reservations of the room
+     *
+     * @return returns a collection of reservations of the room
+     * @throws Exception SQL database error
+     */
+    public Collection<Reservation> getReservations() throws Exception {
+        ReservationSearchParameters rParams = new ReservationSearchParameters();
+        rParams.addParameter(new FreeSearchParameter("room_id", " = ",
+                Integer.toString(roomId)));
+        return Reservation.getFilteredReservations(rParams, getConnection());
     }
 
+    public boolean isOccupied() throws Exception {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+
+        ReservationSearchParameters parameters = new ReservationSearchParameters();
+        parameters.addRoomSpecificDateOverlapParameter(dtf.format(now));
+        Collection<Reservation> reservations = Reservation.getFilteredReservations(parameters, getConnection());
+
+        return reservations.size() != 0;
+    }
 
     // Getter Methods
 
@@ -118,5 +152,10 @@ public class Room extends TableEntry {
 
     public String getRenderData() {
         return renderData;
+    }
+
+    @Override
+    public void save() {
+
     }
 }
