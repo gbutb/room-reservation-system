@@ -35,8 +35,8 @@ public class RRSGraphicalView {
     }
 
     private void filterRooms(HttpServletRequest req) {
-        String startTime = req.getParameter("fromTime");
-        String endTime = req.getParameter("toTime");
+        String fromTime = req.getParameter("fromTime");
+        String toTime = req.getParameter("toTime");
 
         String hasProjector = req.getParameter("hasProjector");
         String hasAirConditioner = req.getParameter("hasAirConditioner");
@@ -46,17 +46,58 @@ public class RRSGraphicalView {
         String roomSize3 = req.getParameter("roomSize3");
         String roomSize4 = req.getParameter("roomSize4");
 
-        System.out.println(startTime);
-        System.out.println(endTime);
+        if (fromTime.length() != 0 && toTime.length() != 0) {
+            // TODO: Set time range attribute to filter parameter
+        }
 
-        System.out.println(hasProjector);
+        System.out.println(fromTime);
+        System.out.println(toTime);
+
         System.out.println(hasAirConditioner);
+        System.out.println(hasProjector);
 
         System.out.println(roomSize1);
         System.out.println(roomSize2);
         System.out.println(roomSize3);
         System.out.println(roomSize4);
+
+//        addParameter(hasAirConditioner, 1);
     }
+
+//    private ArrayList<Room> addParameter(String parameter, int method) {
+//        RoomSearchParameters rsp = new RoomSearchParameters();
+//
+//        if (parameter != null) {
+//            switch (parameter) {
+//                case "on":
+//                    addFilterParameter(rsp, method);
+//            }
+//        }
+//
+//        return Room.getFilteredRooms(rsp, connection);
+//    }
+//
+//    private void addFilterParameter(RoomSearchParameters rsp, int method) {
+//        switch (method) {
+//            case 1:
+//                rsp.addAirConditionerParameter();
+//                break;
+//            case 2:
+//                rsp.addProjectorParameter();
+//                break;
+//            case 3:
+//                rsp.addRoomSizeParameter(1);
+//                break;
+//            case 4:
+//                rsp.addRoomSizeParameter(2);
+//                break;
+//            case 5:
+//                rsp.addRoomSizeParameter(3);
+//                break;
+//            case 6:
+//                rsp.addRoomSizeParameter(4);
+//        }
+//    }
 
     public HashMap<String, ArrayList<String>> fetchData(String floorParam) throws IOException {
         BufferedReader rd = new BufferedReader(new FileReader("src/main/resources/floor-" + floorParam + "-rooms.txt"));

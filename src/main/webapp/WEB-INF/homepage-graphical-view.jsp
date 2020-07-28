@@ -84,16 +84,16 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="advancedSearch">
                         <h6 class="dropdown-header p-0 ml-2 mb-1">Must include:</h6>
                         <div class="d-flex justify-content-start align-items-center" style="width: 315px;">
-                            <input type="checkbox" name="hasProjector" class="form-check-input ml-3" id="hasProjector">
-                            <label class="form-check-label" for="hasProjector">
-                                Projector
+                            <input type="checkbox" name="hasAirConditioner" class="form-check-input ml-3" id="hasAirConditioner">
+                            <label class="form-check-label" for="hasAirConditioner">
+                                Air Conditioner
                             </label>
                         </div>
                         <div class="d-flex justify-content-start align-items-center">
-                            <input type="checkbox" name="hasAirConditioner" class="form-check-input ml-3"
-                                   id="hasAirConditioner">
-                            <label class="form-check-label" for="hasAirConditioner">
-                                Air Conditioner
+                            <input type="checkbox" name="hasProjector" class="form-check-input ml-3"
+                                   id="hasProjector">
+                            <label class="form-check-label" for="hasProjector">
+                                Projector
                             </label>
                         </div>
                         <h6 class="dropdown-header p-0 ml-2 mb-1 mt-2">Room size:</h6>
