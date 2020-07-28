@@ -102,4 +102,17 @@ public class ReservationSearchParameters implements SearchParameters {
         addParametersClause(" OR ", ReservationSearchParameter.startsBeforeTime(timeTo, false),
                 ReservationSearchParameter.endsAfterTime(timeTo, true));
     }
+
+    /**
+     * Adds parameters, which serve fetching reservations
+     * which contain the user given date
+     *
+     * @param date user given date
+     * @throws Exception error
+     */
+    public void addRoomSpecificDateOverlapParameter(String date) throws Exception {
+        addParameter(ReservationSearchParameter.containsDate(date));
+        addParametersClause(" OR ", ReservationSearchParameter.containsTime(date),
+                ReservationSearchParameter.isRepeated(true));
+    }
 }
