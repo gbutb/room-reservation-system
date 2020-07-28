@@ -46,7 +46,8 @@
             <%-- Time based search and advanced search --%>
             <form class="form-inline flex-nowrap m-0"
                   action="${pageContext.request.contextPath}/homepage-gv?floor=${param.floor}"
-                  method="post">
+                  method="post"
+                  id="filterForm">
                 <label for="startTime" class="text-light bg-dark mr-2">From:</label>
                 <input id="startTime" class="form-control mr-2" name="startTime" type="time">
                 <label for="endTime" class="text-light bg-dark mr-2">To:</label>
@@ -55,7 +56,7 @@
                 <input name="filter" type="hidden">
 
                 <div class="btn-group">
-                    <button class="btn btn-primary" type="submit">Filter</button>
+                    <button class="btn btn-primary" id="filterBtn" type="button" onclick="checkTime()">Filter</button>
                     <button class="btn btn-primary dropdown-toggle" type="button" id="advancedSearch"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="advancedSearch">
@@ -67,9 +68,9 @@
                             </label>
                         </div>
                         <div class="d-flex justify-content-start align-items-center">
-                            <input type="checkbox" name="hasConditioner" class="form-check-input ml-3"
-                                   id="hasConditioner">
-                            <label class="form-check-label" for="hasConditioner">
+                            <input type="checkbox" name="hasAirConditioner" class="form-check-input ml-3"
+                                   id="hasAirConditioner">
+                            <label class="form-check-label" for="hasAirConditioner">
                                 Air Conditioner
                             </label>
                         </div>
@@ -189,5 +190,56 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
+
+<script>
+    $(function () {
+        $('#startTime').change(function () {
+            var startTime = $('#startTime').val();
+            var endTime = $('#endTime').val();
+
+            if (endTime.length === 0) {
+                document.getElementById("endTime").value = startTime;
+            }
+
+            // if (endTime < startTime && endTime > Date.parse('10/02/2020 09:00')) {
+            //     $('#filterBtn').attr("disabled", true);
+            //     alert('hello');
+            // }
+        });
+
+        $('#endTime').change(function () {
+            var startTime = $('#startTime').val();
+            var endTime = $('#endTime').val();
+
+            if (startTime.length === 0) {
+                document.getElementById("startTime").value = endTime;
+            }
+        });
+    });
+
+    function checkTime() {
+        var startTime = $('#startTime').val();
+        var endTime = $('#endTime').val();
+
+        if (startTime.length === 0 && endTime.length === 0) {
+            document.getElementById("filterForm").submit();
+        } else {
+            var startTimeDate = Date.parse('09/02/2020 ' + startTime);
+            var endTimeDate = Date.parse('09/02/2020 ' + endTime);
+
+            if (startTimeDate > Date.parse('09/02/2020 00:00') && startTimeDate < Date.parse('09/02/2020 09:00')) {
+                startTimeDate = Date.parse('10/02/2020 ' + startTime);
+            }
+
+            if (endTimeDate > Date.parse('09/02/2020 00:00') && endTimeDate < Date.parse('09/02/2020 09:00')) {
+                endTimeDate = Date.parse('10/02/2020 ' + endTime);
+            }
+
+            if (endTimeDate < startTimeDate) {
+                alert("...");
+            }
+        }
+    }
+</script>
 </body>
 </html>
