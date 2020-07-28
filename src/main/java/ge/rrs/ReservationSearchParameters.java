@@ -1,76 +1,15 @@
 package ge.rrs;
 
+import com.sun.org.apache.xpath.internal.operations.And;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-public class ReservationSearchParameters implements SearchParameters {
-
-    // Data structure to construct a statement from all user given parameters
-    private final StringBuilder parameters;
-    // Data Structure to save all parameters' value expression's arguments
-    List<String> arguments;
+public class ReservationSearchParameters extends SearchParameters {
 
     public ReservationSearchParameters() {
-        parameters = new StringBuilder();
-        arguments = new ArrayList<>();
-    }
-
-    @Override
-    public void addParameter(SearchParameter parameter) throws Exception {
-        if (parameters.length() != 0) parameters.append(" AND ");
-        parameters.append(parameter.getKey());
-        parameters.append(parameter.getRelation());
-        parameters.append(parameter.getValueExpression());
-
-        arguments.addAll(parameter.getValueArgs());
-    }
-
-    @Override
-    public void addParameter(String operator, SearchParameter parameter) throws Exception {
-        if (parameters.length() != 0) parameters.append(operator);
-        parameters.append(parameter.getKey());
-        parameters.append(parameter.getRelation());
-        parameters.append(parameter.getValueExpression());
-
-        arguments.addAll(parameter.getValueArgs());
-    }
-
-    @Override
-    public void addParametersClause(SearchParameter... inputParameters) throws Exception {
-        if (parameters.length() != 0) parameters.append(" AND ");
-        addOpeningBracket();
-        for (SearchParameter parameter : inputParameters) {
-            addParameter(parameter);
-        }
-        addClosingBracket();
-    }
-
-    @Override
-    public void addParametersClause(String operator, SearchParameter... inputParameters) throws Exception {
-        if (parameters.length() != 0) parameters.append(operator);
-        addOpeningBracket();
-        for (SearchParameter parameter : inputParameters) {
-            addParameter(parameter);
-        }
-        addClosingBracket();
-    }
-
-    public void addOpeningBracket() {
-        parameters.append(" ( ");
-    }
-
-    public void addClosingBracket() {
-        parameters.append(" ) ");
-    }
-
-    @Override
-    public String getParametersStatement() {
-        return parameters.toString();
-    }
-
-    @Override
-    public List<String> getArguments() {
-        return arguments;
+        super();
     }
 
     /**
@@ -81,11 +20,21 @@ public class ReservationSearchParameters implements SearchParameters {
      * @param dateTo   end of the date-time interval
      */
     public void addDateTimeRangeOverlapParameter(String dateFrom, String dateTo) throws Exception {
-        addParametersClause(ReservationSearchParameter.startsBefore(dateFrom, true),
-                ReservationSearchParameter.endsAfter(dateFrom, false));
-        addParametersClause(" OR ", ReservationSearchParameter.startsBefore(dateTo, false),
-                ReservationSearchParameter.endsAfter(dateTo, true));
+        Clause tempClause = new Clause();
 
+        Clause startOverlap = new Clause();
+        startOverlap.addParameter(ReservationSearchParameter.startsBefore(dateFrom, true));
+        startOverlap.addParameter("AND", ReservationSearchParameter.endsAfter(dateFrom, false));
+
+        Clause endOverlap = new Clause();
+        endOverlap.addParameter(ReservationSearchParameter.startsBefore(dateTo, false));
+        endOverlap.addParameter("AND", ReservationSearchParameter.endsAfter(dateTo, true));
+
+        tempClause.addClause(startOverlap);
+        tempClause.addClause("OR", endOverlap);
+
+        if (clause.isEmpty()) clause.addClause(tempClause);
+        else clause.addClause("AND", tempClause);
     }
 
     /**
@@ -96,11 +45,26 @@ public class ReservationSearchParameters implements SearchParameters {
      * @param timeTo   end of the time interval
      */
     public void addRepeatAndTimeRangeOverlapParameter(String timeFrom, String timeTo) throws Exception {
-        addParameter(ReservationSearchParameter.isRepeated(true));
-        addParametersClause(ReservationSearchParameter.startsBeforeTime(timeFrom, true),
-                ReservationSearchParameter.endsAfterTime(timeFrom, false));
-        addParametersClause(" OR ", ReservationSearchParameter.startsBeforeTime(timeTo, false),
-                ReservationSearchParameter.endsAfterTime(timeTo, true));
+        Clause tempClause = new Clause();
+        tempClause.addParameter(ReservationSearchParameter.isRepeated(true));
+
+        Clause timeRangeClause = new Clause();
+
+        Clause startOverlap = new Clause();
+        startOverlap.addParameter(ReservationSearchParameter.startsBeforeTime(timeFrom, true));
+        startOverlap.addParameter("AND", ReservationSearchParameter.endsAfterTime(timeFrom, false));
+
+        Clause endOverlap = new Clause();
+        endOverlap.addParameter(ReservationSearchParameter.startsBeforeTime(timeTo, false));
+        endOverlap.addParameter("AND", ReservationSearchParameter.endsAfterTime(timeTo, true));
+
+        timeRangeClause.addClause(startOverlap);
+        timeRangeClause.addClause("OR", endOverlap);
+
+        tempClause.addClause("AND", timeRangeClause);
+
+        if (clause.isEmpty()) clause.addClause(tempClause);
+        else clause.addClause("AND", tempClause);
     }
 
     /**
@@ -111,10 +75,22 @@ public class ReservationSearchParameters implements SearchParameters {
      * @throws Exception error
      */
     public void addRoomSpecificDateOverlapParameter(int roomId, String date) throws Exception {
-        addParameter(ReservationSearchParameter.ofRoom(roomId));
-        addParameter(" AND (", ReservationSearchParameter.containsDate(date));
-        addParametersClause(" OR ", ReservationSearchParameter.containsTime(date),
-                ReservationSearchParameter.isRepeated(true));
-        addClosingBracket();
+        Clause tempClause = new Clause();
+
+        tempClause.addParameter(ReservationSearchParameter.ofRoom(roomId));
+
+        Clause timeContainClause = new Clause();
+        timeContainClause.addParameter(ReservationSearchParameter.containsDate(date));
+
+        Clause rptTimeContainClause = new Clause();
+        rptTimeContainClause.addParameter(ReservationSearchParameter.isRepeated(true));
+        rptTimeContainClause.addParameter("AND", ReservationSearchParameter.containsTime(date));
+
+        timeContainClause.addClause("OR", rptTimeContainClause);
+
+        tempClause.addClause("AND", timeContainClause);
+
+        if (clause.isEmpty()) clause.addClause(tempClause);
+        else clause.addClause("AND", tempClause);
     }
 }

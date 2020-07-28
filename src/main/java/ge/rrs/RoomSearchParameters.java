@@ -4,74 +4,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomSearchParameters implements SearchParameters {
-
-    // Data structure to save all user given parameters
-    private final StringBuilder parameters;
-    // Data Structure to save all parameters' value expression's arguments
-    List<String> arguments;
+public class RoomSearchParameters extends SearchParameters {
 
     public RoomSearchParameters() {
-        parameters = new StringBuilder();
-        arguments = new ArrayList<>();
-    }
-
-    @Override
-    public void addParameter(SearchParameter parameter) throws Exception {
-        if (parameters.length() != 0) parameters.append(" AND ");
-        parameters.append(parameter.getKey());
-        parameters.append(parameter.getRelation());
-        parameters.append(parameter.getValueExpression());
-
-        arguments.addAll(parameter.getValueArgs());
-    }
-
-    @Override
-    public void addParameter(String operator, SearchParameter parameter) throws Exception {
-        if (parameters.length() != 0) parameters.append(operator);
-        parameters.append(parameter.getKey());
-        parameters.append(parameter.getRelation());
-        parameters.append(parameter.getValueExpression());
-
-        arguments.addAll(parameter.getValueArgs());
-    }
-
-    @Override
-    public void addParametersClause(SearchParameter... inputParameters) throws Exception {
-        if (parameters.length() != 0) parameters.append(" AND ");
-        parameters.append("( ");
-        for (SearchParameter parameter : inputParameters) {
-            parameters.append(parameter.getKey());
-            parameters.append(parameter.getRelation());
-            parameters.append(parameter.getValueExpression());
-
-            arguments.addAll(parameter.getValueArgs());
-        }
-        parameters.append(" )");
-    }
-
-    @Override
-    public void addParametersClause(String operator, SearchParameter... inputParameters) throws Exception {
-        if (parameters.length() != 0) parameters.append(operator);
-        parameters.append("( ");
-        for (SearchParameter parameter : inputParameters) {
-            parameters.append(parameter.getKey());
-            parameters.append(parameter.getRelation());
-            parameters.append(parameter.getValueExpression());
-
-            arguments.addAll(parameter.getValueArgs());
-        }
-        parameters.append(" )");
-    }
-
-    @Override
-    public String getParametersStatement() {
-        return parameters.toString();
-    }
-
-    @Override
-    public List<String> getArguments() {
-        return arguments;
+        super();
     }
 
     /**
