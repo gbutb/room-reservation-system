@@ -69,7 +69,11 @@
     bootstrapValidate('#username', 'min:5:Please enter minimum 5 symbols.')
     bootstrapValidate('#mail', 'email:Please enter a valid mail.')
     bootstrapValidate('#repeatPassword', 'matches:#password:Your passwords should match')
-
+    function checkIfRight(validUsername,validMail,validNumber,samePasswords){
+        if(validMail&&validUsername&&validNumber&&samePasswords){
+            $('#submit').attr("disabled",false);
+        }
+    }
     $(function () {
         var validUsername=false;
         var validMail=false;
@@ -81,6 +85,7 @@
                 validUsername=false;
             } else {
                 validUsername=true;
+                checkIfRight(validUsername,validMail,validNumber,samePasswords);
             }
         });
 
@@ -90,7 +95,7 @@
                 validMail=false
             } else {
                 validMail=true;
-
+                checkIfRight(validUsername,validMail,validNumber,samePasswords);
             }
         });
         $('#repeatPassword').keyup(function () {
@@ -99,6 +104,7 @@
                 samePasswords=false;
             } else {
                 samePasswords=true;
+                checkIfRight(validUsername,validMail,validNumber,samePasswords);
             }
         });
         $('#number').keyup(function () {
@@ -107,9 +113,7 @@
                 validNumber=false;
             } else {
                 validNumber=true;
-                if(validMail&&validUsername&&validNumber&&samePasswords){
-                    $('#submit').attr("disabled",false);
-                }
+                checkIfRight(validUsername,validMail,validNumber,samePasswords);
             }
         });
     });
