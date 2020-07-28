@@ -38,29 +38,29 @@ public class ReservationSearchParameters implements SearchParameters {
     @Override
     public void addParametersClause(SearchParameter... inputParameters) throws Exception {
         if (parameters.length() != 0) parameters.append(" AND ");
-        parameters.append("( ");
+        addOpeningBracket();
         for (SearchParameter parameter : inputParameters) {
-            parameters.append(parameter.getKey());
-            parameters.append(parameter.getRelation());
-            parameters.append(parameter.getValueExpression());
-
-            arguments.addAll(parameter.getValueArgs());
+            addParameter(parameter);
         }
-        parameters.append(" )");
+        addClosingBracket();
     }
 
     @Override
     public void addParametersClause(String operator, SearchParameter... inputParameters) throws Exception {
         if (parameters.length() != 0) parameters.append(operator);
-        parameters.append("( ");
+        addOpeningBracket();
         for (SearchParameter parameter : inputParameters) {
-            parameters.append(parameter.getKey());
-            parameters.append(parameter.getRelation());
-            parameters.append(parameter.getValueExpression());
-
-            arguments.addAll(parameter.getValueArgs());
+            addParameter(parameter);
         }
-        parameters.append(" )");
+        addClosingBracket();
+    }
+
+    public void addOpeningBracket() {
+        parameters.append(" ( ");
+    }
+
+    public void addClosingBracket() {
+        parameters.append(" ) ");
     }
 
     @Override
@@ -110,9 +110,11 @@ public class ReservationSearchParameters implements SearchParameters {
      * @param date user given date
      * @throws Exception error
      */
-    public void addRoomSpecificDateOverlapParameter(String date) throws Exception {
-        addParameter(ReservationSearchParameter.containsDate(date));
+    public void addRoomSpecificDateOverlapParameter(int roomId, String date) throws Exception {
+        addParameter(ReservationSearchParameter.ofRoom(roomId));
+        addParameter(" AND (", ReservationSearchParameter.containsDate(date));
         addParametersClause(" OR ", ReservationSearchParameter.containsTime(date),
                 ReservationSearchParameter.isRepeated(true));
+        addClosingBracket();
     }
 }
