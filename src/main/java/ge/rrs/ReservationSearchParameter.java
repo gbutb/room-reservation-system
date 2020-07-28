@@ -32,7 +32,7 @@ public class ReservationSearchParameter implements SearchParameter {
         String relation = " < ";
         if (inclusive) relation = " <= ";
         return new ReservationSearchParameter(
-                "start_date", relation, "?",
+                "start_date", relation, "STR_TO_DATE(?)",
                 new ArrayList<String>() {
                     {
                         add(dateTime);
@@ -44,7 +44,7 @@ public class ReservationSearchParameter implements SearchParameter {
         String relation = " > ";
         if (inclusive) relation = " >= ";
         return new ReservationSearchParameter(
-                "end_date", relation, "?",
+                "end_date", relation, "STR_TO_DATE(?)",
                 new ArrayList<String>() {
                     {
                         add(dateTime);
@@ -85,6 +85,36 @@ public class ReservationSearchParameter implements SearchParameter {
 
         return new ReservationSearchParameter(
                 "do_repeat", " = ", "?", arguments);
+    }
+
+    static ReservationSearchParameter containsDate(String date) {
+        return new ReservationSearchParameter(
+                "TO_DATE(?)", " BETWEEN ", "start_date AND end_date",
+                new ArrayList<String>() {
+                    {
+                        add(date);
+                    }
+                });
+    }
+
+    static ReservationSearchParameter containsTime(String time) {
+        return new ReservationSearchParameter(
+                "TIME(?)", " BETWEEN ", "start_date AND end_date",
+                new ArrayList<String>() {
+                    {
+                        add(time);
+                    }
+                });
+    }
+
+    static ReservationSearchParameter ofRoom(int roomId) {
+        return new ReservationSearchParameter(
+                "room_id", " = ", "?",
+                new ArrayList<String>() {
+                    {
+                        add("" + roomId);
+                    }
+                });
     }
 
     // Getter Methods
