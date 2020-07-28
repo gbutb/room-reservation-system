@@ -14,13 +14,13 @@ CREATE TABLE room_comment
 
 CREATE TABLE rooms
 (
-    room_id     INT PRIMARY KEY,
-    room_size   INT,
-    floor       INT,
-    conditioner BOOLEAN,
-    projector   BOOLEAN,
-    comment_id  INT,
-    render_data VARCHAR(255),
+    room_id         INT PRIMARY KEY,
+    room_size       INT,
+    floor           INT,
+    air_conditioner BOOLEAN,
+    projector       BOOLEAN,
+    comment_id      INT,
+    render_data     VARCHAR(255),
     FOREIGN KEY (comment_id) REFERENCES room_comment (comment_id)
 );
 
