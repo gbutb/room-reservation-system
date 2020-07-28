@@ -55,7 +55,6 @@ public class RRSUserService implements UserDetailsService {
      * @param user: New user object.
      */
     public void registerNewUser(RRSUser user) throws Exception {
-        System.out.println("Saving user: " + user.getUsername());
         user.save();
     }
 }
