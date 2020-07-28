@@ -25,13 +25,37 @@ public class RRSGraphicalView {
         String isFiltered = req.getParameter("filter");
 
         if (isFiltered != null) {
-            // TODO: implement filterRooms()...
+            filterRooms(req);
         }
 
         mv.setViewName("/homepage-graphical-view");
         mv.addObject("rooms", fetchData(floorParam));
 
         return mv;
+    }
+
+    private void filterRooms(HttpServletRequest req) {
+        String startTime = req.getParameter("startTime");
+        String endTime = req.getParameter("endTime");
+
+        String hasProjector = req.getParameter("hasProjector");
+        String hasAirConditioner = req.getParameter("hasAirConditioner");
+
+        String roomSize1 = req.getParameter("roomSize1");
+        String roomSize2 = req.getParameter("roomSize2");
+        String roomSize3 = req.getParameter("roomSize3");
+        String roomSize4 = req.getParameter("roomSize4");
+
+        System.out.println(startTime);
+        System.out.println(endTime);
+
+        System.out.println(hasProjector);
+        System.out.println(hasAirConditioner);
+
+        System.out.println(roomSize1);
+        System.out.println(roomSize2);
+        System.out.println(roomSize3);
+        System.out.println(roomSize4);
     }
 
     public HashMap<String, ArrayList<String>> fetchData(String floorParam) throws IOException {
