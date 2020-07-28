@@ -24,7 +24,7 @@ public class Room extends TableEntry {
     private static final String RENDER_DATA_NAME = "render_data";
 
     // Reference to DBConnection
-    private DBConnection connection;
+    private final DBConnection connection;
 
     // Room Details
     private int roomId;
@@ -34,10 +34,6 @@ public class Room extends TableEntry {
     private boolean conditioner;
     private boolean projector;
     private String renderData;
-
-    public Room(int roomId) {
-        // TODO: implement this;
-    }
 
     /**
      * Initializes Room using given ResultSet's current row
@@ -118,7 +114,7 @@ public class Room extends TableEntry {
         LocalDateTime now = LocalDateTime.now();
 
         ReservationSearchParameters parameters = new ReservationSearchParameters();
-        parameters.addRoomSpecificDateOverlapParameter(dtf.format(now));
+        parameters.addRoomSpecificDateOverlapParameter(getRoomId(), dtf.format(now));
         Collection<Reservation> reservations = Reservation.getFilteredReservations(parameters, getConnection());
 
         return reservations.size() != 0;
