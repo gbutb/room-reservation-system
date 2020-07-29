@@ -26,7 +26,10 @@ public class SearchParameters {
      */
     public void addParameter(SearchParameter parameter) throws Exception {
         if (parameter.isEmpty()) return;
-        if (clause.isEmpty()) clause.addParameter(parameter);
+        if (clause.isEmpty()) {
+            clause.addParameter(parameter);
+            return;
+        }
         clause.addParameter("AND", parameter);
     }
 
@@ -40,7 +43,10 @@ public class SearchParameters {
      */
     public void addParameter(String operator, SearchParameter parameter) throws Exception {
         if (parameter.isEmpty()) return;
-        if (clause.isEmpty()) clause.addParameter(parameter);
+        if (clause.isEmpty()) {
+            clause.addParameter(parameter);
+            return;
+        }
         clause.addParameter(operator, parameter);
     }
 

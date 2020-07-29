@@ -27,7 +27,7 @@ public class SearchParametersTest {
     @Test
     public void testSingle() throws Exception {
         searchParameters.addParameter(new FreeSearchParameter("key", "=", "value"));
-        assertEquals("key=?", searchParameters.getParametersStatement());
+        assertEquals("(key=?)", searchParameters.getParametersStatement());
         assertArrayEquals(
             new String[] {"value"},
             searchParameters.getArguments().toArray());
@@ -37,7 +37,7 @@ public class SearchParametersTest {
     public void testMultiple() throws Exception {
         int numParams = 10;
         StringBuilder expected = new StringBuilder();
-        if (numParams > 1)
+        if (numParams >= 1)
             expected.append("(");
         for (int i = 0; i < numParams; ++i) {
             // Build from search params
@@ -53,7 +53,7 @@ public class SearchParametersTest {
             if (i != numParams - 1)
                 expected.append(" AND ");
         }
-        if (numParams > 1)
+        if (numParams >= 1)
             expected.append(")");
 
         assertEquals(
