@@ -60,4 +60,18 @@ public class SearchParametersTest {
             expected.toString(),
             searchParameters.getParametersStatement());
     }
+
+    @Test
+    public void testDifferentOperators() throws Exception {
+        searchParameters.addParameter(
+            new FreeSearchParameter("param0", "=", "value0"));
+        searchParameters.addParameter("OR",
+            new FreeSearchParameter("param1", "=", "value1"));
+        assertEquals(
+            "(param0=? OR param1=?)",
+            searchParameters.getParametersStatement());
+        assertArrayEquals(
+            new String[] {"value0", "value1"},
+            searchParameters.getArguments().toArray());
+    }
 }
