@@ -61,7 +61,6 @@
         var password = false;
 
         $("#username").keyup(function() {
-            console.log("FML");
             if ($(this).val().length < 1) {
                 $("#submit").attr("disabled", true);
                 username = false;
@@ -72,7 +71,6 @@
         });
 
         $("#password").keyup(function() {
-            console.log("FMPL");
             if ($(this).val().length < 1) {
                 $('#submit').attr("disabled", true);
                 password = false;

@@ -19,7 +19,7 @@
             <div id="register-column" class="col-md-6">
 
                 <div  id="register-box" class="col-md-10">
-                    <form id="register-form" class="form" action="login" method="post">
+                    <form id="register-form" class="form" th:action="@{/register}" method="POST">
                         <h2 class="text-center text-dark">Register</h2>
                         <div class="form-group">
                             <label  for="username" class="text-dark">Username: </label><br>
@@ -28,7 +28,7 @@
 
                         <div class="form-group">
                             <label  for="mail" class="text-dark">Mail: </label><br>
-                            <input type="text" name="mail" id="mail" class="form-control">
+                            <input type="text" name="email" id="mail" class="form-control">
                         </div>
                         <div class="form-group">
                             <label for="password"  class="text-dark">Password: </label>
@@ -36,9 +36,9 @@
                             <input type="password"  name="password" id="password" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="password"  class="text-dark">Repeat Password: </label>
+                            <label for="repeatPassword"  class="text-dark">Repeat Password: </label>
                             <br>
-                            <input type="password"  name="password" id="repeatPassword" class="form-control">
+                            <input type="password" id="repeatPassword" class="form-control">
                         </div>
                         <div class="form-group">
                             <label for="number"  class="text-dark">Phone Number: </label>
@@ -69,6 +69,7 @@
     bootstrapValidate('#username', 'min:5:Please enter minimum 5 symbols.')
     bootstrapValidate('#mail', 'email:Please enter a valid mail.')
     bootstrapValidate('#repeatPassword', 'matches:#password:Your passwords should match')
+
     function checkIfRight(validUsername,validMail,validNumber,samePasswords){
         if(validMail&&validUsername&&validNumber&&samePasswords){
             $('#submit').attr("disabled",false);
