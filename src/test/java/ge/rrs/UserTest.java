@@ -3,6 +3,7 @@ package ge.rrs;
 import java.sql.SQLException;
 import java.util.*;
 
+import org.junit.jupiter.api.BeforeEach;
 // JUnit
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -40,10 +41,9 @@ public class UserTest {
 
     @Test
     public void testAllQuery() throws Exception {
-        Collection<SearchParameter> params = new ArrayList<>();
-        params.add(new FreeSearchParameter());
-        RRSUser nullUser = new RRSUser(connection);
-        Collection<? extends TableEntry> users = nullUser.filter(params);
+        SearchParameters params = new SearchParameters();
+        params.addParameter(new FreeSearchParameter());
+        Collection<RRSUser> users = RRSUser.getFilteredUsers(params, connection);
         assertEquals(2, users.size());
 
         Set<String> usernames = new HashSet<>();
@@ -69,10 +69,9 @@ public class UserTest {
 
     @Test
     public void testUserQuery() throws Exception {
-        Collection<SearchParameter> params = new ArrayList<>();
-        params.add(new FreeSearchParameter("username", "=", "Human 1"));
-        RRSUser nullUser = new RRSUser(connection);
-        Collection<? extends TableEntry> users = nullUser.filter(params);
+        SearchParameters params = new SearchParameters();
+        params.addParameter(new FreeSearchParameter("username", "=", "Human 1"));
+        Collection<RRSUser> users = RRSUser.getFilteredUsers(params, connection);
         assertEquals(1, users.size());
 
         Set<String> usernames = new HashSet<>();
@@ -95,12 +94,11 @@ public class UserTest {
     }
 
     @Test
-    public void testUserMultiQuery() throws SQLException {
-        Collection<SearchParameter> params = new ArrayList<>();
-        params.add(new FreeSearchParameter("username", "=", "Human 1"));
-        params.add(new FreeSearchParameter("email", "=", "human1@humans.org"));
-        RRSUser nullUser = new RRSUser(connection);
-        Collection<? extends TableEntry> users = nullUser.filter(params);
+    public void testUserMultiQuery() throws Exception {
+        SearchParameters params = new SearchParameters();
+        params.addParameter(new FreeSearchParameter("username", "=", "Human 1"));
+        params.addParameter(new FreeSearchParameter("email", "=", "human1@humans.org"));
+        Collection<? extends TableEntry> users = RRSUser.getFilteredUsers(params, connection);
         assertEquals(1, users.size());
 
         Set<String> usernames = new HashSet<>();

@@ -23,28 +23,25 @@ public class RoomTest {
 
     @Test
     public void testAllQuery() throws Exception {
-        Collection<SearchParameter> params = new ArrayList<>();
-        params.add(new FreeSearchParameter());
-        Room nullRoom = new Room(connection);
-        Collection<? extends TableEntry> rooms = nullRoom.filter(params);
+        SearchParameters params = new SearchParameters();
+        params.addParameter(new FreeSearchParameter());
+        Collection<? extends TableEntry> rooms = Room.getFilteredRooms(params, connection);
         assertEquals(97, rooms.size());
     }
 
     @Test
     public void testSomeQuery() throws Exception {
-        Collection<SearchParameter> params = new ArrayList<>();
-        params.add(new FreeSearchParameter("floor", "=", "2"));
-        Room nullRoom = new Room(connection);
-        Collection<? extends TableEntry> rooms = nullRoom.filter(params);
+        SearchParameters params = new SearchParameters();
+        params.addParameter(new FreeSearchParameter("floor", "=", "2"));
+        Collection<? extends TableEntry> rooms = Room.getFilteredRooms(params, connection);
         assertEquals(26, rooms.size());
     }
 
     @Test
     public void testRoomSearchParamQuery() throws Exception {
-        Collection<SearchParameter> params = new ArrayList<>();
-        params.add(RoomSearchParameter.fromFloorRange(3, 4));
-        Room nullRoom = new Room(connection);
-        Collection<? extends TableEntry> rooms = nullRoom.filter(params);
+        SearchParameters params = new SearchParameters();
+        params.addParameter(RoomSearchParameter.fromFloorRange(3, 4));
+        Collection<? extends TableEntry> rooms = Room.getFilteredRooms(params, connection);
         assertEquals(51, rooms.size());
     }
 }
