@@ -128,7 +128,7 @@
             <div class="dropdown">
                 <a class="dropdown-toggle text-muted" href="#" style="font-size: 1.2rem" id="userMenu"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    User
+                    ${username}
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
                     <a class="dropdown-item" href="${pageContext.request.contextPath}/settings">Settings</a>

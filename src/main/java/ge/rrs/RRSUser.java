@@ -8,6 +8,7 @@ import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * A container for storing user data
@@ -158,6 +159,16 @@ public class RRSUser extends TableEntry implements UserDetails {
     ///////////
     // Other //
     ///////////
+
+    /**
+     * @return: RRSUser which is currently sending
+     *  the request.
+     */
+    public static RRSUser getCurrentUser() {
+        Object user = SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        return (RRSUser)user;
+    }
 
     @Override
     public boolean equals(Object other) {
