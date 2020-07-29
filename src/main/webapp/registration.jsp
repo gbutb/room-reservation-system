@@ -90,7 +90,7 @@
         });
 
         $('#mail').keyup(function () {
-            if (!($(this).val().endsWith("@freeuni.edu.ge")||$(this).val().endsWith("@agruni.edu.ge"))) {
+            if (!($(this).val().endsWith('@freeuni.edu.ge')||$(this).val().endsWith('@agruni.edu.ge'))) {
                 $('#submit').attr("disabled",true);
                 validMail=false
             } else {
@@ -107,8 +107,19 @@
                 checkIfRight(validUsername,validMail,validNumber,samePasswords);
             }
         });
+        $('#password').keyup(function () {
+            if (!($(this).val()===$('#repeatPassword').val())) {
+                $('#submit').attr("disabled",true);
+                samePasswords=false;
+            } else {
+
+                bootstrapValidate('#repeatPassword', 'matches:#password:Your passwords should match')
+                samePasswords=true;
+                checkIfRight(validUsername,validMail,validNumber,samePasswords);
+            }
+        });
         $('#number').keyup(function () {
-            if ($(this).val().length <= 8) {
+            if (!($(this).val().length === 9)) {
                 $('#submit').attr("disabled",true);
                 validNumber=false;
             } else {
