@@ -86,8 +86,17 @@ public class RRSUser extends TableEntry implements UserDetails {
     // Table Entry //
     /////////////////
 
-    public static Collection<RRSUser> getFilteredUsers(SearchParameters parameters,
-                                                 DBConnection connection) throws SQLException {
+    /**
+     * Filters out the table of users
+     * based on the provided parameters.
+     * @param parameters A set of search parameters.
+     * @param connection A reference to DBConnection
+     * @return A collection of users.
+     * @throws SQLException should any SQL error occur.
+     */
+    public static Collection<RRSUser> getFilteredUsers(
+            SearchParameters parameters,
+            DBConnection connection) throws SQLException {
         ResultSet rs = TableEntry.filter(parameters, connection, RRSUser.TABLE_NAME);
         Collection<RRSUser> entries = new ArrayList<>();
         while (rs.next()) {
@@ -96,7 +105,7 @@ public class RRSUser extends TableEntry implements UserDetails {
                 rs.getString("username"),
                 rs.getString("encryptedPassword"),
                 rs.getString("email"),
-                    connection));
+                connection));
         }
         return entries;
     }

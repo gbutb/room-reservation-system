@@ -112,7 +112,8 @@ public class RoomSearchParameter implements SearchParameter {
     @Override
     public String getValue() {
         return String.format(
-                valueExpression.replace("?", "%s"), args);
+            valueExpression.replace("?", "%s"),
+            args.toArray());
     }
 
     @Override

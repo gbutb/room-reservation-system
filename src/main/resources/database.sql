@@ -18,6 +18,7 @@ CREATE TABLE rooms (
 	conditioner BOOLEAN,
 	projector BOOLEAN,
 	comment_id INT,
+	render_data VARCHAR(255),
 	FOREIGN KEY (comment_id) REFERENCES room_comment(comment_id)
 );
 
@@ -43,8 +44,8 @@ INSERT INTO room_comment VALUES
 	(0, STR_TO_DATE("9,7,2020 14,30,0", "%d,%m,%Y %H,%i,%s"), "Hello room!");
 
 INSERT INTO rooms VALUES
-	(200, 25, 2, true, true, 0),
-	(315, 20, 3, false, true, 0);
+	(200, 25, 2, true, true, 0, '253.12 488.25 118.13 51.75'),
+	(315, 20, 3, false, true, 0, '373.5 488.25 55.13 51.75');
 	
 INSERT INTO accounts VALUES
 	(0, "Human", "human_password", "human@humans.org"),

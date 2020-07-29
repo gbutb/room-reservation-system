@@ -3,7 +3,7 @@ package ge.rrs;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SearchParameters {
+public class SearchParameters {
     /*
     NOTE
     For enhanced security, parameters are saved with value expression's arguments
@@ -25,6 +25,7 @@ public abstract class SearchParameters {
      * @param parameter user given parameter
      */
     public void addParameter(SearchParameter parameter) throws Exception {
+        if (parameter.isEmpty()) return;
         if (clause.isEmpty()) clause.addParameter(parameter);
         clause.addParameter("AND", parameter);
     }
@@ -38,6 +39,7 @@ public abstract class SearchParameters {
      * @param operator  user given operator
      */
     public void addParameter(String operator, SearchParameter parameter) throws Exception {
+        if (parameter.isEmpty()) return;
         if (clause.isEmpty()) clause.addParameter(parameter);
         clause.addParameter(operator, parameter);
     }
@@ -48,7 +50,7 @@ public abstract class SearchParameters {
      * @return returns a complete collection of user added parameters
      */
     public String getParametersStatement() {
-        return clause.getClause();
+        return (clause.isEmpty()) ? "" : clause.getClause();
     }
 
     /**
@@ -79,8 +81,7 @@ public abstract class SearchParameters {
         public void addClause(String operator, Clause clause) {
             if (closed) return;
             this.clause.append(" " + operator + " ");
-            this.clause.append(clause.getClause());
-            arguments.addAll(clause.getArguments());
+            addClause(clause);
         }
 
         public void addClause(Clause clause) {
@@ -101,11 +102,7 @@ public abstract class SearchParameters {
         public void addParameter(String operator, SearchParameter parameter) throws Exception {
             if (closed) return;
             this.clause.append(" " + operator + " ");
-            clause.append(parameter.getKey());
-            clause.append(parameter.getRelation());
-            clause.append(parameter.getValueExpression());
-
-            arguments.addAll(parameter.getValueArgs());
+            addParameter(parameter);
         }
 
         public boolean isEmpty() {
