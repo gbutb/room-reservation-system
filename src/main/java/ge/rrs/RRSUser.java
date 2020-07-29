@@ -4,13 +4,13 @@ package ge.rrs;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import javax.persistence.Table;
 
 /**
  * A container for storing user data
@@ -122,11 +122,12 @@ public class RRSUser extends TableEntry implements UserDetails {
         // TODO: move this to DBConnection
         getConnection().executeUpdate(
             "INSERT INTO accounts VALUES (?, ?, ?, ?)",
-            new String[] {
-                filter(new ArrayList<SearchParameter>()).size() + "",
-                getUsername(),
-                getPassword(),
-                getEmail() });
+            Arrays.asList(
+                new String[] {
+                    getFilteredUsers(new SearchParameters(), getConnection()).size() + "",
+                    getUsername(),
+                    getPassword(),
+                    getEmail() }));
     }
 
     /////////////////

@@ -36,9 +36,9 @@ public class RRSUserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // TODO: use singleton DBConnection
         try {
-            Collection<SearchParameter> params = new ArrayList<>();
-            params.add(new FreeSearchParameter("username", "=", username));
-            Collection<? extends TableEntry> users = (new RRSUser(new DBConnection())).filter(params);
+            SearchParameters params = new SearchParameters();
+            params.addParameter(new FreeSearchParameter("username", "=", username));
+            Collection<? extends TableEntry> users = RRSUser.getFilteredUsers(params, new DBConnection());
             if (users.size() != 1)
                 throw new UsernameNotFoundException(
                     String.format("There's no user with '%s' username", username));
@@ -47,6 +47,8 @@ public class RRSUserService implements UserDetailsService {
         }
         catch (SQLException e) {
             throw new UsernameNotFoundException("Unable to access database");
+        } catch (Exception e) {
+            throw new UsernameNotFoundException("Unable to find username");
         }
     }
 

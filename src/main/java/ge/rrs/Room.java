@@ -19,7 +19,7 @@ public class Room extends TableEntry {
     private static final String ROOM_SIZE_NAME = "room_size";
     private static final String FLOOR_NAME = "floor";
     private static final String COMMENT_ID_NAME = "comment_id";
-    private static final String CONDITIONER_NAME = "conditioner";
+    private static final String CONDITIONER_NAME = "air_conditioner";
     private static final String PROJECTOR_NAME = "projector";
     private static final String RENDER_DATA_NAME = "render_data";
 

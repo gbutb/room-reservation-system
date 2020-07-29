@@ -132,9 +132,9 @@ public class UserTest {
 
 
         // Check if the user registered
-        Collection<SearchParameter> params = new ArrayList<>();
-        params.add(new FreeSearchParameter("username", "=", "testRegisterUsername"));
-        Collection<? extends TableEntry> users = (new RRSUser(connection)).filter(params);
+        SearchParameters params = new SearchParameters();
+        params.addParameter(new FreeSearchParameter("username", "=", "testRegisterUsername"));
+        Collection<? extends TableEntry> users = RRSUser.getFilteredUsers(params, connection);
         assertEquals(1, users.size());
 
         for (TableEntry found_user : users) {
