@@ -27,7 +27,7 @@ public class RoomTest {
         params.add(new FreeSearchParameter());
         Room nullRoom = new Room(connection);
         Collection<? extends TableEntry> rooms = nullRoom.filter(params);
-        assertEquals(2, rooms.size());
+        assertEquals(97, rooms.size());
     }
 
     @Test
@@ -36,7 +36,7 @@ public class RoomTest {
         params.add(new FreeSearchParameter("floor", "=", "2"));
         Room nullRoom = new Room(connection);
         Collection<? extends TableEntry> rooms = nullRoom.filter(params);
-        assertEquals(1, rooms.size());
+        assertEquals(26, rooms.size());
     }
 
     @Test
@@ -45,6 +45,6 @@ public class RoomTest {
         params.add(RoomSearchParameter.fromFloorRange(3, 4));
         Room nullRoom = new Room(connection);
         Collection<? extends TableEntry> rooms = nullRoom.filter(params);
-        assertEquals(1, rooms.size());
+        assertEquals(51, rooms.size());
     }
 }

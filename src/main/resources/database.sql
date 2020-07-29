@@ -46,21 +46,10 @@ CREATE TABLE reservations
 	
 INSERT INTO room_comment VALUES
 	(0, STR_TO_DATE("9,7,2020 14,30,0", "%d,%m,%Y %H,%i,%s"), "Hello room!");
-
-INSERT INTO rooms VALUES
-	(200, 25, 2, true, true, 0),
-	(315, 20, 3, false, true, 0);
 	
 INSERT INTO accounts VALUES
 	(0, "Human", "$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO", "human@humans.org"),
 	(1, "Human 1", "$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO", "human1@humans.org");
-	
-INSERT INTO reservations VALUES
-	(0, 200, STR_TO_DATE("10,7,2020 14,40,0", "%d,%m,%Y %H,%i,%s"), 
-			 STR_TO_DATE("10,7,2020 15,40,0", "%d,%m,%Y %H,%i,%s"), false, 0);
-
-INSERT INTO room_comment
-VALUES (0, STR_TO_DATE('9,7,2020 14,30,0', '%d,%m,%Y %H,%i,%s'), 'Hello room!');
 
 INSERT INTO rooms
 VALUES (100, 1, 1, true, true, 0, '253.12 488.25 118.13 51.75'),
@@ -83,7 +72,6 @@ VALUES (100, 1, 1, true, true, 0, '253.12 488.25 118.13 51.75'),
        (117, 1, 1, true, true, 0, '608.62 114.75 51.75 83.25'),
        (118, 1, 1, true, true, 0, '608.62 57.38 51.75 55.13'),
        (119, 1, 1, true, true, 0, '608.62 0 51.75 55.13'),
-
        (200, 1, 2, true, true, 0, '0 429.75 108 110.25'),
        (201, 1, 2, true, true, 0, '138.37 488.25 55.13 51.75'),
        (202, 1, 2, true, true, 0, '195.75 488.25 55.13 51.75'),
@@ -110,7 +98,6 @@ VALUES (100, 1, 1, true, true, 0, '253.12 488.25 118.13 51.75'),
        (225, 1, 2, true, true, 0, '608.62 114.75 68.63 83.25'),
        (226, 1, 2, true, true, 0, '608.62 57.38 51.75 55.13'),
        (227, 1, 2, true, true, 0, '608.62 0 51.75 55.13'),
-
        (300, 1, 3, true, true, 0, '138.37 488.25 55.13 51.75'),
        (301, 1, 3, true, true, 0, '195.75 488.25 55.13 51.75'),
        (302, 1, 3, true, true, 0, '253.12 488.25 118.13 51.75'),
@@ -139,7 +126,6 @@ VALUES (100, 1, 1, true, true, 0, '253.12 488.25 118.13 51.75'),
        (327, 1, 3, true, true, 0, '608.62 114.75 68.63 83.25'),
        (328, 1, 3, true, true, 0, '608.62 57.38 51.75 55.13'),
        (329, 1, 3, true, true, 0, '608.62 0 51.75 55.13'),
-
        (400, 1, 4, true, true, 0, '195.75 488.25 55.13 51.75'),
        (401, 1, 4, true, true, 0, '253.12 488.25 118.13 51.75'),
        (402, 1, 4, true, true, 0, '373.5 488.25 26.44 51.75'),
@@ -163,3 +149,8 @@ VALUES (100, 1, 1, true, true, 0, '253.12 488.25 118.13 51.75'),
        (422, 1, 4, true, true, 0, '608.62 114.75 68.63 83.25'),
        (423, 1, 4, true, true, 0, '608.62 57.38 51.75 55.13'),
        (424, 1, 4, true, true, 0, '608.62 0 51.75 55.13');
+
+INSERT INTO reservations VALUES
+	(0, 200, STR_TO_DATE("10,7,2020 14,40,0", "%d,%m,%Y %H,%i,%s"), 
+			 STR_TO_DATE("10,7,2020 15,40,0", "%d,%m,%Y %H,%i,%s"), false, 0);
+

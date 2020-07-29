@@ -17,14 +17,20 @@ public class RRSAuthController {
         userService = new RRSUserService();
     }
 
+    // TODO: remove this
+    @GetMapping("/")
+    String home() {
+        return "/index";
+    }
+
     @GetMapping("/login")
 	String login() {
-		return "login";
+		return "/login";
 	}
 
 	@GetMapping("/register")
 	String register() {
-		return "registration";
+		return "/registration";
 	}
 
 	@PostMapping("/register")

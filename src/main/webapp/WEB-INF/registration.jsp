@@ -1,3 +1,7 @@
+<!-- Load taglibs -->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -17,9 +21,8 @@
     <div class="container">
         <div id="register-row" class="row justify-content-center">
             <div id="register-column" class="col-md-6">
-
                 <div  id="register-box" class="col-md-10">
-                    <form id="register-form" class="form" th:action="@{/register}" method="POST">
+                    <form:form id="register-form" class="form" action="/register" method="POST">
                         <h2 class="text-center text-dark">Register</h2>
                         <div class="form-group">
                             <label  for="username" class="text-dark">Username: </label><br>
@@ -53,7 +56,7 @@
                             <a href="/login"  class="text-secondary">Login to existing account</a>
                         </div>
 
-                    </form>
+                    </form:form>
                 </div>
             </div>
         </div>

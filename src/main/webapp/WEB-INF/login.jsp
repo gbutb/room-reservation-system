@@ -1,3 +1,7 @@
+<!-- Load taglibs -->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
@@ -19,7 +23,7 @@
         <div id="login-row" class="row justify-content-center">
             <div id="login-column" class="col-md-6">
                 <div id="login-box" class="col-md-10">
-                    <form th:action="@{/login}" id="login-form" class="form" method="POST">
+                    <form:form action="/login" id="login-form" class="form" method="POST">
                         <h2 class="text-center text-dark">Login</h2>
                         <div class="form-group">
                             <label  for="username" class="text-dark">Username: </label><br>
@@ -38,7 +42,7 @@
                         <div id="register-link" class="text-right">
                             <a href="/register"  class="text-dark">Register</a>
                         </div>
-                    </form>
+                    </form:form>
                 </div>
             </div>
         </div>

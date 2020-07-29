@@ -57,7 +57,7 @@ public class Room extends TableEntry {
                 rs.getInt("room_size"),
                 rs.getInt("floor"),
                 rs.getInt("comment_id"),
-                rs.getBoolean("conditioner"),
+                rs.getBoolean("air_conditioner"),
                 rs.getBoolean("projector"),
                 getConnection()
             ));
