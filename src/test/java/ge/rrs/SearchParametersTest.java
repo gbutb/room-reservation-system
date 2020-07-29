@@ -1,9 +1,14 @@
+// SearchParametersTest.java
 package ge.rrs;
 
-import org.junit.jupiter.api.BeforeEach;
 // JUnit
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.*;
+
+import ge.rrs.database.FreeSearchParameter;
+// ge.rrs
+import ge.rrs.database.SearchParameters;
 
 public class SearchParametersTest {
     private SearchParameters searchParameters;

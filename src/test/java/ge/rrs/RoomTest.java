@@ -1,12 +1,22 @@
+// RoomTest.java
 package ge.rrs;
 
 import java.sql.SQLException;
 import java.util.*;
 
-import org.junit.jupiter.api.BeforeEach;
 // JUnit
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.*;
+
+// ge.rrs
+import ge.rrs.database.DBConnection;
+import ge.rrs.database.FreeSearchParameter;
+import ge.rrs.database.SearchParameters;
+import ge.rrs.database.TableEntry;
+import ge.rrs.database.room.Room;
+import ge.rrs.database.room.RoomSearchParameter;
+
 
 public class RoomTest {
     // Database credentials

@@ -1,4 +1,5 @@
-package ge.rrs;
+// RRSListView.java
+package ge.rrs.modules.homepage;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

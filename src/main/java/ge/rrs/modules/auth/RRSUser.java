@@ -1,5 +1,5 @@
 // UserData.java
-package ge.rrs;
+package ge.rrs.modules.auth;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +11,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+// ge.rrs
+import ge.rrs.database.DBConnection;
+import ge.rrs.database.SearchParameters;
+import ge.rrs.database.TableEntry;
 
 /**
  * A container for storing user data

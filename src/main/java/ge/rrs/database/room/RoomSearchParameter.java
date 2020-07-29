@@ -1,9 +1,15 @@
 // RoomSearchParameter.java
-package ge.rrs;
+package ge.rrs.database.room;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+// ge.rrs
+import ge.rrs.database.DBConnection;
+import ge.rrs.database.SearchParameter;
+import ge.rrs.database.reservation.Reservation;
+import ge.rrs.database.reservation.ReservationSearchParameters;
 
 public class RoomSearchParameter implements SearchParameter {
 
@@ -21,7 +27,7 @@ public class RoomSearchParameter implements SearchParameter {
      * @param valueExpression Expression, with arguments replaced with '?'
      * @param args            Arguments.
      */
-    RoomSearchParameter(String key, String relation, String valueExpression, List<String> args) {
+    public RoomSearchParameter(String key, String relation, String valueExpression, List<String> args) {
         this.key = key;
         this.relation = relation;
         this.valueExpression = valueExpression;
@@ -36,7 +42,7 @@ public class RoomSearchParameter implements SearchParameter {
      * @param end   Final floor.
      * @return Room Search Parameter.
      */
-    static RoomSearchParameter fromFloorRange(int start, int end) {
+    public static RoomSearchParameter fromFloorRange(int start, int end) {
         return new RoomSearchParameter(
                 "floor", " BETWEEN ", "? AND ?",
                 new ArrayList<String>() {

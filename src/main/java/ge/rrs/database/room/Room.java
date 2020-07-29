@@ -1,4 +1,4 @@
-package ge.rrs;
+package ge.rrs.database.room;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -6,6 +6,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
+
+// ge.rrs
+import ge.rrs.database.DBConnection;
+import ge.rrs.database.FreeSearchParameter;
+import ge.rrs.database.SearchParameters;
+import ge.rrs.database.TableEntry;
+import ge.rrs.database.reservation.Reservation;
+import ge.rrs.database.reservation.ReservationSearchParameters;
 
 public class Room extends TableEntry {
 

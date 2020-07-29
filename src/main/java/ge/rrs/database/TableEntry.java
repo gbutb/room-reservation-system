@@ -1,5 +1,5 @@
 // TableEntry.java
-package ge.rrs;
+package ge.rrs.database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

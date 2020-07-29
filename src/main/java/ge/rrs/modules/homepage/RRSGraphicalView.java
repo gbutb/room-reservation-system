@@ -1,4 +1,5 @@
-package ge.rrs;
+// RRSGraphicalView.java
+package ge.rrs.modules.homepage;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
+
+// ge.rrs
+import ge.rrs.modules.auth.RRSUser;
 
 /**
  * Initial implementation of homepage graphical view controller

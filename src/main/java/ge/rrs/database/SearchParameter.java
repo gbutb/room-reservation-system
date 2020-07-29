@@ -1,5 +1,5 @@
 // SearchParameters.java
-package ge.rrs;
+package ge.rrs.database;
 
 import java.util.List;
 

@@ -1,4 +1,5 @@
-package ge.rrs;
+// RRSUserService.java
+package ge.rrs.modules.auth;
 
 import java.sql.SQLException;
 // Java
@@ -12,6 +13,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import ge.rrs.database.DBConnection;
+import ge.rrs.database.FreeSearchParameter;
+import ge.rrs.database.SearchParameters;
+import ge.rrs.database.TableEntry;
+
 import org.springframework.security.core.GrantedAuthority;
 
 @Service

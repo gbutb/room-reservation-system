@@ -1,5 +1,5 @@
 // DBConnection.java
-package ge.rrs;
+package ge.rrs.database;
 
 
 import java.sql.*;

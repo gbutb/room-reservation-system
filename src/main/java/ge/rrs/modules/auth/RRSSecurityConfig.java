@@ -1,4 +1,5 @@
-package ge.rrs;
+// RRSSecurityConfig.java
+package ge.rrs.modules.auth;
 
 // Spring
 import org.springframework.beans.factory.annotation.Autowired;

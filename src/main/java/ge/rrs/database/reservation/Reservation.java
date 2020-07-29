@@ -1,9 +1,13 @@
-package ge.rrs;
+package ge.rrs.database.reservation;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+
+// ge.rrs
+import ge.rrs.database.TableEntry;
+import ge.rrs.database.DBConnection;
 
 public class Reservation extends TableEntry {
 

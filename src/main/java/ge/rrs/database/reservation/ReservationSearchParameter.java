@@ -1,7 +1,11 @@
-package ge.rrs;
+// ReservationSearchParameter.java
+package ge.rrs.database.reservation;
 
 import java.util.ArrayList;
 import java.util.List;
+
+// ge.rrs
+import ge.rrs.database.SearchParameter;
 
 public class ReservationSearchParameter implements SearchParameter {
 

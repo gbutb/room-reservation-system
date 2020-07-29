@@ -1,10 +1,11 @@
+// UserTest.java
 package ge.rrs;
 
 import java.sql.SQLException;
 import java.util.*;
 
-import org.junit.jupiter.api.BeforeEach;
 // JUnit
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,13 @@ import static org.junit.Assert.*;
 // Spring
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+// ge.rrs
+import ge.rrs.database.DBConnection;
+import ge.rrs.database.FreeSearchParameter;
+import ge.rrs.database.SearchParameters;
+import ge.rrs.database.TableEntry;
+import ge.rrs.modules.auth.RRSUser;
 
 public class UserTest {
     // Database credentials

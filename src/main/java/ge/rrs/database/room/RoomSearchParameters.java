@@ -1,8 +1,12 @@
-package ge.rrs;
+package ge.rrs.database.room;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+// ge.rrs
+import ge.rrs.database.DBConnection;
+import ge.rrs.database.SearchParameters;
 
 public class RoomSearchParameters extends SearchParameters {
 

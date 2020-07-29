@@ -1,5 +1,5 @@
-// FreeSearchParameter
-package ge.rrs;
+// FreeSearchParameter.java
+package ge.rrs.database;
 
 import java.util.ArrayList;
 import java.util.List;

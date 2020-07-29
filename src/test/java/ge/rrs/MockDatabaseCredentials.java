@@ -1,3 +1,4 @@
+// MockDatabaseCredentials.java
 package ge.rrs;
 
 public class MockDatabaseCredentials {

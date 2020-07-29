@@ -1,9 +1,12 @@
 // RRSAuthConfig.java
-package ge.rrs;
+package ge.rrs.modules.auth;
 
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+// ge.rrs
+import ge.rrs.database.DBConnection;
 
 
 @Controller
