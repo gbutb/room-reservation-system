@@ -11,15 +11,13 @@
 
 </head>
 <body>
-
 <div id="register">
     <br>
     <div class="container">
         <div id="register-row" class="row justify-content-center">
             <div id="register-column" class="col-md-6">
-
                 <div  id="register-box" class="col-md-10">
-                    <form id="register-form" class="form" th:action="@{/register}" method="POST">
+                    <form id="register-form" class="form" action="/register" method="POST">
                         <h2 class="text-center text-dark">Register</h2>
                         <div class="form-group">
                             <label  for="username" class="text-dark">Username: </label><br>
@@ -30,20 +28,26 @@
                             <label  for="mail" class="text-dark">Mail: </label><br>
                             <input type="text" name="email" id="mail" class="form-control">
                         </div>
-                        <div class="form-group">
-                            <label for="password"  class="text-dark">Password: </label>
-                            <br>
-                            <input type="password"  name="password" id="password" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="repeatPassword"  class="text-dark">Repeat Password: </label>
-                            <br>
-                            <input type="password" id="repeatPassword" class="form-control">
+                        <div id="password-group">
+                            <div class="form-group">
+                                <label for="password"  class="text-dark">Password: </label>
+                                <br>
+                                <input type="password"  name="password" id="password" class="form-control">
+                                <span id = 'strongMessage'></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="repeatPassword"  class="text-dark">Repeat Password: </label>
+                                <br>
+                                <input type="password" id="repeatPassword" class="form-control">
+                                <span id = 'message'></span>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="number"  class="text-dark">Phone Number: </label>
                             <br>
                             <input type="text"  name="number" id="number" class="form-control" required>
+                            <span id = 'numMessage'></span>
                         </div>
 
                         <div class="form-group">
@@ -68,18 +72,19 @@
 <script>
     bootstrapValidate('#username', 'min:5:Please enter minimum 5 symbols.')
     bootstrapValidate('#mail', 'email:Please enter a valid mail.')
-    bootstrapValidate('#repeatPassword', 'matches:#password:Your passwords should match')
 
     function checkIfRight(validUsername,validMail,validNumber,samePasswords){
         if(validMail&&validUsername&&validNumber&&samePasswords){
             $('#submit').attr("disabled",false);
         }
     }
+
     $(function () {
         var validUsername=false;
         var validMail=false;
         var validNumber=false;
         var samePasswords=false;
+
         $('#username').keyup(function () {
             if ($(this).val().length <= 4) {
                 $('#submit').attr("disabled",true);
@@ -99,34 +104,52 @@
                 checkIfRight(validUsername,validMail,validNumber,samePasswords);
             }
         });
-        $('#repeatPassword').keyup(function () {
-            if (!($(this).val()===$('#password').val())) {
+
+        $('#password').keyup(function(){
+            if($('#password').val() == ""){
+                $('#strongMessage').html("");
+            }else if(passwordIsStrong($('#password').val())){
+                $('#strongMessage').html("Password is strong").css('color', 'green');
+            }else{
+                $('#strongMessage').html(`Password must contain: 1 lowercase letter, 1 uppercase letter, be minimum 8 characters`).css('color', 'red');
+            }
+        });
+
+        $('#password-group').keyup(function () {
+            if (!($('#password').val()===$('#repeatPassword').val()) && $('#repeatPassword').val() != "") {
                 $('#submit').attr("disabled",true);
                 samePasswords=false;
+                $('#message').html("Your passwords should match").css('color', 'red');
             } else {
                 samePasswords=true;
+                $('#message').html("");
                 checkIfRight(validUsername,validMail,validNumber,samePasswords);
             }
         });
-        $('#password').keyup(function () {
-            if (!($(this).val()===$('#repeatPassword').val())) {
-                $('#submit').attr("disabled",true);
-                samePasswords=false;
-            } else {
-                samePasswords=true;
-                checkIfRight(validUsername,validMail,validNumber,samePasswords);
-            }
-        });
+
+
         $('#number').keyup(function () {
-            if (!($(this).val().length === 9)) {
+            if (!checkNumber($(this).val()) && $(this).val() != "") {
                 $('#submit').attr("disabled",true);
+                $('#numMessage').html("Please enter a valid phone number").css('color', 'red');
                 validNumber=false;
             } else {
                 validNumber=true;
+                $('#numMessage').html("");
                 checkIfRight(validUsername,validMail,validNumber,samePasswords);
             }
         });
     });
+
+    function passwordIsStrong(pass){
+        var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.{8,})");
+        return pass.match(strongRegex);
+    }
+    function checkNumber(num){
+        var reg = /^\d+$/;
+
+        return reg.test(num) && num.length==9;
+    }
 </script>
 
 </body>
