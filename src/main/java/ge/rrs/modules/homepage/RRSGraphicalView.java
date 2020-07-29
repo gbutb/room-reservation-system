@@ -32,7 +32,7 @@ public class RRSGraphicalView {
             filterRooms(req);
         }
 
-        mv.setViewName("/homepage-graphical-view");
+        mv.setViewName("/homepage/homepage-graphical-view");
         mv.addObject("rooms", fetchData(floorParam));
         mv.addObject("username", RRSUser.getCurrentUser().getUsername());
 

@@ -22,7 +22,7 @@ public class RRSListView {
             // TODO: implement filterRooms()...
         }
 
-        mv.setViewName("/homepage-list-view");
+        mv.setViewName("/homepage/homepage-list-view");
 
         return mv;
     }

@@ -28,12 +28,12 @@ public class RRSAuthController {
 
     @GetMapping("/login")
 	String login() {
-		return "/login";
+		return "/auth/login";
 	}
 
 	@GetMapping("/register")
 	String register() {
-		return "/registration";
+		return "/auth/registration";
 	}
 
 	@PostMapping("/register")
