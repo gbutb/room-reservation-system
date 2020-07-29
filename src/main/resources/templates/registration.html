@@ -113,8 +113,6 @@
                 $('#submit').attr("disabled",true);
                 samePasswords=false;
             } else {
-
-                bootstrapValidate('#repeatPassword', 'matches:#password:Your passwords should match')
                 samePasswords=true;
                 checkIfRight(validUsername,validMail,validNumber,samePasswords);
             }
