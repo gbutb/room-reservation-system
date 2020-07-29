@@ -1,7 +1,10 @@
 package ge.rrs;
 
+import java.sql.SQLException;
 // Java
 import java.util.*;
+
+import com.mysql.cj.xdevapi.Table;
 
 // Spring
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,13 +25,29 @@ public class RRSUserService implements UserDetailsService {
         encoder = new BCryptPasswordEncoder();
     }
 
+    /**
+     * @return Password encoder.
+     */
+    public BCryptPasswordEncoder getEncoder() {
+        return encoder;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Dummy user
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        RRSUser user = new RRSUser(
-            username,  encoder.encode("password"), "email", null);
-        return user;
+        // TODO: use singleton DBConnection
+        try {
+            Collection<SearchParameter> params = new ArrayList<>();
+            params.add(new FreeSearchParameter("username", "=", username));
+            Collection<? extends TableEntry> users = (new RRSUser(new DBConnection())).filter(params);
+            if (users.size() != 1)
+                throw new UsernameNotFoundException(
+                    String.format("There's no user with '%s' username", username));
+            Object[] usersArray = users.toArray();
+            return (RRSUser)usersArray[0];
+        }
+        catch (SQLException e) {
+            throw new UsernameNotFoundException("Unable to access database");
+        }
     }
 
     /**
@@ -36,6 +55,6 @@ public class RRSUserService implements UserDetailsService {
      * @param user: New user object.
      */
     public void registerNewUser(RRSUser user) throws Exception {
-        throw new Exception("Not implemented yet");
+        user.save();
     }
 }

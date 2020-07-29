@@ -8,6 +8,7 @@ import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.Table;
 
@@ -51,6 +52,12 @@ public class RRSUser extends TableEntry implements UserDetails {
         this.username = username;
         this.encryptedPassword = encryptedPassword;
         this.email = email;
+        
+        this.nonExpired = true;
+        this.nonLocked = true;
+        this.credentialsNonExpired = true;
+        this.enabled = true;
+        
         this.authorities = new ArrayList<>();
 
         this.connection = connection;
@@ -112,7 +119,14 @@ public class RRSUser extends TableEntry implements UserDetails {
 
     @Override
     public void save() throws Exception {
-        throw new Exception("Not implemented yet");
+        // TODO: move this to DBConnection
+        getConnection().executeUpdate(
+            "INSERT INTO accounts VALUES (?, ?, ?, ?)",
+            new String[] {
+                filter(new ArrayList<SearchParameter>()).size() + "",
+                getUsername(),
+                getPassword(),
+                getEmail() });
     }
 
     /////////////////
@@ -156,5 +170,28 @@ public class RRSUser extends TableEntry implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    ///////////
+    // Other //
+    ///////////
+
+    /**
+     * @return: RRSUser which is currently sending
+     *  the request.
+     */
+    public static RRSUser getCurrentUser() {
+        Object user = SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        return (RRSUser)user;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof RRSUser)) return false;
+        RRSUser otherUser = (RRSUser)other;
+        if ((otherUser.getUsername() != this.getUsername()) ||
+            (otherUser.getPassword() != this.getPassword())) return false;
+        return true;
     }
 }

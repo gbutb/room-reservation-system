@@ -6,10 +6,13 @@ import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 // JUnit
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.junit.jupiter.api.BeforeEach;
 import static org.junit.Assert.*;
 
 // Spring
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class UserTest {
     // Database credentials
@@ -18,10 +21,10 @@ public class UserTest {
     @BeforeEach
     public void initialize() throws SQLException {
         connection = new DBConnection(
-            "localhost",
-            "root",
-            "12345678",
-            "reservations_db");
+            MockDatabaseCredentials.SERVER,
+            MockDatabaseCredentials.USER,
+            MockDatabaseCredentials.PASSWORD,
+            MockDatabaseCredentials.DB_NAME);
     }
 
     @Test
@@ -115,5 +118,29 @@ public class UserTest {
         assertEquals(0, usernames.size());
         assertEquals(0, emails.size());
         assertEquals(1, users.size());
+    }
+
+
+    // @Test
+    public void testRegister() throws Exception {
+        RRSUser user = new RRSUser(
+            "testRegisterUsername", 
+            (new BCryptPasswordEncoder()).encode("testRegisterPassword"),
+            "registeredUsers@humans.org",
+            connection);
+        user.save();
+
+
+        // Check if the user registered
+        Collection<SearchParameter> params = new ArrayList<>();
+        params.add(new FreeSearchParameter("username", "=", "testRegisterUsername"));
+        Collection<? extends TableEntry> users = (new RRSUser(connection)).filter(params);
+        assertEquals(1, users.size());
+
+        for (TableEntry found_user : users) {
+            assertEquals(user.getUsername(), ((RRSUser)found_user).getUsername());
+            assertEquals(user.getPassword(), ((RRSUser)found_user).getPassword());
+            assertEquals(user.getEmail(), ((RRSUser)found_user).getEmail());
+        }
     }
 }

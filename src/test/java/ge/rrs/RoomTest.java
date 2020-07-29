@@ -15,10 +15,10 @@ public class RoomTest {
     @BeforeEach
     public void initialize() throws SQLException {
         connection = new DBConnection(
-            "localhost",
-            "root",
-            "12345678",
-            "reservations_db");
+            MockDatabaseCredentials.SERVER,
+            MockDatabaseCredentials.USER,
+            MockDatabaseCredentials.PASSWORD,
+            MockDatabaseCredentials.DB_NAME);
     }
 
     @Test
@@ -26,7 +26,7 @@ public class RoomTest {
         SearchParameters params = new SearchParameters();
         params.addParameter(new FreeSearchParameter());
         Collection<? extends TableEntry> rooms = Room.getFilteredRooms(params, connection);
-        assertEquals(2, rooms.size());
+        assertEquals(97, rooms.size());
     }
 
     @Test
@@ -34,7 +34,7 @@ public class RoomTest {
         SearchParameters params = new SearchParameters();
         params.addParameter(new FreeSearchParameter("floor", "=", "2"));
         Collection<? extends TableEntry> rooms = Room.getFilteredRooms(params, connection);
-        assertEquals(1, rooms.size());
+        assertEquals(26, rooms.size());
     }
 
     @Test
@@ -42,6 +42,6 @@ public class RoomTest {
         SearchParameters params = new SearchParameters();
         params.addParameter(RoomSearchParameter.fromFloorRange(3, 4));
         Collection<? extends TableEntry> rooms = Room.getFilteredRooms(params, connection);
-        assertEquals(1, rooms.size());
+        assertEquals(51, rooms.size());
     }
 }
