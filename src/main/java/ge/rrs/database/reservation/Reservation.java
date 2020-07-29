@@ -1,3 +1,4 @@
+// Reservation.java
 package ge.rrs.database.reservation;
 
 import java.sql.ResultSet;

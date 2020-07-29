@@ -1,3 +1,4 @@
+// RRSConfig.java
 package ge.rrs;
 
 import org.springframework.context.annotation.Bean;

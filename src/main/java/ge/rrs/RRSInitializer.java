@@ -1,3 +1,4 @@
+// RRSInitializer.java
 package ge.rrs;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;

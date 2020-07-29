@@ -1,11 +1,9 @@
 // RRSUserService.java
 package ge.rrs.modules.auth;
 
-import java.sql.SQLException;
 // Java
+import java.sql.SQLException;
 import java.util.*;
-
-import com.mysql.cj.xdevapi.Table;
 
 // Spring
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,12 +12,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+// ge.rrs
 import ge.rrs.database.DBConnection;
 import ge.rrs.database.FreeSearchParameter;
 import ge.rrs.database.SearchParameters;
 import ge.rrs.database.TableEntry;
 
-import org.springframework.security.core.GrantedAuthority;
 
 @Service
 public class RRSUserService implements UserDetailsService {

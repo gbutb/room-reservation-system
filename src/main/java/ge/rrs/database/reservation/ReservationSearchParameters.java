@@ -1,13 +1,7 @@
 // ReservationSearchParameters.java
 package ge.rrs.database.reservation;
 
-import com.sun.org.apache.xpath.internal.operations.And;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-
+// ge.rrs
 import ge.rrs.database.SearchParameters;
 
 public class ReservationSearchParameters extends SearchParameters {
