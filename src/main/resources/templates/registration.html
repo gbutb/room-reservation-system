@@ -36,7 +36,7 @@
                             <input type="password"  name="password" id="password" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="password"  class="text-dark">Repeat Password: </label>
+                            <label for="repeatPassword"  class="text-dark">Repeat Password: </label>
                             <br>
                             <input type="password" id="repeatPassword" class="form-control">
                         </div>
@@ -70,6 +70,11 @@
     bootstrapValidate('#mail', 'email:Please enter a valid mail.')
     bootstrapValidate('#repeatPassword', 'matches:#password:Your passwords should match')
 
+    function checkIfRight(validUsername,validMail,validNumber,samePasswords){
+        if(validMail&&validUsername&&validNumber&&samePasswords){
+            $('#submit').attr("disabled",false);
+        }
+    }
     $(function () {
         var validUsername=false;
         var validMail=false;
@@ -81,6 +86,7 @@
                 validUsername=false;
             } else {
                 validUsername=true;
+                checkIfRight(validUsername,validMail,validNumber,samePasswords);
             }
         });
 
@@ -90,7 +96,7 @@
                 validMail=false
             } else {
                 validMail=true;
-
+                checkIfRight(validUsername,validMail,validNumber,samePasswords);
             }
         });
         $('#repeatPassword').keyup(function () {
@@ -99,6 +105,7 @@
                 samePasswords=false;
             } else {
                 samePasswords=true;
+                checkIfRight(validUsername,validMail,validNumber,samePasswords);
             }
         });
         $('#number').keyup(function () {
@@ -107,9 +114,7 @@
                 validNumber=false;
             } else {
                 validNumber=true;
-                if(validMail&&validUsername&&validNumber&&samePasswords){
-                    $('#submit').attr("disabled",false);
-                }
+                checkIfRight(validUsername,validMail,validNumber,samePasswords);
             }
         });
     });
