@@ -1,4 +1,5 @@
-package ge.rrs;
+// RenderListView.java
+package ge.rrs.modules.homepage;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +22,7 @@ public class RenderListView {
 
         // TODO: USER CODE END
 
-        mv.setViewName("/homepage-list-view");
+        mv.setViewName("/homepage/homepage-list-view");
 
         return mv;
     }
