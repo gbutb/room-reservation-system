@@ -1,8 +1,9 @@
 // DBConnection.java
-package ge.rrs;
+package ge.rrs.database;
 
 
 import java.sql.*;
+import java.util.List;
 
 public class DBConnection {
     private static final String SERVER = "localhost";
@@ -69,13 +70,12 @@ public class DBConnection {
      * @throws SQLException
      * @return result set
      */
-    public ResultSet executeQuery(String command, String[] args) throws SQLException {
+    public ResultSet executeQuery(String command, List<String> args) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(command);
-        for (int i = 0; i < args.length; i++) {
-            ps.setString(i+1, args[i]);
+        for (int i = 0; i < args.size(); i++) {
+            ps.setString(i+1, args.get(i));
         }
-        ResultSet set = ps.executeQuery();
-        return set;
+        return ps.executeQuery();
     }
 
 
@@ -86,10 +86,10 @@ public class DBConnection {
      * @param args - arguments for prepared statement
      * @throws SQLException
      */
-    public void executeUpdate(String command, String[] args)  throws SQLException {
+    public void executeUpdate(String command, List<String> args)  throws SQLException {
         PreparedStatement ps = connection.prepareStatement(command);
-        for (int i = 0; i < args.length; i++) {
-            ps.setString(i+1, args[i]);
+        for (int i = 0; i < args.size(); i++) {
+            ps.setString(i+1, args.get(i));
         }
         ps.executeUpdate();
     }

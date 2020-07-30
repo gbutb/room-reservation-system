@@ -1,20 +1,29 @@
 // UserData.java
-package ge.rrs;
+package ge.rrs.modules.auth;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+// ge.rrs
+import ge.rrs.database.DBConnection;
+import ge.rrs.database.SearchParameters;
+import ge.rrs.database.TableEntry;
 
 /**
  * A container for storing user data
  */
 public class RRSUser extends TableEntry implements UserDetails {
     private static final long serialVersionUID = 1L;
-    private static String TABLE_NAME = "accounts";
+    // The name of the table to which
+    // this table entry corresponds to.
+    private static final String TABLE_NAME = "accounts";
 
     // Reference to DBConnection
     private DBConnection connection;
@@ -47,6 +56,12 @@ public class RRSUser extends TableEntry implements UserDetails {
         this.username = username;
         this.encryptedPassword = encryptedPassword;
         this.email = email;
+        
+        this.nonExpired = true;
+        this.nonLocked = true;
+        this.credentialsNonExpired = true;
+        this.enabled = true;
+        
         this.authorities = new ArrayList<>();
 
         this.connection = connection;
@@ -73,11 +88,27 @@ public class RRSUser extends TableEntry implements UserDetails {
         return this.connection;
     }
 
+    @Override
+    public String getTableName() {
+        return TABLE_NAME;
+    }
+
     /////////////////
     // Table Entry //
     /////////////////
 
-    public Collection<? extends TableEntry> fromResultSet(ResultSet rs) throws SQLException {
+    /**
+     * Filters out the table of users
+     * based on the provided parameters.
+     * @param parameters A set of search parameters.
+     * @param connection A reference to DBConnection
+     * @return A collection of users.
+     * @throws SQLException should any SQL error occur.
+     */
+    public static Collection<RRSUser> getFilteredUsers(
+            SearchParameters parameters,
+            DBConnection connection) throws SQLException {
+        ResultSet rs = TableEntry.filter(parameters, connection, RRSUser.TABLE_NAME);
         Collection<RRSUser> entries = new ArrayList<>();
         while (rs.next()) {
             // Add new entry
@@ -85,18 +116,22 @@ public class RRSUser extends TableEntry implements UserDetails {
                 rs.getString("username"),
                 rs.getString("encryptedPassword"),
                 rs.getString("email"),
-                getConnection()));
+                connection));
         }
         return entries;
     }
 
-    public String getTableName() {
-        return TABLE_NAME;
-    }
-
     @Override
     public void save() throws Exception {
-        throw new Exception("Not implemented yet");
+        // TODO: move this to DBConnection
+        getConnection().executeUpdate(
+            "INSERT INTO accounts VALUES (?, ?, ?, ?)",
+            Arrays.asList(
+                new String[] {
+                    getFilteredUsers(new SearchParameters(), getConnection()).size() + "",
+                    getUsername(),
+                    getPassword(),
+                    getEmail() }));
     }
 
     /////////////////
@@ -140,5 +175,28 @@ public class RRSUser extends TableEntry implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    ///////////
+    // Other //
+    ///////////
+
+    /**
+     * @return: RRSUser which is currently sending
+     *  the request.
+     */
+    public static RRSUser getCurrentUser() {
+        Object user = SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        return (RRSUser)user;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof RRSUser)) return false;
+        RRSUser otherUser = (RRSUser)other;
+        if ((otherUser.getUsername() != this.getUsername()) ||
+            (otherUser.getPassword() != this.getPassword())) return false;
+        return true;
     }
 }

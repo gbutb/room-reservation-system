@@ -1,16 +1,37 @@
+// UserTest.java
 package ge.rrs;
 
 import java.sql.SQLException;
 import java.util.*;
 
 // JUnit
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.*;
 
 // Spring
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+// ge.rrs
+import ge.rrs.database.DBConnection;
+import ge.rrs.database.FreeSearchParameter;
+import ge.rrs.database.SearchParameters;
+import ge.rrs.database.TableEntry;
+import ge.rrs.modules.auth.RRSUser;
 
 public class UserTest {
+    // Database credentials
+    private DBConnection connection;
+
+    @BeforeEach
+    public void initialize() throws SQLException {
+        connection = new DBConnection(
+            MockDatabaseCredentials.SERVER,
+            MockDatabaseCredentials.USER,
+            MockDatabaseCredentials.PASSWORD,
+            MockDatabaseCredentials.DB_NAME);
+    }
 
     @Test
     public void testInitialization() {
@@ -26,11 +47,9 @@ public class UserTest {
 
     @Test
     public void testAllQuery() throws Exception {
-        DBConnection connection = new DBConnection();
-        Collection<SearchParameter> params = new ArrayList<>();
-        params.add(new FreeSearchParameter());
-        RRSUser nullUser = new RRSUser(connection);
-        Collection<? extends TableEntry> users = nullUser.filter(params);
+        SearchParameters params = new SearchParameters();
+        params.addParameter(new FreeSearchParameter());
+        Collection<RRSUser> users = RRSUser.getFilteredUsers(params, connection);
         assertEquals(2, users.size());
 
         Set<String> usernames = new HashSet<>();
@@ -56,11 +75,9 @@ public class UserTest {
 
     @Test
     public void testUserQuery() throws Exception {
-        DBConnection connection = new DBConnection();
-        Collection<SearchParameter> params = new ArrayList<>();
-        params.add(new FreeSearchParameter("username", "=", "Human 1"));
-        RRSUser nullUser = new RRSUser(connection);
-        Collection<? extends TableEntry> users = nullUser.filter(params);
+        SearchParameters params = new SearchParameters();
+        params.addParameter(new FreeSearchParameter("username", "=", "Human 1"));
+        Collection<RRSUser> users = RRSUser.getFilteredUsers(params, connection);
         assertEquals(1, users.size());
 
         Set<String> usernames = new HashSet<>();
@@ -83,13 +100,11 @@ public class UserTest {
     }
 
     @Test
-    public void testUserMultiQuery() throws SQLException {
-        DBConnection connection = new DBConnection();
-        Collection<SearchParameter> params = new ArrayList<>();
-        params.add(new FreeSearchParameter("username", "=", "Human 1"));
-        params.add(new FreeSearchParameter("email", "=", "human1@humans.org"));
-        RRSUser nullUser = new RRSUser(connection);
-        Collection<? extends TableEntry> users = nullUser.filter(params);
+    public void testUserMultiQuery() throws Exception {
+        SearchParameters params = new SearchParameters();
+        params.addParameter(new FreeSearchParameter("username", "=", "Human 1"));
+        params.addParameter(new FreeSearchParameter("email", "=", "human1@humans.org"));
+        Collection<? extends TableEntry> users = RRSUser.getFilteredUsers(params, connection);
         assertEquals(1, users.size());
 
         Set<String> usernames = new HashSet<>();
@@ -109,5 +124,29 @@ public class UserTest {
         assertEquals(0, usernames.size());
         assertEquals(0, emails.size());
         assertEquals(1, users.size());
+    }
+
+
+    // @Test
+    public void testRegister() throws Exception {
+        RRSUser user = new RRSUser(
+            "testRegisterUsername", 
+            (new BCryptPasswordEncoder()).encode("testRegisterPassword"),
+            "registeredUsers@humans.org",
+            connection);
+        user.save();
+
+
+        // Check if the user registered
+        SearchParameters params = new SearchParameters();
+        params.addParameter(new FreeSearchParameter("username", "=", "testRegisterUsername"));
+        Collection<? extends TableEntry> users = RRSUser.getFilteredUsers(params, connection);
+        assertEquals(1, users.size());
+
+        for (TableEntry found_user : users) {
+            assertEquals(user.getUsername(), ((RRSUser)found_user).getUsername());
+            assertEquals(user.getPassword(), ((RRSUser)found_user).getPassword());
+            assertEquals(user.getEmail(), ((RRSUser)found_user).getEmail());
+        }
     }
 }
