@@ -75,7 +75,7 @@
                 <label for="toTime" class="text-light bg-dark mr-2">To:</label>
                 <input id="toTime" class="form-control mr-2" name="toTime" type="time">
 
-                <input name="filter" type="hidden">
+                <input name="isFiltered" type="hidden">
 
                 <div class="btn-group">
                     <button class="btn btn-primary" id="filterBtn" type="button" onclick="checkTime()">Filter</button>
@@ -178,20 +178,20 @@
                      style="width: 1152px; height: 540px;" alt="..."/>
 
                 <svg class="position-absolute" width="1152" height="540">
-                    <c:forEach var="roomId" items="${rooms.keySet()}">
-                        <svg x="${rooms.get(roomId).get(0)}"
-                             y="${rooms.get(roomId).get(1)}"
-                             width="${rooms.get(roomId).get(2)}"
-                             height="${rooms.get(roomId).get(3)}">
-                            <a href="${pageContext.request.contextPath}/room?id=${roomId}">
+                    <c:forEach var="room" items="${rooms}">
+                        <svg x="${renderData.get(room.roomId).get(0)}"
+                             y="${renderData.get(room.roomId).get(1)}"
+                             width="${renderData.get(room.roomId).get(2)}"
+                             height="${renderData.get(room.roomId).get(3)}">
+                            <a href="${pageContext.request.contextPath}/room?id=${room.roomId}">
                                 <rect x="0" y="0" rx="5" ry="5"
-                                      width="${rooms.get(roomId).get(2)}"
-                                      height="${rooms.get(roomId).get(3)}"
+                                      width="${renderData.get(room.roomId).get(2)}"
+                                      height="${renderData.get(room.roomId).get(3)}"
                                       style="fill: #28a745;">
                                 </rect>
 
                                 <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
-                                      style="fill: #f8f9fa;">${roomId}</text>
+                                      style="fill: #f8f9fa;">${room.roomId}</text>
                             </a>
                         </svg>
                     </c:forEach>
