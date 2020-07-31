@@ -50,8 +50,8 @@ public class RoomTest {
     @Test
     public void testRoomSearchParamQuery() throws Exception {
         SearchParameters params = new SearchParameters();
-        params.addParameter(RoomSearchParameter.fromFloorRange(3, 4));
+        params.addParameter(RoomSearchParameter.fromFloor(3));
         Collection<? extends TableEntry> rooms = Room.getFilteredRooms(params, connection);
-        assertEquals(51, rooms.size());
+        assertEquals(28, rooms.size());
     }
 }
