@@ -27,7 +27,7 @@ public class RRSUserService implements UserDetailsService {
      * Initializes RRS user service.
      */
     public RRSUserService() {
-        encoder = new BCryptPasswordEncoder();
+        this.encoder = new BCryptPasswordEncoder();
     }
 
     /**
@@ -39,11 +39,10 @@ public class RRSUserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // TODO: use singleton DBConnection
         try {
             SearchParameters params = new SearchParameters();
             params.addParameter(new FreeSearchParameter("username", "=", username));
-            Collection<? extends TableEntry> users = RRSUser.getFilteredUsers(params, new DBConnection());
+            Collection<? extends TableEntry> users = RRSUser.getFilteredUsers(params, DBConnection.getContextConnection());
             if (users.size() != 1)
                 throw new UsernameNotFoundException(
                     String.format("There's no user with '%s' username", username));
