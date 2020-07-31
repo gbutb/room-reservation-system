@@ -121,10 +121,12 @@
         var samePasswords=false;
         var validPassword=false;
 
+
         $("#termsAndConditions").change(function() {
             console.log("test");
             checkIfRight(validUsername, validMail, validNumber, samePasswords, validPassword);
         });
+
 
         $('#username').keyup(function () {
             if ($(this).val().length <= 4) {
@@ -148,7 +150,7 @@
 
         $('#password').keyup(function(){
             if($('#password').val() == ""){
-                $('#strongMessage').html("This must be filled").css('color', 'grey');
+                $('#strongMessage').html("");
             }else if(passwordIsStrong($('#password').val())){
                 validPassword = true;
                 $('#strongMessage').html("Password is strong").css('color', 'green');
@@ -161,10 +163,7 @@
         });
 
         $('#password-group').keyup(function () {
-            if($('#repeatPassword').val() == ""){
-                $('#submit').attr("disabled",true);
-                samePasswords=false;
-            }else if (!($('#password').val()===$('#repeatPassword').val())) {
+            if (!($('#password').val()===$('#repeatPassword').val()) && $('#repeatPassword').val() != "") {
                 $('#submit').attr("disabled",true);
                 samePasswords=false;
                 $('#message').html("Your passwords should match").css('color', 'red');
@@ -177,11 +176,7 @@
 
 
         $('#number').keyup(function () {
-            if ($(this).val() == "") {
-                $('#submit').attr("disabled",true);
-                $('#numMessage').html("Please enter your phone number").css('color', 'red');
-                validNumber=false;
-            } else if (!checkNumber($(this).val()) && $(this).val() != "") {
+            if (!checkNumber($(this).val()) && $(this).val() != "") {
                 $('#submit').attr("disabled",true);
                 $('#numMessage').html("Please enter a valid phone number").css('color', 'red');
                 validNumber=false;
