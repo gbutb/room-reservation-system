@@ -1,20 +1,23 @@
 // RRSGraphicalView.java
 package ge.rrs.modules.homepage;
 
+import ge.rrs.database.DBConnection;
+import ge.rrs.database.room.Room;
+import ge.rrs.database.room.RoomSearchParameters;
+import ge.rrs.modules.auth.RRSUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
 // ge.rrs
-import ge.rrs.modules.auth.RRSUser;
 
 /**
  * Initial implementation of homepage graphical view controller
@@ -23,66 +26,60 @@ import ge.rrs.modules.auth.RRSUser;
 public class RRSGraphicalView {
 
     @RequestMapping("/homepage-gv")
-    public ModelAndView renderDashboard(HttpServletRequest req) throws IOException {
+    public ModelAndView renderFilteredGraphicalView(HttpServletRequest req) throws Exception {
         ModelAndView mv = new ModelAndView();
         String floorParam = req.getParameter("floor");
-        String isFiltered = req.getParameter("filter");
+        String isFiltered = req.getParameter("isFiltered");
 
-        if (isFiltered != null) {
-            filterRooms(req);
-        }
+//        if (isFiltered != null) {
+//            filterRooms(req);
+//        }
+
+        RoomSearchParameters emptyParameters = new RoomSearchParameters();
+        emptyParameters.addFloorParameter(Integer.parseInt(floorParam));
+        Collection<Room> rooms = Room.getFilteredRooms(emptyParameters, new DBConnection());
+        HashMap<Integer, ArrayList<String>> roomsRenderData = parseRenderData(rooms);
 
         mv.setViewName("/homepage/homepage-graphical-view");
-        mv.addObject("rooms", fetchData(floorParam));
+        mv.addObject("rooms", rooms);
+        mv.addObject("renderData", roomsRenderData);
         mv.addObject("username", RRSUser.getCurrentUser().getUsername());
 
         return mv;
     }
 
-    private void filterRooms(HttpServletRequest req) {
-        String fromTime = req.getParameter("fromTime");
-        String toTime = req.getParameter("toTime");
-
-        String hasProjector = req.getParameter("hasProjector");
-        String hasAirConditioner = req.getParameter("hasAirConditioner");
-
-        String roomSize1 = req.getParameter("roomSize1");
-        String roomSize2 = req.getParameter("roomSize2");
-        String roomSize3 = req.getParameter("roomSize3");
-        String roomSize4 = req.getParameter("roomSize4");
-
-        if (fromTime.length() != 0 && toTime.length() != 0) {
-            // TODO: Set time range attribute to filter parameter
-        }
-
-        System.out.println(fromTime);
-        System.out.println(toTime);
-
-        System.out.println(hasAirConditioner);
-        System.out.println(hasProjector);
-
-        System.out.println(roomSize1);
-        System.out.println(roomSize2);
-        System.out.println(roomSize3);
-        System.out.println(roomSize4);
-
+//    private void filterRooms(HttpServletRequest req) {
+//        String fromTime = req.getParameter("fromTime");
+//        String toTime = req.getParameter("toTime");
+//
+//        String hasProjector = req.getParameter("hasProjector");
+//        String hasAirConditioner = req.getParameter("hasAirConditioner");
+//
+//        String roomSize1 = req.getParameter("roomSize1");
+//        String roomSize2 = req.getParameter("roomSize2");
+//        String roomSize3 = req.getParameter("roomSize3");
+//        String roomSize4 = req.getParameter("roomSize4");
+//
+//        if (fromTime.length() != 0 && toTime.length() != 0) {
+//            // TODO: Set time range attribute to filter parameter
+//        }
+//
 //        addParameter(hasAirConditioner, 1);
-    }
-
-//    private ArrayList<Room> addParameter(String parameter, int method) {
+//    }
+//
+//    private Collection<Room> addParameter(String parameter, int method, DBConnection dbConnection) throws Exception {
 //        RoomSearchParameters rsp = new RoomSearchParameters();
 //
 //        if (parameter != null) {
-//            switch (parameter) {
-//                case "on":
-//                    addFilterParameter(rsp, method);
+//            if (parameter.equals("on")) {
+//                addFilterParameter(rsp, method);
 //            }
 //        }
 //
-//        return Room.getFilteredRooms(rsp, connection);
+//        return Room.getFilteredRooms(rsp, dbConnection);
 //    }
 //
-//    private void addFilterParameter(RoomSearchParameters rsp, int method) {
+//    private void addFilterParameter(RoomSearchParameters rsp, int method) throws Exception {
 //        switch (method) {
 //            case 1:
 //                rsp.addAirConditionerParameter();
@@ -104,27 +101,23 @@ public class RRSGraphicalView {
 //        }
 //    }
 
-    public HashMap<String, ArrayList<String>> fetchData(String floorParam) throws IOException {
-        BufferedReader rd = new BufferedReader(new FileReader("src/main/resources/floor-" + floorParam + "-rooms.txt"));
-        HashMap<String, ArrayList<String>> rooms = new HashMap<>();
+    private HashMap<Integer, ArrayList<String>> parseRenderData(Collection<Room> rooms) {
+        HashMap<Integer, ArrayList<String>> roomsRenderData = new HashMap<>();
 
-        int roomId = 0;
-        while (true) {
-            String line = rd.readLine();
-            if (line == null) break;
+        for (Room room : rooms) {
+            int roomId = room.getRoomId();
+            String renderData = room.getRenderData();
 
-            StringTokenizer stringTokenizer = new StringTokenizer(line, " ");
-
-            rooms.put(String.valueOf(roomId), new ArrayList<>());
+            StringTokenizer stringTokenizer = new StringTokenizer(renderData, " ");
+            ArrayList<String> parsedData = new ArrayList<>();
             while (stringTokenizer.hasMoreElements()) {
                 String currElement = stringTokenizer.nextToken();
-                rooms.get(String.valueOf(roomId)).add(currElement);
+                parsedData.add(currElement);
             }
-            roomId++;
+
+            roomsRenderData.put(roomId, parsedData);
         }
 
-        rd.close();
-
-        return rooms;
+        return roomsRenderData;
     }
 }
