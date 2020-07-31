@@ -46,7 +46,7 @@ public class RoomSearchParameter implements SearchParameter {
 
     static RoomSearchParameter withAirConditioner() {
         return new RoomSearchParameter(
-                "conditioner", " = ", "true", new ArrayList<>()
+                "air_conditioner", " = ", "true", new ArrayList<>()
         );
     }
 
