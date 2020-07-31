@@ -37,7 +37,7 @@ public class UserTest {
     public void testInitialization() {
         // Initialize User
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        RRSUser user = new RRSUser("username", "password", "username", null);
+        RRSUser user = new RRSUser("username", "password", "username", "123456789", null);
 
         assertEquals(user.getUsername(), "username");
         assertEquals(user.getPassword(), "password");
@@ -127,15 +127,15 @@ public class UserTest {
     }
 
 
-    // @Test
+    @Test
     public void testRegister() throws Exception {
         RRSUser user = new RRSUser(
             "testRegisterUsername", 
             (new BCryptPasswordEncoder()).encode("testRegisterPassword"),
             "registeredUsers@humans.org",
+            "123456789",
             connection);
-        user.save();
-
+        user.insertEntry();
 
         // Check if the user registered
         SearchParameters params = new SearchParameters();
@@ -148,5 +148,38 @@ public class UserTest {
             assertEquals(user.getPassword(), ((RRSUser)found_user).getPassword());
             assertEquals(user.getEmail(), ((RRSUser)found_user).getEmail());
         }
+
+        // Try to register the user again
+        RRSUser re_user = new RRSUser(
+            user.getUsername(),
+            (new BCryptPasswordEncoder()).encode("testRegisterPassword"),
+            "registeredUsers@humangs.org",
+            "123456789",
+            connection);
+        boolean threwError = false;
+        try {
+            re_user.insertEntry();
+        } catch (Exception e) {
+            threwError = true;
+        }
+        assertTrue(threwError);
+    }
+
+    @Test
+    public void testUpdateUser() throws Exception {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        RRSUser user = new RRSUser(
+            "testUpdateUsername", 
+            encoder.encode("testUpdatePassword"),
+            "updatedUsers@humans.org",
+            "123456789",
+            connection);
+        user.insertEntry();
+        user.setEncryptedPassword(
+            encoder.encode("newPassword"));
+        user.updateEntry();
+
+        RRSUser user_from_db = RRSUser.getUser("testUpdateUsername", connection);
+        assertTrue(encoder.matches("newPassword", user_from_db.getPassword()));
     }
 }

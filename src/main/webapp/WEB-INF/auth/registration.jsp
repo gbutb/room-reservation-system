@@ -54,6 +54,10 @@
                             <input type="text"  name="phoneNumber" id="number" class="form-control" required>
                             <span id = 'numMessage'></span>
                         </div>
+                        <div class="form-check mb-3">
+                            <input type="checkbox" class="form-check-input" id="termsAndConditions">
+                            <label class="form-check-label" for="termsAndConditions">I agree to the <a href="/terms-and-conditions">Terms and Conditions</a></label>
+                        </div>
 
                         <div class="modal fade" id="inputsModal" tabindex="-1" role="dialog"
                              aria-labelledby="inputsModalLabel" aria-hidden="true">
@@ -98,8 +102,10 @@
     bootstrapValidate('#mail', 'email:Please enter a valid mail.')
 
     function checkIfRight(validUsername,validMail,validNumber,samePasswords,validPassword){
-        if(validMail&&validUsername&&validNumber&&samePasswords&&validPassword){
+        if(validMail&&validUsername&&validNumber&&samePasswords&&validPassword&&$("#termsAndConditions").is(":checked")){
             $('#submit').attr("disabled",false);
+        } else {
+            $('#submit').attr("disabled",true);
         }
     }
 
@@ -114,6 +120,12 @@
         var validNumber=false;
         var samePasswords=false;
         var validPassword=false;
+
+
+        $("#termsAndConditions").change(function() {
+            console.log("test");
+            checkIfRight(validUsername, validMail, validNumber, samePasswords, validPassword);
+        });
 
 
         $('#username').keyup(function () {

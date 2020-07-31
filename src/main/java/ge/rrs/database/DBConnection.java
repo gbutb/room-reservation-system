@@ -1,7 +1,6 @@
 // DBConnection.java
 package ge.rrs.database;
 
-
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import java.io.BufferedReader;
@@ -58,6 +57,10 @@ public class DBConnection {
             dbConnection = new DBConnection();
         }
         return dbConnection;
+    }
+
+    public static DBConnection getContextConnection() {
+        return ContextConnection.getContextConnection();
     }
 
     /**
