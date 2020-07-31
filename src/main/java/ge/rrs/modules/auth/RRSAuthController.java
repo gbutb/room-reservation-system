@@ -39,11 +39,13 @@ public class RRSAuthController {
 	String register(
             @RequestParam(value = "username", required = true) String username,
             @RequestParam(value = "password", required = true) String password,
-            @RequestParam(value = "email", required = true) String email) throws Exception {
+            @RequestParam(value = "email", required = true) String email,
+            @RequestParam(value = "phoneNumber", required = true) String phoneNumber) throws Exception {
         userService.registerNewUser(
             new RRSUser(
                 username, userService.getEncoder().encode(password),
-                email, new DBConnection()));
+                email, phoneNumber,
+                new DBConnection()));
 		return "redirect:/login";
 	}    
 }
