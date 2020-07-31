@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
 <head>
     <!-- Required meta tags -->
@@ -65,7 +66,7 @@
             </form>
 
             <%-- Time based search and advanced search --%>
-            <form class="form-inline flex-nowrap m-0 needs-validation" novalidate
+            <form:form class="form-inline flex-nowrap m-0"
                   action="${pageContext.request.contextPath}/homepage-gv?floor=${param.floor}"
                   method="post"
                   id="filterForm">
@@ -120,7 +121,7 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            </form:form>
         </div>
 
         <%-- Container for user dropdown toggler --%>
