@@ -93,10 +93,11 @@ public class ReservationSearchParameter implements SearchParameter {
 
     static ReservationSearchParameter containsDate(String date) {
         return new ReservationSearchParameter(
-                "TO_DATE(?)", " BETWEEN ", "start_date AND end_date",
+                "STR_TO_DATE(?, ?)", " BETWEEN ", "start_date AND end_date",
                 new ArrayList<String>() {
                     {
                         add(date);
+                        add("%Y-%M-%d %H:%i:%s");
                     }
                 });
     }

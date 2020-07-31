@@ -43,14 +43,14 @@ CREATE TABLE reservations
     FOREIGN KEY (room_id) REFERENCES rooms (room_id),
     FOREIGN KEY (account_id) REFERENCES accounts (account_id)
 );
-	
-INSERT INTO room_comment VALUES
-	(0, STR_TO_DATE('9,7,2020 14,30,0', '%d,%m,%Y %H,%i,%s'), 'Hello room!');
 
-	
-INSERT INTO accounts VALUES
-	(0, 'Human', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO', 'human@humans.org'),
-	(1, 'Human 1', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO', 'human1@humans.org');
+INSERT INTO room_comment
+VALUES (0, STR_TO_DATE('2020-08-12 14:30:00', '%Y-%M-%d %H:%i:%s'), 'Hello room!');
+
+
+INSERT INTO accounts
+VALUES (0, 'Human', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO', 'human@humans.org'),
+       (1, 'Human 1', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO', 'human1@humans.org');
 
 INSERT INTO rooms
 VALUES (100, 1, 1, true, true, 0, '253.12 488.25 118.13 51.75'),
@@ -151,7 +151,7 @@ VALUES (100, 1, 1, true, true, 0, '253.12 488.25 118.13 51.75'),
        (421, 1, 4, true, true, 0, '608.62 57.38 51.75 55.13'),
        (422, 1, 4, true, true, 0, '608.62 0 51.75 55.13');
 
-INSERT INTO reservations VALUES
-	(0, 200, STR_TO_DATE('10,7,2020 14,40,0', '%d,%m,%Y %H,%i,%s'),
-			 STR_TO_DATE('10,7,2020 15,40,0', '%d,%m,%Y %H,%i,%s'), false, 0);
+INSERT INTO reservations
+VALUES (0, 200, STR_TO_DATE('2020-01-12 14:30:00', '%Y-%M-%d %H:%i:%s'),
+        STR_TO_DATE('2020-12-12 14:30:00', '%Y-%M-%d %H:%i:%s'), false, 0);
 
