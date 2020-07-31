@@ -4,11 +4,13 @@ package ge.rrs.database.reservation;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 // ge.rrs
 import ge.rrs.database.TableEntry;
 import ge.rrs.database.DBConnection;
+import ge.rrs.database.SearchParameters;
 
 public class Reservation extends TableEntry {
 
@@ -28,7 +30,7 @@ public class Reservation extends TableEntry {
     // Reference to DBConnection
     private final DBConnection connection;
 
-    private int reservationId;
+    private Integer reservationId;
     private int roomId;
     private String startDate;
     private String endDate;
@@ -63,6 +65,23 @@ public class Reservation extends TableEntry {
         this.connection = connection;
     }
 
+    public Reservation(
+            int roomId,
+            String startDate,
+            String endDate,
+            boolean doRepeat,
+            int accountId,
+            DBConnection connection) {
+        this(0,
+            roomId,
+            startDate,
+            endDate,
+            doRepeat,
+            accountId,
+            connection);
+        this.reservationId = null;
+    }
+
     @Override
     public DBConnection getConnection() {
         return connection;
@@ -73,7 +92,12 @@ public class Reservation extends TableEntry {
         return TABLE_NAME;
     }
 
-    public static Collection<Reservation> getFilteredReservations(ReservationSearchParameters parameters,
+    @Override
+    public Integer getPrimaryKey() {
+        return reservationId;
+    }
+
+    public static Collection<Reservation> getFilteredReservations(SearchParameters parameters,
                                                                   DBConnection connection) throws SQLException {
         ResultSet rs = TableEntry.filter(parameters, connection, Reservation.TABLE_NAME);
         Collection<Reservation> entries = new ArrayList<>();
@@ -85,20 +109,44 @@ public class Reservation extends TableEntry {
     }
 
     @Override
-    public void save() throws Exception {
+    public void insertEntry() throws Exception {
+        if (getPrimaryKey() != null)
+            throw new Exception("Entry already exists!");
+
         getConnection().executeUpdate(
-                "INSERT INTO " + TABLE_NAME + " VALUES (?, ?, ?, ?, ?, ?)",
-                new ArrayList<String>() {
-                    {
-                        add("" + getReservationId());
-                        add("" + getRoomId());
-                        add(getStartDate());
-                        add(getEndDate());
-                        add(isDoRepeat() ? "true" : "false");
-                        add("" + getAccountId());
-                    }
-                }
-        );
+            String.format(
+                "INSERT INTO %s VALUES (0, ?, ?, ?, ?, ?)",
+                getTableName()),
+            Arrays.asList(new String[] {
+                Integer.toString(getRoomId()),
+                getStartDate(),
+                getEndDate(),
+                isDoRepeat() ? "1" : "0",
+                Integer.toString(getAccountId()) }));
+    }
+
+    @Override
+    public void updateEntry() throws Exception {
+        if (getPrimaryKey() == null)
+            throw new Exception("No such entry exists!");
+        // Update the entry
+        getConnection().executeUpdate(
+            String.format(
+                "UPDATE %s SET %s=?, %s=?, %s=?, %s=?, %s=? WHERE %s=?",
+                getTableName(),
+                ROOM_ID_NAME,
+                START_DATE_NAME,
+                END_DATE_NAME,
+                DO_REPEAT_NAME,
+                ACCOUNT_ID_NAME,
+                RESERVATION_ID_NAME),
+            Arrays.asList(new String[] {
+                Integer.toString(getRoomId()),
+                getStartDate(),
+                getEndDate(),
+                isDoRepeat() ? "1" : "0",
+                Integer.toString(getAccountId()),
+                getPrimaryKey().toString() }));
     }
 
     // Getter Methods

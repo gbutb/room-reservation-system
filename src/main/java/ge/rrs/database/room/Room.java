@@ -36,7 +36,7 @@ public class Room extends TableEntry {
     private final DBConnection connection;
 
     // Room Details
-    private int roomId;
+    private Integer roomId;
     private int roomSize;
     private int floor;
     private int commentId;
@@ -92,6 +92,11 @@ public class Room extends TableEntry {
     @Override
     public String getTableName() {
         return TABLE_NAME;
+    }
+
+    @Override
+    public Integer getPrimaryKey() {
+        return roomId;
     }
 
     public static Collection<Room> getFilteredRooms(SearchParameters parameters,
@@ -160,7 +165,14 @@ public class Room extends TableEntry {
     }
 
     @Override
-    public void save() {
+    public void insertEntry() throws Exception {
+        // TODO Auto-generated method stub
+        throw new Exception("Not implemented yet");
+    }
 
+    @Override
+    public void updateEntry() throws Exception {
+        // TODO Auto-generated method stub
+        throw new Exception("Not implemented yet");
     }
 }
