@@ -54,13 +54,29 @@
                             <input type="text"  name="number" id="number" class="form-control" required>
                             <span id = 'numMessage'></span>
                         </div>
+
+                        <div class="modal fade" id="inputsModal" tabindex="-1" role="dialog"
+                             aria-labelledby="inputsModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-danger" id="inputsModalLabel">Failed To Register</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        You can't register with the given username and email.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div >
                             <div class="form-group" style="display: inline-block;">
-                                <input type="submit" name="submit" id="submit" class="btn btn-primary btn-md" value="register" onclick=function
-                                       registerValid() {
-
-                                       }
-                                       registerValid() disabled>
+                                <input type="submit" name="submit" id="submit" class="btn btn-primary btn-md" value="register" onclick= "registerValid()" disabled>
                             </div>
                         </div>
                         <div id="login-link" class="text-right">
@@ -86,7 +102,10 @@
             $('#submit').attr("disabled",false);
         }
     }
-
+    function registerValid() {
+        if (<%=failed %>) ('#inputsModal').modal();
+        else document.getElementById("submit").submit();
+    }
     $(function () {
         var validUsername=false;
         var validMail=false;
