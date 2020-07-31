@@ -40,7 +40,7 @@ public class ReservationTest {
     }
 
     @Test
-    public void addNewReservation() throws Exception {
+    public void testAddNewReservation() throws Exception {
         LocalDateTime datetime = LocalDateTime.now();
         DateTimeFormatter formatter =
             DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
@@ -59,5 +59,32 @@ public class ReservationTest {
 
         int new_size = Reservation.getFilteredReservations(params, connection).size();
         assertEquals(previous_size + 1, new_size);
+    }
+
+    @Test
+    public void testUpdateReservation() throws Exception {
+        SearchParameters params = new SearchParameters();
+        params.addParameter(new FreeSearchParameter());
+        Collection<Reservation> reservations =
+            Reservation.getFilteredReservations(params, connection);
+        assertTrue(reservations.size() > 0);
+
+        // Extract first one
+        Reservation reservation =
+            reservations.toArray(new Reservation[reservations.size()])[0];
+        String endDate = reservation.getEndDate();
+
+        // Set end to today
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter =
+            DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        reservation.setEndDate(formatter.format(now));
+        reservation.updateEntry();
+
+        // Revert changes
+        reservation.setEndDate(endDate);
+        reservation.updateEntry();
+
+        // TODO: query the value again.
     }
 }

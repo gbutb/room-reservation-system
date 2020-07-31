@@ -109,23 +109,6 @@ public class Reservation extends TableEntry {
     }
 
     @Override
-    public void save() throws Exception {
-        getConnection().executeUpdate(
-                "INSERT INTO " + TABLE_NAME + " VALUES (?, ?, ?, ?, ?, ?)",
-                new ArrayList<String>() {
-                    {
-                        add("" + getReservationId());
-                        add("" + getRoomId());
-                        add(getStartDate());
-                        add(getEndDate());
-                        add(isDoRepeat() ? "true" : "false");
-                        add("" + getAccountId());
-                    }
-                }
-        );
-    }
-
-    @Override
     public void insertEntry() throws Exception {
         if (getPrimaryKey() != null)
             throw new Exception("Entry already exists!");
@@ -144,8 +127,26 @@ public class Reservation extends TableEntry {
 
     @Override
     public void updateEntry() throws Exception {
-        // TODO Auto-generated method stub
-        throw new Exception("Not implemented yet");
+        if (getPrimaryKey() == null)
+            throw new Exception("No such entry exists!");
+        // Update the entry
+        getConnection().executeUpdate(
+            String.format(
+                "UPDATE %s SET %s=?, %s=?, %s=?, %s=?, %s=? WHERE %s=?",
+                getTableName(),
+                ROOM_ID_NAME,
+                START_DATE_NAME,
+                END_DATE_NAME,
+                DO_REPEAT_NAME,
+                ACCOUNT_ID_NAME,
+                RESERVATION_ID_NAME),
+            Arrays.asList(new String[] {
+                Integer.toString(getRoomId()),
+                getStartDate(),
+                getEndDate(),
+                isDoRepeat() ? "1" : "0",
+                Integer.toString(getAccountId()),
+                getPrimaryKey().toString() }));
     }
 
     // Getter Methods
