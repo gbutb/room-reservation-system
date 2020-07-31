@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,18 +24,18 @@ import java.util.StringTokenizer;
 public class RRSGraphicalView {
 
     @RequestMapping("/homepage-gv")
-    public ModelAndView renderFilteredGraphicalView(HttpServletRequest req) throws Exception {
+    public ModelAndView renderGraphicalView(HttpServletRequest req) throws Exception {
         ModelAndView mv = new ModelAndView();
         String floorParam = req.getParameter("floor");
         String isFiltered = req.getParameter("isFiltered");
 
+        RoomSearchParameters params = new RoomSearchParameters();
 //        if (isFiltered != null) {
-//            filterRooms(req);
+//             filterRooms(params, req);
 //        }
 
-        RoomSearchParameters emptyParameters = new RoomSearchParameters();
-        emptyParameters.addFloorParameter(Integer.parseInt(floorParam));
-        Collection<Room> rooms = Room.getFilteredRooms(emptyParameters, new DBConnection());
+        params.addFloorParameter(Integer.parseInt(floorParam));
+        Collection<Room> rooms = Room.getFilteredRooms(params, new DBConnection());
         HashMap<Integer, ArrayList<String>> roomsRenderData = parseRenderData(rooms);
 
         mv.setViewName("/homepage/homepage-graphical-view");
@@ -48,58 +46,69 @@ public class RRSGraphicalView {
         return mv;
     }
 
-//    private void filterRooms(HttpServletRequest req) {
-//        String fromTime = req.getParameter("fromTime");
-//        String toTime = req.getParameter("toTime");
-//
-//        String hasProjector = req.getParameter("hasProjector");
-//        String hasAirConditioner = req.getParameter("hasAirConditioner");
-//
-//        String roomSize1 = req.getParameter("roomSize1");
-//        String roomSize2 = req.getParameter("roomSize2");
-//        String roomSize3 = req.getParameter("roomSize3");
-//        String roomSize4 = req.getParameter("roomSize4");
-//
+    private void filterRooms(RoomSearchParameters params, HttpServletRequest req) throws Exception {
+        String fromTime = req.getParameter("fromTime");
+        String toTime = req.getParameter("toTime");
+
 //        if (fromTime.length() != 0 && toTime.length() != 0) {
-//            // TODO: Set time range attribute to filter parameter
+//            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//            LocalDate from = LocalDate.now();
+//            LocalDate to = from.plusDays(1);
+//
+//            params.addDateTimeRangeParameter(
+//                    dtf.format(now) + " " + fromTime,
+//                    dtf.format(now) + " " + toTime,
+//                    new DBConnection()
+//            );
 //        }
-//
-//        addParameter(hasAirConditioner, 1);
-//    }
-//
-//    private Collection<Room> addParameter(String parameter, int method, DBConnection dbConnection) throws Exception {
-//        RoomSearchParameters rsp = new RoomSearchParameters();
-//
-//        if (parameter != null) {
-//            if (parameter.equals("on")) {
-//                addFilterParameter(rsp, method);
-//            }
-//        }
-//
-//        return Room.getFilteredRooms(rsp, dbConnection);
-//    }
-//
-//    private void addFilterParameter(RoomSearchParameters rsp, int method) throws Exception {
-//        switch (method) {
-//            case 1:
-//                rsp.addAirConditionerParameter();
-//                break;
-//            case 2:
-//                rsp.addProjectorParameter();
-//                break;
-//            case 3:
-//                rsp.addRoomSizeParameter(1);
-//                break;
-//            case 4:
-//                rsp.addRoomSizeParameter(2);
-//                break;
-//            case 5:
-//                rsp.addRoomSizeParameter(3);
-//                break;
-//            case 6:
-//                rsp.addRoomSizeParameter(4);
-//        }
-//    }
+
+        ArrayList<String> requestParameters = new ArrayList<String>() {
+            {
+                add(req.getParameter("hasProjector"));
+                add(req.getParameter("hasAirConditioner"));
+                add(req.getParameter("roomSize1"));
+                add(req.getParameter("roomSize2"));
+                add(req.getParameter("roomSize3"));
+                add(req.getParameter("roomSize4"));
+            }
+        };
+
+        System.out.println(requestParameters);
+
+        for (int i = 0; i < requestParameters.size(); i++) {
+            addParameter(params, requestParameters.get(i), i);
+        }
+    }
+
+    private void addParameter(RoomSearchParameters params, String parameter, int method) throws Exception {
+        if (parameter != null) {
+            if (parameter.equals("on")) {
+                addFilterParameter(params, method);
+            }
+        }
+    }
+
+    private void addFilterParameter(RoomSearchParameters params, int method) throws Exception {
+        switch (method) {
+            case 0:
+                params.addAirConditionerParameter();
+                break;
+            case 1:
+                params.addProjectorParameter();
+                break;
+            case 2:
+                params.addRoomSizeParameter(1);
+                break;
+            case 3:
+                params.addRoomSizeParameter(2);
+                break;
+            case 4:
+                params.addRoomSizeParameter(3);
+                break;
+            case 5:
+                params.addRoomSizeParameter(4);
+        }
+    }
 
     private HashMap<Integer, ArrayList<String>> parseRenderData(Collection<Room> rooms) {
         HashMap<Integer, ArrayList<String>> roomsRenderData = new HashMap<>();

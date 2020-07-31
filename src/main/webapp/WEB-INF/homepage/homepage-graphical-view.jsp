@@ -187,7 +187,7 @@
                                 <rect x="0" y="0" rx="5" ry="5"
                                       width="${renderData.get(room.roomId).get(2)}"
                                       height="${renderData.get(room.roomId).get(3)}"
-                                      style="fill: #28a745;">
+                                      style="fill: ${room.occupied == true ? '#dc3545' : '#28a745'};">
                                 </rect>
 
                                 <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
@@ -212,6 +212,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
-<script src="homepage-graphical-view.js"></script>
+<script src="../../resources/homepage-graphical-view.js"></script>
 </body>
 </html>
