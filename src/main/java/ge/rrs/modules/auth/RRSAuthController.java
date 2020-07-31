@@ -55,7 +55,7 @@ public class RRSAuthController {
             userService.registerNewUser(
                 new RRSUser(
                     username, userService.getEncoder().encode(password),
-                    email, phoneNumber, new DBConnection()));
+                    email, phoneNumber, DBConnection.getContextConnection()));
         } catch (Exception e) {
             System.out.println(e.toString());
             modelView.addObject("failed", true);
