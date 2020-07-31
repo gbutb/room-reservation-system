@@ -73,6 +73,11 @@ public class Reservation extends TableEntry {
         return TABLE_NAME;
     }
 
+    @Override
+    public Integer getPrimaryKey() {
+        return reservationId;
+    }
+
     public static Collection<Reservation> getFilteredReservations(ReservationSearchParameters parameters,
                                                                   DBConnection connection) throws SQLException {
         ResultSet rs = TableEntry.filter(parameters, connection, Reservation.TABLE_NAME);
@@ -99,6 +104,18 @@ public class Reservation extends TableEntry {
                     }
                 }
         );
+    }
+
+    @Override
+    public void insertEntry() throws Exception {
+        // TODO Auto-generated method stub
+        throw new Exception("Not implemented yet");
+    }
+
+    @Override
+    public void updateEntry() throws Exception {
+        // TODO Auto-generated method stub
+        throw new Exception("Not implemented yet");
     }
 
     // Getter Methods

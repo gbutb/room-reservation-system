@@ -26,10 +26,12 @@ CREATE TABLE rooms
 
 CREATE TABLE accounts
 (
-    account_id        INT PRIMARY KEY,
+    account_id        INT NOT NULL AUTO_INCREMENT,
     username          VARCHAR(255),
     encryptedPassword VARCHAR(255),
-    email             VARCHAR(255)
+    email             VARCHAR(255),
+
+    PRIMARY KEY (account_id)
 );
 
 CREATE TABLE reservations
@@ -49,8 +51,8 @@ INSERT INTO room_comment VALUES
 
 	
 INSERT INTO accounts VALUES
-	(0, 'Human', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO', 'human@humans.org'),
-	(1, 'Human 1', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO', 'human1@humans.org');
+	(0,'Human', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO', 'human@humans.org'),
+	(0,'Human 1', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO', 'human1@humans.org');
 
 INSERT INTO rooms
 VALUES (100, 1, 1, true, true, 0, '253.12 488.25 118.13 51.75'),
@@ -153,5 +155,5 @@ VALUES (100, 1, 1, true, true, 0, '253.12 488.25 118.13 51.75'),
 
 INSERT INTO reservations VALUES
 	(0, 200, STR_TO_DATE('10,7,2020 14,40,0', '%d,%m,%Y %H,%i,%s'),
-			 STR_TO_DATE('10,7,2020 15,40,0', '%d,%m,%Y %H,%i,%s'), false, 0);
+			 STR_TO_DATE('10,7,2020 15,40,0', '%d,%m,%Y %H,%i,%s'), false, 1);
 

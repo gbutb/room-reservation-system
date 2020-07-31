@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 // ge.rrs
 import ge.rrs.database.DBConnection;
+import ge.rrs.database.FreeSearchParameter;
 import ge.rrs.database.SearchParameters;
 import ge.rrs.database.TableEntry;
 
@@ -25,10 +26,17 @@ public class RRSUser extends TableEntry implements UserDetails {
     // this table entry corresponds to.
     private static final String TABLE_NAME = "accounts";
 
+    // Names of the table columns
+    private static final String ACCOUNT_ID_NAME = "account_id";
+    private static final String USERNAME_NAME = "username";
+    private static final String PASSWORD_NAME = "encryptedPassword";
+    private static final String EMAIL_NAME = "email";
+
     // Reference to DBConnection
     private DBConnection connection;
 
     // User Details
+    private Integer primaryKey;
     private String username;
     private String encryptedPassword;
     private String email;
@@ -39,11 +47,22 @@ public class RRSUser extends TableEntry implements UserDetails {
     private boolean credentialsNonExpired;
     private boolean enabled;
 
-    // Meta
-    private boolean isNull;
-
     // Authorities
     private Collection<GrantedAuthority> authorities;
+
+    /**
+     * Initializes From result set.
+     * @param rs result set corresponding to the entry.
+     * @param connection A reference to DBConnection.
+     */
+    public RRSUser(ResultSet rs, DBConnection connection) throws SQLException {
+        this(
+            rs.getString(USERNAME_NAME),
+            rs.getString(PASSWORD_NAME),
+            rs.getString(EMAIL_NAME),
+            connection);
+        primaryKey = rs.getInt(ACCOUNT_ID_NAME);
+    }
 
     /**
      * Initializes new RRS User.
@@ -65,7 +84,6 @@ public class RRSUser extends TableEntry implements UserDetails {
         this.authorities = new ArrayList<>();
 
         this.connection = connection;
-        this.isNull = false;
     }
 
     /**
@@ -73,7 +91,7 @@ public class RRSUser extends TableEntry implements UserDetails {
      */
     public RRSUser(DBConnection connection) {
         this(null, null, null, connection);
-        this.isNull = true;
+        this.primaryKey = null;
     }
 
     /**
@@ -91,6 +109,18 @@ public class RRSUser extends TableEntry implements UserDetails {
     @Override
     public String getTableName() {
         return TABLE_NAME;
+    }
+
+    @Override
+    public Integer getPrimaryKey() {
+        if (primaryKey == null) {
+            try {
+                RRSUser user = getUser(
+                    getUsername(), connection);
+                primaryKey = user.getPrimaryKey();
+            } catch (Exception e) {}
+        }
+        return primaryKey;
     }
 
     /////////////////
@@ -113,25 +143,65 @@ public class RRSUser extends TableEntry implements UserDetails {
         while (rs.next()) {
             // Add new entry
             entries.add(new RRSUser(
-                rs.getString("username"),
-                rs.getString("encryptedPassword"),
-                rs.getString("email"),
-                connection));
+                rs, connection));
         }
         return entries;
     }
 
+    /**
+     * Filters users with given entris.
+     * @param connection reference to DBConnection
+     * @return a collection of users which match the entry.
+     * @throws Exception should any error occur.
+     */
+    public static RRSUser getUser(
+            String username, DBConnection connection) throws Exception {
+        // Initialize Search parameters
+        SearchParameters params = new SearchParameters();
+        params.addParameter(new FreeSearchParameter(USERNAME_NAME, "=", username));
+
+        // Query
+        Collection<RRSUser> users = getFilteredUsers(params, connection);
+
+        // Return the first user
+        for (RRSUser user : users) {
+            return user;
+        }
+
+        return null;
+    }
+
     @Override
-    public void save() throws Exception {
-        // TODO: move this to DBConnection
+    public void insertEntry() throws Exception {
+        if (getPrimaryKey() != null)
+            throw new Exception("Entry already exists!");
+        // Insert the entry
         getConnection().executeUpdate(
-            "INSERT INTO accounts VALUES (?, ?, ?, ?)",
-            Arrays.asList(
-                new String[] {
-                    getFilteredUsers(new SearchParameters(), getConnection()).size() + "",
-                    getUsername(),
-                    getPassword(),
-                    getEmail() }));
+            String.format(
+                "INSERT INTO %s VALUES (0, ?, ?, ?)",
+                getTableName()),
+            Arrays.asList(new String[] {
+                getUsername(),
+                getPassword(),
+                getEmail() }));
+    }
+
+    @Override
+    public void updateEntry() throws Exception {
+        if (getPrimaryKey() == null)
+            throw new Exception("No such entry exists");
+        // Update the entry
+        getConnection().executeUpdate(
+            String.format(
+                "UPDATE %s SET %s=?, %s=?, %s=? WHERE %s=?",
+                getTableName(),
+                USERNAME_NAME, PASSWORD_NAME, EMAIL_NAME,
+                ACCOUNT_ID_NAME),
+            Arrays.asList(new String[] {
+                getUsername(),
+                getPassword(),
+                getEmail(),
+                getPrimaryKey().toString() }));
     }
 
     /////////////////
@@ -175,6 +245,14 @@ public class RRSUser extends TableEntry implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    /////////////
+    // Setters //
+    /////////////
+
+    public void setEncryptedPassword(String encryptedPassword) {
+        this.encryptedPassword = encryptedPassword;
     }
 
     ///////////
