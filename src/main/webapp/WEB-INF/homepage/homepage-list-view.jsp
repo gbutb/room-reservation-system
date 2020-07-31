@@ -140,7 +140,8 @@
                         <th style="width: 10%">Floor</th>
                         <th style="width: 10%">Size</th>
                         <th style="width: 10%">Air Conditioner</th>
-                        <th>Projector</th>
+                        <th style="width: 10%">Projector</th>
+                        <th></th>
                         <th style="width: 6.5%">Room Link</th>
                     </tr>
                 </thead>
@@ -156,6 +157,7 @@
                         <td>medium</td>
                         <td>yes</td>
                         <td>yes</td>
+                        <td></td>
                         <td>
                             <a class="btn btn-primary"  style="width: 87px" role="button" href="#">
                                 Enter
@@ -174,6 +176,7 @@
                         <td>large</td>
                         <td>no</td>
                         <td>yes</td>
+                        <td></td>
                         <td>
                             <a class="btn btn-primary" style="width: 87px" role="button" href="#">
                                 Enter
@@ -193,6 +196,7 @@
                             <td>${room.getSize()}</td>
                             <td>${room.getConditioner()}</td>
                             <td>${room.getProjector()}</td>
+                            <td></td>
                             <td>
                                 <a class="btn btn-primary" style="width: 87px" role="button" href="/room?id=${room.getId()}">
                                     Enter
