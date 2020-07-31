@@ -27,9 +27,10 @@ CREATE TABLE rooms
 CREATE TABLE accounts
 (
     account_id        INT NOT NULL AUTO_INCREMENT,
-    username          VARCHAR(255),
+    username          VARCHAR(255) UNIQUE,
     encryptedPassword VARCHAR(255),
-    email             VARCHAR(255),
+    email             VARCHAR(255) UNIQUE,
+    phoneNumber       VARCHAR(255),
 
     PRIMARY KEY (account_id)
 );
@@ -53,8 +54,8 @@ INSERT INTO room_comment VALUES
 
 	
 INSERT INTO accounts VALUES
-	(0,'Human', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO', 'human@humans.org'),
-	(0,'Human 1', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO', 'human1@humans.org');
+	(0,'Human', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO', 'human@humans.org', '123456789'),
+	(0,'Human 1', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO', 'human1@humans.org', '123456789');
 
 INSERT INTO rooms
 VALUES (100, 1, 1, true, true, 0, '253.12 488.25 118.13 51.75'),

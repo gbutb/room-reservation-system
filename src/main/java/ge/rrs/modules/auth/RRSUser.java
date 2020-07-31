@@ -32,6 +32,7 @@ public class RRSUser extends TableEntry implements UserDetails {
     private static final String USERNAME_NAME = "username";
     private static final String PASSWORD_NAME = "encryptedPassword";
     private static final String EMAIL_NAME = "email";
+    private static final String PHONENUMBER_NAME = "phoneNumber";
 
     // Reference to DBConnection
     private DBConnection connection;
@@ -41,6 +42,7 @@ public class RRSUser extends TableEntry implements UserDetails {
     private String username;
     private String encryptedPassword;
     private String email;
+    private String phoneNumber;
 
     // User status
     private boolean nonExpired;
@@ -61,6 +63,7 @@ public class RRSUser extends TableEntry implements UserDetails {
             rs.getString(USERNAME_NAME),
             rs.getString(PASSWORD_NAME),
             rs.getString(EMAIL_NAME),
+            rs.getString(PHONENUMBER_NAME),
             connection);
         primaryKey = rs.getInt(ACCOUNT_ID_NAME);
     }
@@ -71,11 +74,13 @@ public class RRSUser extends TableEntry implements UserDetails {
      * @param encryptedPassword BCrypt encrypted password.
      * @param email Email of the account.
      * @param connection a reference to the DBConnection.
+     * @param phoneNumber a 9-digit phone number.
      */
-    public RRSUser(String username, String encryptedPassword, String email, DBConnection connection) {
+    public RRSUser(String username, String encryptedPassword, String email, String phoneNumber, DBConnection connection) {
         this.username = username;
         this.encryptedPassword = encryptedPassword;
         this.email = email;
+        this.phoneNumber = phoneNumber;
         
         this.nonExpired = true;
         this.nonLocked = true;
@@ -91,7 +96,7 @@ public class RRSUser extends TableEntry implements UserDetails {
      * Null user constructor.
      */
     public RRSUser(DBConnection connection) {
-        this(null, null, null, connection);
+        this(null, null, null, null, connection);
         this.primaryKey = null;
     }
 
@@ -179,12 +184,13 @@ public class RRSUser extends TableEntry implements UserDetails {
         // Insert the entry
         getConnection().executeUpdate(
             String.format(
-                "INSERT INTO %s VALUES (0, ?, ?, ?)",
+                "INSERT INTO %s VALUES (0, ?, ?, ?, ?)",
                 getTableName()),
             Arrays.asList(new String[] {
                 getUsername(),
                 getPassword(),
-                getEmail() }));
+                getEmail(),
+                getPhoneNumber() }));
     }
 
     @Override
@@ -194,14 +200,15 @@ public class RRSUser extends TableEntry implements UserDetails {
         // Update the entry
         getConnection().executeUpdate(
             String.format(
-                "UPDATE %s SET %s=?, %s=?, %s=? WHERE %s=?",
+                "UPDATE %s SET %s=?, %s=?, %s=?, %s=? WHERE %s=?",
                 getTableName(),
-                USERNAME_NAME, PASSWORD_NAME, EMAIL_NAME,
+                USERNAME_NAME, PASSWORD_NAME, EMAIL_NAME, PHONENUMBER_NAME,
                 ACCOUNT_ID_NAME),
             Arrays.asList(new String[] {
                 getUsername(),
                 getPassword(),
                 getEmail(),
+                getPhoneNumber(),
                 getPrimaryKey().toString() }));
     }
 
@@ -226,6 +233,10 @@ public class RRSUser extends TableEntry implements UserDetails {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
     @Override
@@ -273,7 +284,7 @@ public class RRSUser extends TableEntry implements UserDetails {
      * @param phoneNumber 9-digit phone number.
      */
     public void setPhoneNumber(String phoneNumber) {
-        // TODO: implement phone number
+        this.phoneNumber = phoneNumber;
     }
 
     ///////////
@@ -295,7 +306,7 @@ public class RRSUser extends TableEntry implements UserDetails {
         if (!(other instanceof RRSUser)) return false;
         RRSUser otherUser = (RRSUser)other;
         if ((otherUser.getUsername() != this.getUsername()) ||
-            (otherUser.getPassword() != this.getPassword())) return false;
+            (otherUser.getEmail() != this.getEmail())) return false;
         return true;
     }
 }

@@ -50,7 +50,7 @@
                         <div class="form-group">
                             <label for="number"  class="text-dark">Phone Number: </label>
                             <br>
-                            <input type="text"  name="number" id="number" class="form-control" required>
+                            <input type="text"  name="phoneNumber" id="number" class="form-control" required>
                             <span id = 'numMessage'></span>
                         </div>
 

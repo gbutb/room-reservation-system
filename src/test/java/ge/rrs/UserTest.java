@@ -37,7 +37,7 @@ public class UserTest {
     public void testInitialization() {
         // Initialize User
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        RRSUser user = new RRSUser("username", "password", "username", null);
+        RRSUser user = new RRSUser("username", "password", "username", "123456789", null);
 
         assertEquals(user.getUsername(), "username");
         assertEquals(user.getPassword(), "password");
@@ -133,6 +133,7 @@ public class UserTest {
             "testRegisterUsername", 
             (new BCryptPasswordEncoder()).encode("testRegisterPassword"),
             "registeredUsers@humans.org",
+            "123456789",
             connection);
         user.insertEntry();
 
@@ -153,6 +154,7 @@ public class UserTest {
             user.getUsername(),
             (new BCryptPasswordEncoder()).encode("testRegisterPassword"),
             "registeredUsers@humangs.org",
+            "123456789",
             connection);
         boolean threwError = false;
         try {
@@ -169,7 +171,8 @@ public class UserTest {
         RRSUser user = new RRSUser(
             "testUpdateUsername", 
             encoder.encode("testUpdatePassword"),
-            "registeredUsers@humans.org",
+            "updatedUsers@humans.org",
+            "123456789",
             connection);
         user.insertEntry();
         user.setEncryptedPassword(
