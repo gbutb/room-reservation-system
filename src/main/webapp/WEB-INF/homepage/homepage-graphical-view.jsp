@@ -52,7 +52,7 @@
 
         <%-- Container for navigation bar branding --%>
         <div class="d-flex justify-content-start align-items-center p-4" style="width: 100px; height: 100%;">
-            <a class="text-light" style="font-size: 1.2rem;" href="#">RRS</a>
+            <a class="text-light" style="font-size: 1.2rem;" href="${pageContext.request.contextPath}/homepage-gv?floor=1">RRS</a>
         </div>
 
         <%-- Container for search --%>
@@ -66,7 +66,7 @@
             </form>
 
             <%-- Time based search and advanced search --%>
-            <form:form class="form-inline flex-nowrap m-0"
+            <form:form cssClass="form-inline flex-nowrap m-0"
                   action="${pageContext.request.contextPath}/homepage-gv?floor=${param.floor}"
                   method="post"
                   id="filterForm">
@@ -134,7 +134,9 @@
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
                     <a class="dropdown-item" href="${pageContext.request.contextPath}/settings">Settings</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Log Out</a>
+                    <form:form cssClass="m-0" action="/logout" method="post">
+                        <input class="dropdown-item" type="submit" value="Log Out">
+                    </form:form>
                 </div>
             </div>
         </div>
