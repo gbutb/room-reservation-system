@@ -55,6 +55,7 @@ public class AuthTest {
 			.param("username", "testUsername")
 			.param("password", "testPassword")
 			.param("email", "testEmail")
+			.param("phoneNumber", "123456789")
 			.contentType(MediaType.APPLICATION_JSON))
 				.andReturn();
 

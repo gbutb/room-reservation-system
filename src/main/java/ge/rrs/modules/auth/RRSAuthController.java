@@ -44,17 +44,18 @@ public class RRSAuthController {
 	public ModelAndView register(
             @RequestParam(value = "username", required = true) String username,
             @RequestParam(value = "password", required = true) String password,
-            @RequestParam(value = "email", required = true) String email) throws Exception {
+            @RequestParam(value = "email", required = true) String email,
+            @RequestParam(value = "phoneNumber", required = true) String phoneNumber) throws Exception {
+
         // Initialize result
         ModelAndView modelView = new ModelAndView();
         modelView.setViewName("/auth/registration");
-        System.out.println("Trying register");
         modelView.addObject("failed", false);
         try {
             userService.registerNewUser(
                 new RRSUser(
                     username, userService.getEncoder().encode(password),
-                    email, new DBConnection()));
+                    email, phoneNumber, new DBConnection()));
         } catch (Exception e) {
             System.out.println(e.toString());
             modelView.addObject("failed", true);

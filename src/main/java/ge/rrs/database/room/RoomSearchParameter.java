@@ -34,21 +34,12 @@ public class RoomSearchParameter implements SearchParameter {
         this.args = args;
     }
 
-    /**
-     * Creates a Room search parameter between
-     * start floor and the end floor.
-     *
-     * @param start Initial floor.
-     * @param end   Final floor.
-     * @return Room Search Parameter.
-     */
-    public static RoomSearchParameter fromFloorRange(int start, int end) {
+    public static RoomSearchParameter fromFloor(int floor) {
         return new RoomSearchParameter(
-                "floor", " BETWEEN ", "? AND ?",
+                "floor", " = ", "?",
                 new ArrayList<String>() {
                     {
-                        add("" + start);
-                        add("" + end);
+                        add("" + floor);
                     }
                 });
     }

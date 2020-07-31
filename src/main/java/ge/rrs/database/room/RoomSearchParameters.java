@@ -13,15 +13,8 @@ public class RoomSearchParameters extends SearchParameters {
         super();
     }
 
-    /**
-     * Adds parameters, which serve fetching rooms which are on the
-     * user given range of floors
-     *
-     * @param start start of the floor range
-     * @param end   end of the floor range (inclusive)
-     */
-    public void addFloorRangeParameter(int start, int end) throws Exception {
-        addParameter(RoomSearchParameter.fromFloorRange(start, end));
+    public void addFloorParameter(int floor) throws Exception {
+        addParameter(RoomSearchParameter.fromFloor(floor));
     }
 
     /**

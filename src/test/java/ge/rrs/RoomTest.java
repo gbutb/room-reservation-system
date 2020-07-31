@@ -50,8 +50,21 @@ public class RoomTest {
     @Test
     public void testRoomSearchParamQuery() throws Exception {
         SearchParameters params = new SearchParameters();
-        params.addParameter(RoomSearchParameter.fromFloorRange(3, 4));
+        params.addParameter(RoomSearchParameter.fromFloor(3));
         Collection<? extends TableEntry> rooms = Room.getFilteredRooms(params, connection);
-        assertEquals(51, rooms.size());
+        assertEquals(28, rooms.size());
+    }
+
+    @Test
+    public void testInsert() throws Exception {
+        SearchParameters params = new SearchParameters();
+        params.addParameter(new FreeSearchParameter());
+        int previousSize = Room.getFilteredRooms(params, connection).size();
+
+        Room newRoom = new Room(500, 20, 5, 0, false, true, "", connection);
+        newRoom.insertEntry();
+
+        int newSize = Room.getFilteredRooms(params, connection).size();
+        assertEquals(previousSize + 1, newSize);
     }
 }
