@@ -14,8 +14,8 @@ public class RRSSettingsController {
         ModelAndView mv = new ModelAndView();
         if (req.getParameter("afterSave") != null) {
             RRSUser user = RRSUser.getCurrentUser();
-            user.setPassword(req.getParameter("password"));
-            user.setPhoneNumber(req.getParameter("number"));
+            if(!req.getParameter("password").isEmpty()) user.setPassword(req.getParameter("password"));
+            if(!req.getParameter("number").isEmpty()) user.setPhoneNumber(req.getParameter("number"));
             try{
                 user.updateEntry();
             }catch(Exception e) {
