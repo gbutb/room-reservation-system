@@ -85,6 +85,10 @@
         });
     });
 </script>
-
+<footer class="footer fixed-bottom">
+    <div class="footer-copyright text-center py-3">
+        Copyright &copy; 2020: Room Reservation Systems, All rights reserved.
+    </div>
+</footer>
 
 </html>

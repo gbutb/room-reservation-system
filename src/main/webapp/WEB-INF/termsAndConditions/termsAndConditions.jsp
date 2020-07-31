@@ -13,7 +13,7 @@
 <body>
     <div class="container">
         <h1>Terms and Conditions</h1>
-        <p>Last updated: July 31, 2020</p>
+        <p>Last updated: 2020</p>
         <p>Please read these terms and conditions carefully before using Our Service.</p>
         <h1>Interpretation and Definitions</h1>
         <h2>Interpretation</h2>
@@ -78,6 +78,10 @@
         </ul>
     </div>
 </body>
+<footer class="footer fixed-bottom">
+    <div class="footer-copyright text-center py-3">
+        Copyright &copy; 2020: Room Reservation Systems, All rights reserved.
+    </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
@@ -89,4 +93,5 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
             integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
             crossorigin="anonymous"></script>
+</footer>
 </html>

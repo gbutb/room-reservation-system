@@ -66,7 +66,7 @@
             <%-- TODO: User code here --%>
 
                 <div class="container">
-                    <div class="column justify-content-center col-md-4 mx-auto"
+                    <div class="column justify-content-center col-md-4 mx-auto">
                         <form:form id="afterSave" class="form" action="settings" method="POST">
                             <div class="form-group">
                                 <label for="number" class="text-dark">New Phone Number: </label><br>
