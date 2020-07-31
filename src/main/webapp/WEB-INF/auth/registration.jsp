@@ -54,7 +54,7 @@
                             <input type="text"  name="phoneNumber" id="number" class="form-control" required>
                             <span id = 'numMessage'></span>
                         </div>
-                        <div class="form-check">
+                        <div class="form-check mb-3">
                             <input type="checkbox" class="form-check-input" id="termsAndConditions">
                             <label class="form-check-label" for="termsAndConditions">I agree to the <a href="/terms-and-conditions">Terms and Conditions</a></label>
                         </div>
