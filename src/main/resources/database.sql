@@ -36,14 +36,16 @@ CREATE TABLE accounts
 
 CREATE TABLE reservations
 (
-    reservation_id INT PRIMARY KEY,
+    reservation_id INT NOT NULL AUTO_INCREMENT,
     room_id        INT,
     start_date     DATETIME,
     end_date       DATETIME,
     do_repeat      BOOLEAN,
     account_id     INT,
     FOREIGN KEY (room_id) REFERENCES rooms (room_id),
-    FOREIGN KEY (account_id) REFERENCES accounts (account_id)
+    FOREIGN KEY (account_id) REFERENCES accounts (account_id),
+
+    PRIMARY KEY (reservation_id)
 );
 	
 INSERT INTO room_comment VALUES
