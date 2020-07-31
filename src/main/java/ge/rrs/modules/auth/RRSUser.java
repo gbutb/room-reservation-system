@@ -9,6 +9,7 @@ import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 // ge.rrs
@@ -251,8 +252,28 @@ public class RRSUser extends TableEntry implements UserDetails {
     // Setters //
     /////////////
 
+    /**
+     * Sets an BCrypt encrypted password
+     * @param encryptedPassword encrypted password.
+     */
     public void setEncryptedPassword(String encryptedPassword) {
         this.encryptedPassword = encryptedPassword;
+    }
+
+    /**
+     * Sets password.
+     * @param password unencrypted password.
+     */
+    public void setPassword(String password) {
+        setEncryptedPassword((new BCryptPasswordEncoder()).encode(password));
+    }
+
+    /**
+     * Sets phone number.
+     * @param phoneNumber 9-digit phone number.
+     */
+    public void setPhoneNumber(String phoneNumber) {
+        // TODO: implement phone number
     }
 
     ///////////
