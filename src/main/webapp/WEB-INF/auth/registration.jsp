@@ -22,7 +22,7 @@
         <div id="register-row" class="row justify-content-center">
             <div id="register-column" class="col-md-6">
                 <div  id="register-box">
-                    <form id="register-form" class="form" action="/register" method="POST">
+                    <form:form id="register-form" class="form" action="/register" method="POST">
                         <h2 class="text-center text-dark">Register</h2>
                         <div class="form-group">
                             <label  for="username" class="text-dark">Username: </label><br>
@@ -76,13 +76,13 @@
                         </div>
                         <div >
                             <div class="form-group" style="display: inline-block;">
-                                <input type="submit" name="submit" id="submit" class="btn btn-primary btn-md" value="register" onclick= "registerValid()" disabled>
+                                <input type="submit" name="submit" id="submit" class="btn btn-primary btn-md" value="register" disabled>
                             </div>
                         </div>
                         <div id="login-link" class="text-right">
                             <a href="/login"  class="text-secondary">Login to existing account</a>
                         </div>
-                    </form>
+                    </form:form>
                 </div>
             </div>
         </div>
@@ -102,16 +102,19 @@
             $('#submit').attr("disabled",false);
         }
     }
-    function registerValid() {
-        if (<%=failed %>) ('#inputsModal').modal();
-        else document.getElementById("submit").submit();
-    }
+
+    $(window).on('load', function() {
+        // Launch modal if registration was not successful
+        if (${failed}) $('#inputsModal').modal('show');
+    });
+
     $(function () {
         var validUsername=false;
         var validMail=false;
         var validNumber=false;
         var samePasswords=false;
         var validPassword=false;
+
 
         $('#username').keyup(function () {
             if ($(this).val().length <= 4) {
