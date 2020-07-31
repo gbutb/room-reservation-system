@@ -111,7 +111,7 @@
 
         $('#password').keyup(function(){
             if($('#password').val() == ""){
-                $('#strongMessage').html("");
+                $('#strongMessage').html("This must be filled").css('color', 'grey');
             }else if(passwordIsStrong($('#password').val())){
                 $('#strongMessage').html("Password is strong").css('color', 'green');
             }else{
@@ -120,7 +120,10 @@
         });
 
         $('#password-group').keyup(function () {
-            if (!($('#password').val()===$('#repeatPassword').val()) && $('#repeatPassword').val() != "") {
+            if($('#repeatPassword').val() == ""){
+                $('#submit').attr("disabled",true);
+                samePasswords=false;
+            }else if (!($('#password').val()===$('#repeatPassword').val())) {
                 $('#submit').attr("disabled",true);
                 samePasswords=false;
                 $('#message').html("Your passwords should match").css('color', 'red');
@@ -133,7 +136,11 @@
 
 
         $('#number').keyup(function () {
-            if (!checkNumber($(this).val()) && $(this).val() != "") {
+            if ($(this).val() == "") {
+                $('#submit').attr("disabled",true);
+                $('#numMessage').html("Please enter your phone number").css('color', 'red');
+                validNumber=false;
+            } else if (!checkNumber($(this).val()) && $(this).val() != "") {
                 $('#submit').attr("disabled",true);
                 $('#numMessage').html("Please enter a valid phone number").css('color', 'red');
                 validNumber=false;
