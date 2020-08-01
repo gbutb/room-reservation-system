@@ -40,13 +40,13 @@ public class RRSHomepageService {
             Time to = new Time(timeFormatter.parse(toTime).getTime());
             LocalDate localDate = LocalDate.now();
 
-            if (from.before(to)) {
+            if (from.before(to) || from.equals(to)) {
                 roomSearchParameters.addDateTimeRangeParameter(
                         localDate + " " + fromTime,
                         localDate + " " + toTime,
                         new DBConnection()
                 );
-            } else {
+            } else if (from.after(to)) {
                 LocalDate nextDate = localDate.plusDays(1);
                 roomSearchParameters.addDateTimeRangeParameter(
                         localDate + " " + fromTime,
@@ -54,8 +54,6 @@ public class RRSHomepageService {
                         new DBConnection()
                 );
             }
-        } else if (fromTime.equals(toTime)) {
-            // TODO: Implement something...
         }
 
         // filter rooms by advanced options
