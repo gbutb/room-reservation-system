@@ -56,10 +56,31 @@ public abstract class TableEntry {
     public abstract String getTableName();
 
     /**
+     * @deprecated
      * Saves any changes that have
      * been done to the table entry.
      *
      * @throws Exception if unable to save.
      */
-    public abstract void save() throws Exception;
+    public void save() throws Exception {
+        throw new Exception("Deprecated");
+    }
+
+    /**
+     * Adds a new entry to the database.
+     * @throws Exception if entry already exists.
+     */
+    public abstract void insertEntry() throws Exception;
+
+    /**
+     * Updates an existing entry in the database.
+     * @throws Exception if the entry doesn't exist.
+     */
+    public abstract void updateEntry() throws Exception;
+
+    /**
+     * @return the primary key of the entry if it
+     *  exists in database, null otherwise.
+     */
+    public abstract Integer getPrimaryKey();
 }

@@ -15,12 +15,13 @@
 
 </head>
 <body>
+
 <div id="register">
     <br>
     <div class="container">
         <div id="register-row" class="row justify-content-center">
             <div id="register-column" class="col-md-6">
-                <div  id="register-box" class="col-md-10">
+                <div  id="register-box">
                     <form:form id="register-form" class="form" action="/register" method="POST">
                         <h2 class="text-center text-dark">Register</h2>
                         <div class="form-group">
@@ -50,17 +51,41 @@
                         <div class="form-group">
                             <label for="number"  class="text-dark">Phone Number: </label>
                             <br>
-                            <input type="text"  name="number" id="number" class="form-control" required>
+                            <input type="text"  name="phoneNumber" id="number" class="form-control" required>
                             <span id = 'numMessage'></span>
                         </div>
+                        <div class="form-check mb-3">
+                            <input type="checkbox" class="form-check-input" id="termsAndConditions">
+                            <label class="form-check-label" for="termsAndConditions">I agree to the <a href="/terms-and-conditions">Terms and Conditions</a></label>
+                        </div>
 
-                        <div class="form-group">
-                            <input type="submit" name="submit" id="submit" class="btn btn-primary btn-md" value="register" disabled>
+                        <div class="modal fade" id="inputsModal" tabindex="-1" role="dialog"
+                             aria-labelledby="inputsModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-danger" id="inputsModalLabel">Failed To Register</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        You can't register with the given username and email.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div >
+                            <div class="form-group" style="display: inline-block;">
+                                <input type="submit" name="submit" id="submit" class="btn btn-primary btn-md" value="register" disabled>
+                            </div>
                         </div>
                         <div id="login-link" class="text-right">
                             <a href="/login"  class="text-secondary">Login to existing account</a>
                         </div>
-
                     </form:form>
                 </div>
             </div>
@@ -72,22 +97,36 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-
 <script>
     bootstrapValidate('#username', 'min:5:Please enter minimum 5 symbols.')
     bootstrapValidate('#mail', 'email:Please enter a valid mail.')
 
-    function checkIfRight(validUsername,validMail,validNumber,samePasswords){
-        if(validMail&&validUsername&&validNumber&&samePasswords){
+    function checkIfRight(validUsername,validMail,validNumber,samePasswords,validPassword){
+        if(validMail&&validUsername&&validNumber&&samePasswords&&validPassword&&$("#termsAndConditions").is(":checked")){
             $('#submit').attr("disabled",false);
+        } else {
+            $('#submit').attr("disabled",true);
         }
     }
+
+    $(window).on('load', function() {
+        // Launch modal if registration was not successful
+        if (${failed}) $('#inputsModal').modal('show');
+    });
 
     $(function () {
         var validUsername=false;
         var validMail=false;
         var validNumber=false;
         var samePasswords=false;
+        var validPassword=false;
+
+
+        $("#termsAndConditions").change(function() {
+            console.log("test");
+            checkIfRight(validUsername, validMail, validNumber, samePasswords, validPassword);
+        });
+
 
         $('#username').keyup(function () {
             if ($(this).val().length <= 4) {
@@ -95,7 +134,7 @@
                 validUsername=false;
             } else {
                 validUsername=true;
-                checkIfRight(validUsername,validMail,validNumber,samePasswords);
+                checkIfRight(validUsername,validMail,validNumber,samePasswords, validPassword);
             }
         });
 
@@ -105,7 +144,7 @@
                 validMail=false
             } else {
                 validMail=true;
-                checkIfRight(validUsername,validMail,validNumber,samePasswords);
+                checkIfRight(validUsername,validMail,validNumber,samePasswords, validPassword);
             }
         });
 
@@ -113,8 +152,12 @@
             if($('#password').val() == ""){
                 $('#strongMessage').html("");
             }else if(passwordIsStrong($('#password').val())){
+                validPassword = true;
                 $('#strongMessage').html("Password is strong").css('color', 'green');
+                checkIfRight(validUsername,validMail,validNumber,samePasswords, validPassword);
             }else{
+                validPassword =false;
+                $('#submit').attr("disabled",true);
                 $('#strongMessage').html(`Password must contain: 1 lowercase letter, 1 uppercase letter, be minimum 8 characters`).css('color', 'red');
             }
         });
@@ -127,7 +170,7 @@
             } else {
                 samePasswords=true;
                 $('#message').html("");
-                checkIfRight(validUsername,validMail,validNumber,samePasswords);
+                checkIfRight(validUsername,validMail,validNumber,samePasswords, validPassword);
             }
         });
 
@@ -140,7 +183,7 @@
             } else {
                 validNumber=true;
                 $('#numMessage').html("");
-                checkIfRight(validUsername,validMail,validNumber,samePasswords);
+                checkIfRight(validUsername,validMail,validNumber,samePasswords, validPassword);
             }
         });
     });
@@ -157,4 +200,9 @@
 </script>
 
 </body>
+<footer class="footer fixed-bottom">
+    <div class="footer-copyright text-center py-3">
+        Copyright &copy; 2020: Room Reservation Systems, All rights reserved.
+    </div>
+</footer>
 </html>

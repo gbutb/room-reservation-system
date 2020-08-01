@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 // ge.rrs
@@ -36,7 +37,7 @@ public class Room extends TableEntry {
     private final DBConnection connection;
 
     // Room Details
-    private int roomId;
+    private Integer roomId;
     private int roomSize;
     private int floor;
     private int commentId;
@@ -92,6 +93,11 @@ public class Room extends TableEntry {
     @Override
     public String getTableName() {
         return TABLE_NAME;
+    }
+
+    @Override
+    public Integer getPrimaryKey() {
+        return roomId;
     }
 
     public static Collection<Room> getFilteredRooms(SearchParameters parameters,
@@ -160,7 +166,45 @@ public class Room extends TableEntry {
     }
 
     @Override
-    public void save() {
+    public void insertEntry() throws Exception {
+        // Insert the entry
+        getConnection().executeUpdate(
+            String.format(
+                "INSERT %s VALUES (?, ?, ?, ?, ?, ?, ?)",
+                getTableName()),
+            Arrays.asList(new String[] {
+                Integer.toString(getRoomId()),
+                Integer.toString(getRoomSize()),
+                Integer.toString(getFloor()),
+                isConditioner() ? "1" : "0",
+                isProjector() ? "1" : "0",
+                Integer.toString(getCommentId()),
+                getRenderData() }));
+    }
 
+    @Override
+    public void updateEntry() throws Exception {
+        if (getPrimaryKey() == null)
+            throw new Exception("No such entry exists");
+        // Update the entry
+        getConnection().executeUpdate(
+            String.format(
+                "UPDATE %s SET %s=?, %s=?, %s=?, %s=?, %s=?, %s=? WHERE %s=?",
+                getTableName(),
+                ROOM_SIZE_NAME,
+                FLOOR_NAME,
+                COMMENT_ID_NAME,
+                CONDITIONER_NAME,
+                PROJECTOR_NAME,
+                RENDER_DATA_NAME,
+                ROOM_ID_NAME),
+            Arrays.asList(new String[] {
+                Integer.toString(getRoomSize()),
+                Integer.toString(getFloor()),
+                isConditioner() ? "1" : "0",
+                isProjector() ? "1" : "0",
+                Integer.toString(getCommentId()),
+                getRenderData(),
+                Integer.toString(getRoomId()) }));
     }
 }

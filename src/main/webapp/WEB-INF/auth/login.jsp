@@ -37,7 +37,7 @@
 
                         <div class="form-group">
 
-                            <input type="submit" id="submit" name="submit" class="btn btn-info btn-md" value="submit" disabled>
+                            <input type="submit" id="submit" name="submit" class="btn btn-info btn-md" value="login" disabled>
                         </div>
                         <div id="register-link" class="text-right">
                             <a href="/register"  class="text-dark">Register</a>
@@ -85,6 +85,10 @@
         });
     });
 </script>
-
+<footer class="footer fixed-bottom">
+    <div class="footer-copyright text-center py-3">
+        Copyright &copy; 2020: Room Reservation Systems, All rights reserved.
+    </div>
+</footer>
 
 </html>
