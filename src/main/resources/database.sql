@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS rooms;
 DROP TABLE IF EXISTS room_comment;
 DROP TABLE IF EXISTS accounts;
 
-CREATE TABLE room_comment
+CREATE TABLE room_comments
 (
     comment_id   INT PRIMARY KEY,
     comment_date DATETIME,
@@ -21,7 +21,7 @@ CREATE TABLE rooms
     projector       BOOLEAN,
     comment_id      INT,
     render_data     VARCHAR(255),
-    FOREIGN KEY (comment_id) REFERENCES room_comment (comment_id)
+    FOREIGN KEY (comment_id) REFERENCES room_comments (comment_id)
 );
 
 CREATE TABLE accounts
@@ -44,7 +44,7 @@ CREATE TABLE reservations
     FOREIGN KEY (account_id) REFERENCES accounts (account_id)
 );
 	
-INSERT INTO room_comment VALUES
+INSERT INTO room_comments VALUES
 	(0, STR_TO_DATE('9,7,2020 14,30,0', '%d,%m,%Y %H,%i,%s'), 'Hello room!');
 
 	

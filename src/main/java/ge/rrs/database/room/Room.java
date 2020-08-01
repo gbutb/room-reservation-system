@@ -15,6 +15,7 @@ import ge.rrs.database.SearchParameters;
 import ge.rrs.database.TableEntry;
 import ge.rrs.database.reservation.Reservation;
 import ge.rrs.database.reservation.ReservationSearchParameters;
+import ge.rrs.database.room.comment.RoomComment;
 
 public class Room extends TableEntry {
 
@@ -127,6 +128,22 @@ public class Room extends TableEntry {
         Collection<Reservation> reservations = Reservation.getFilteredReservations(parameters, getConnection());
 
         return reservations.size() != 0;
+    }
+
+    public RoomComment getRoomComment() throws Exception {
+        return RoomComment.getRoomComment(getRoomId(), getConnection());
+    }
+
+    public void setRoomComment(String comment) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        RoomComment roomComment = new RoomComment(0, dtf.format(now), comment, getConnection());
+    }
+
+    public void setRoomComment(RoomComment roomComment) throws Exception {
+        roomComment.insertEntry();
+        commentId = roomComment.getCommentId();
+        this.updateEntry();
     }
 
     // Getter Methods

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
 <head>
     <!-- Required meta tags -->
@@ -12,7 +13,6 @@
 
     <title>Room ${param.roomId}</title>
 </head>
-
 <body>
 <%-- Container for entire screen --%>
 <div class="d-flex flex-column" style="width: 100%; height: 100vh; min-width: 1280px; min-height: 720px;">
@@ -78,7 +78,7 @@
               style="border-width: 1.5px !important; width: 70%; height: 550px;">
 
             <%-- Container for room information --%>
-            <div class="d-flex flex-column justify-content-center align-items-start bg-light"
+            <div class="d-flex flex-column justify-content-center align-items-start bg-light mr-2"
                  style="width: 70%; height: 100%;">
 
                 <%-- Room diagram and properties --%>
@@ -86,17 +86,18 @@
                      style="width: 100%; height: 50%;">
 
                     <%-- Room diagram --%>
-                    <div class="d-flex flex-row justify-content-center align-items-center bg-light border mr-4"
-                         style="width: 40%; height: 100%; border-radius: 15px">
-                        <img src="/resources/images/room-${room.roomSize}.jpg" alt="Room Diagram">
+                    <div class="d-flex flex-row justify-content-center align-items-center bg-light border rounded mr-4"
+                         style="width: 40%; height: 100%;">
+                        <img src="/resources/images/room-${room.roomSize}.png" class="img-fluid" alt="Room Diagram">
                     </div>
 
                     <%-- Room properties --%>
                     <div class="d-flex flex-column justify-content-center align-items-center bg-light" style="width: 50%; height: 100%;">
                         <div class="d-flex flex-row justify-content-start align-items-center" style="width: 100%; font-size: x-large">
+                            <b class="mr-2">${room.occupied ? "Reserved" : "Available"}</b>
                             <svg height="20" width="20">
                                 <circle cx="10" cy="10" r="8" fill= "${room.occupied ? "#d9534f" : "#28a745"}"></circle>
-                            </svg> <b>${room.occupied ? "Reserved" : "Available"}</b>
+                            </svg>
                         </div>
                         <br>
                         <div class="d-flex flex-row justify-content-start align-items-center"
@@ -107,15 +108,15 @@
                              style="width: 100%; height: 100%;">
                                 Floor: &nbsp
                                 <c:forEach var="i" begin="1" end="4">
-                                    <button type="button" class="btn disabled btn-${i == room.floor ? "primary" : "outline-secondary"} btn-sm mr-1">${i}</button>
+                                    <a class="btn disabled btn-${i == room.floor ? "primary" : "outline-secondary"} btn-sm mr-1">${i}</a>
                                 </c:forEach>
                         </div>
                         <div class="d-flex flex-row justify-content-start align-items-center"
                              style="width: 100%; height: 100%;">
                             Size: &nbsp
                             <c:forEach var="i" begin="1" end="4">
-                                <button type="button" class="btn disabled btn-${i == room.roomSize ? "primary" : "outline-secondary"} btn-sm mr-1">
-                                        ${i == 1 ? "Mini" : i == 2 ? "Small" : i == 3 ? "Medium" : "Large"}</button>
+                                <a class="btn disabled btn-${i == room.roomSize ? "primary" : "outline-secondary"} btn-sm mr-1">
+                                        ${i == 1 ? "Mini" : i == 2 ? "Small" : i == 3 ? "Medium" : "Large"}</a>
                             </c:forEach>
                         </div>
                         <div class="d-flex flex-row justify-content-start align-items-end"
@@ -135,66 +136,97 @@
                 </div>
 
                 <%-- Room Comment --%>
-                <div class="d-flex flex-column justify-content-start align-items-start bg-light border rounded mt-5 p-3"
-                     style="width: 95%; height: 25%;">
-                    Latest Comment --
+                <div class="card secondary mt-3" style="width: 100%; height: 30%; background-color: #F0F0F0">
+<%--                  <div class="card-header" style="height:15%">Latest Comment</div>--%>
+                    <div class=" d-flex flex-column justify-content-center rounded"
+                         style="width: 100%; height: 30%; background-color: #F0F0F0">
+                        <text class="ml-4" style="color: darkslategrey !important; font-size: smaller">Latest Comment</text>
+                    </div>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" maxlength="255" rows="4"
+                              disabled
+                              style="border-width: 0; resize: unset; background-color: white;">&nbsp;&nbsp;&mdash;</textarea>
                 </div>
 
-                <%-- Room Reservation --%>
-                <div class="d-flex flex-row justify-content-start align-items-center bg-light border rounded"
-                     style="width: 95%; height: 15%;">
+                <%-- Room Reservation Panel --%>
+                <div class="d-flex flex-row justify-content-between align-items-center bg-light "
+                     style="width: 100%; height: 15%;">
+                    <%-- Time Range Entry --%>
+                    <form:form cssClass="form-inline flex-nowrap m-0"
+                          action="${pageContext.request.contextPath}/room?id=${param.id}"
+                          method="post"
+                          id="timeRangeForm">
+
+                        <label for="fromTime" class="mr-2">From:</label>
+                        <input id="fromTime" class="form-control mr-2" name="fromTime" type="time">
+                        <label for="toTime" class="mr-2">To:</label>
+                        <input id="toTime" class="form-control mr-2" name="toTime" type="time">
+
+                        <button class="btn btn-primary" type="button" onclick="checkTime()">Reserve</button>
+                    </form:form>
+                    <button class="btn btn-primary" type="button" onclick="checkTime()">Comment</button>
                 </div>
 
             </div>
 
             <%-- Container for room reservation table --%>
-            <div class="d-flex flex-column align-items-center justify-content-center bg-light"
+            <div class="d-flex flex-column align-items-end justify-content-center bg-light"
                  style="width: 30%; height: 100%;">
 
-                Room Reservations<br>
                 <%-- Helper container for room reservation table --%>
-                <div class="d-flex flex-column overflow-auto align-items-center justify-content-center bg-light"
+                <div class="d-flex overflow-auto bg-light"
                      style="width: 100%; height: 100%;">
 
+                        <%-- Container for room reservation table --%>
+                        <div class="d-flex overflow-auto bg-light"
+                             style="width: 100%; height: 100%;">
 
-                    <%-- Container for room reservation table --%>
-                    <div class="d-flex flex-row align-items-start justify-content-center bg-light"
-                         style="width: 100%; height: 100%;">
-
-                        <%-- Timeline list for room reservation table --%>
-                        <div class="d-flex flex-column align-items-center justify-items-start"
-                             style="height: 120%; width: 20%;">
-                            <c:forEach var="i" begin="9" end="32">
-                                <svg width="100%" height="100%">
-
-                                    <rect x="0" y="0" fill="transparent" width="100%" height="90%"></rect>
-                                    <line x1="8%" y1="0%" x2="98%" y2="0%" stroke="#C8C8C8"></line>
-                                    <line x1="8%" y1="100%" x2="98%" y2="100%" stroke="#C8C8C8"></line>
-                                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
-                                          style="fill: #484848;"
-                                          font-size="0.9rem">${((i >= 24) ? (i - 24) : i)}:00-</text>
+                            <%-- Hourly division for reservation table --%>
+                            <svg x="0%" y="0%" width="100%" height="120%">
+                                <svg x="0%" y="0%" width="100%" height="100%">
+                                    <c:forEach var="i" begin="1" end="23">
+                                        <svg y="${(i/24)*100}%" width="100%" height="${100/24}%">
+                                            <line x1="15%" y1="0%" x2="100%" y2="0%" stroke="#484848" opacity="10%" stroke-width="2px"></line>
+                                        </svg>
+                                    </c:forEach>
                                 </svg>
-                            </c:forEach>
-                        </div>
 
-                        <%-- Room reservation table --%>
-                        <div class="d-flex flex-column align-items-center justify-items-start ml-2"
-                             style="height: 120%; width: 80%;">
+                            <%-- Timeline list for room reservation table --%>
+                                <svg x="0%" y="0%" width="20%" height="100%">
+                                    <c:forEach var="i" begin="10" end="32">
+                                        <svg y="${((i-9.5)/24)*100}%" width="100%" height="${100/24}%">
+                                            <text x="50%" y="60%" dominant-baseline="middle" text-anchor="middle"
+                                                  opacity="${(((i-9)/24 - currentTimeRelativePosition < 1/48) && ((i-9)/24 - currentTimeRelativePosition > -1/48)) ? 20 : 100}%"
+                                                  style="fill: #6c757d;"
+                                                  font-size="0.9rem">
+                                                    ${(i >= 24) ? (i - 24) : i}</text>
+                                        </svg>
+                                    </c:forEach>
+                                </svg>
 
-                            <svg x="0" y="50%" width="100%" height="1px">
-                                <line x1="0%" y1="50%" x2="100%" y2="50%" stroke="#484848"></line>
+                                <%-- Room reservation table --%>
+                                <svg x="18%" y="0%" width="79%" height="100%">
+                                    <c:forEach var="timePortion" items="${timePortions}">
+                                        <svg y="${timePortion.relativePosition * 100}%" width="100%" height="${timePortion.timePortion * 100}%">
+                                            <rect x="0" y="0" rx="3" ry="3"
+                                                  width="100%"
+                                                  height="100%"
+                                                  style="fill: ${timePortion.reservation ? '#d9534f' : 'transparent'}; opacity: 80%">
+                                            </rect>
+                                        </svg>
+                                    </c:forEach>
+                                </svg>
+
+                                <%-- Current Time Indicator --%>
+                                <svg x="0%" y="0%" width="100%" height="100%">
+                                    <text x="2%" y="${currentTimeRelativePosition*100 + 0.3}%" dominant-baseline="middle" text-anchor="start"
+                                          style="fill: #000000; font-size: smaller" font-weight="bold">${currentTime}</text>
+                                    <line x1="15%" y1="${currentTimeRelativePosition*100}%" x2="100%" y2="${currentTimeRelativePosition*100}%" stroke="#484848"></line>
+                                    <svg x="15%" y="${(currentTimeRelativePosition-(1/48))*100}%" height="20" width="20">
+                                        <circle cx="4" cy="12" r="4" fill= "#484848"></circle>
+                                    </svg>
+                                </svg>
                             </svg>
-                            <c:forEach var="timePortion" items="${timePortions}">
-                                <svg width="100%" height="${timePortion.timePortion * 100}%">
-                                    <rect x="0" y="0" rx="6" ry="6"
-                                          width="100%"
-                                          height="100%"
-                                          style="fill: ${timePortion.reservation ? '#d9534f' : 'transparent'};">
-                                    </rect>
-                                </svg>
-                            </c:forEach>
                         </div>
-                    </div>
                 </div>
 
 
@@ -217,5 +249,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
+<script src="../../resources/time-range-controller.js"></script>
 </body>
 </html>
