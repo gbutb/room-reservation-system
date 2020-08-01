@@ -2,6 +2,7 @@
 package ge.rrs.database.reservation;
 
 // ge.rrs
+
 import ge.rrs.database.SearchParameters;
 
 public class ReservationSearchParameters extends SearchParameters {
@@ -21,12 +22,14 @@ public class ReservationSearchParameters extends SearchParameters {
         Clause tempClause = new Clause();
 
         Clause startOverlap = new Clause();
-        startOverlap.addParameter(ReservationSearchParameter.startsAfter(dateFrom, true));
-        startOverlap.addParameter("AND", ReservationSearchParameter.startsBefore(dateTo, false));
+        ReservationSearchParameter.Comparator more = ReservationSearchParameter.Comparator.MORE;
+        ReservationSearchParameter.Comparator less = ReservationSearchParameter.Comparator.LESS;
+        startOverlap.addParameter(ReservationSearchParameter.compareDateTime("start_date", dateFrom, true, more));
+        startOverlap.addParameter("AND", ReservationSearchParameter.compareDateTime("start_date", dateTo, false, less));
 
         Clause endOverlap = new Clause();
-        endOverlap.addParameter(ReservationSearchParameter.endsAfter(dateFrom, false));
-        endOverlap.addParameter("AND", ReservationSearchParameter.endsBefore(dateTo, true));
+        endOverlap.addParameter(ReservationSearchParameter.compareDateTime("end_date", dateFrom, false, less));
+        endOverlap.addParameter("AND", ReservationSearchParameter.compareDateTime("end_date", dateTo, true, less));
 
         tempClause.addClause(startOverlap);
         tempClause.addClause("OR", endOverlap);
@@ -49,12 +52,14 @@ public class ReservationSearchParameters extends SearchParameters {
         Clause timeRangeClause = new Clause();
 
         Clause startOverlap = new Clause();
-        startOverlap.addParameter(ReservationSearchParameter.startsAfterTime(timeFrom, true));
-        startOverlap.addParameter("AND", ReservationSearchParameter.startsBeforeTime(timeTo, false));
+        ReservationSearchParameter.Comparator more = ReservationSearchParameter.Comparator.MORE;
+        ReservationSearchParameter.Comparator less = ReservationSearchParameter.Comparator.LESS;
+        startOverlap.addParameter(ReservationSearchParameter.compareTime("start_date", timeFrom, true, more));
+        startOverlap.addParameter("AND", ReservationSearchParameter.compareTime("start_date", timeTo, false, less));
 
         Clause endOverlap = new Clause();
-        endOverlap.addParameter(ReservationSearchParameter.endsAfterTime(timeFrom, false));
-        endOverlap.addParameter("AND", ReservationSearchParameter.endsBeforeTime(timeTo, true));
+        endOverlap.addParameter(ReservationSearchParameter.compareTime("end_date", timeFrom, false, more));
+        endOverlap.addParameter("AND", ReservationSearchParameter.compareTime("end_date", timeTo, true, less));
 
         timeRangeClause.addClause(startOverlap);
         timeRangeClause.addClause("OR", endOverlap);
