@@ -1,16 +1,22 @@
 // RoomSearchParameters.java
 package ge.rrs.database.room;
 
-import java.sql.SQLException;
-
-// ge.rrs
 import ge.rrs.database.DBConnection;
 import ge.rrs.database.SearchParameters;
 
-public class RoomSearchParameters extends SearchParameters {
+import java.sql.SQLException;
+import java.util.List;
+
+// ge.rrs
+
+public class RoomSearchParameters extends SearchParameters implements Cloneable {
 
     public RoomSearchParameters() {
         super();
+    }
+
+    public RoomSearchParameters(String parameterStatement, List<String> arguments) {
+        super(parameterStatement, arguments);
     }
 
     public void addFloorParameter(int floor) throws Exception {
