@@ -69,7 +69,7 @@
             <form:form cssClass="form-inline flex-nowrap m-0"
                        action="${pageContext.request.contextPath}/homepage-lv"
                        method="post"
-                       id="filterForm">
+                       id="timeRangeForm">
 
                 <label for="fromTime" class="text-light bg-dark mr-2">From:</label>
                 <input id="fromTime" class="form-control mr-2" name="fromTime" type="time">
@@ -77,7 +77,7 @@
                 <input id="toTime" class="form-control mr-2" name="toTime" type="time">
 
                 <div class="btn-group">
-                    <button class="btn btn-primary" id="filterBtn" type="button" onclick="checkTime()">Filter</button>
+                    <button class="btn btn-primary" type="button" onclick="checkTime()">Filter</button>
                     <button class="btn btn-primary dropdown-toggle" type="button" id="advancedSearch"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="advancedSearch">
