@@ -2,7 +2,7 @@ USE reservations_db;
 
 DROP TABLE IF EXISTS reservations;
 DROP TABLE IF EXISTS rooms;
-DROP TABLE IF EXISTS room_comment;
+DROP TABLE IF EXISTS room_comments;
 DROP TABLE IF EXISTS accounts;
 
 CREATE TABLE room_comments
@@ -50,7 +50,7 @@ CREATE TABLE reservations
 );
 
 
-INSERT INTO room_comment
+INSERT INTO room_comments
 VALUES (0, STR_TO_DATE('9,7,2020 14,30,0', '%d,%m,%Y %H,%i,%s'), 'Hello room!');
 	
 INSERT INTO accounts VALUES
