@@ -76,8 +76,6 @@
                 <label for="toTime" class="text-light bg-dark mr-2">To:</label>
                 <input id="toTime" class="form-control mr-2" name="toTime" type="time">
 
-                <input name="isFiltered" type="hidden">
-
                 <div class="btn-group">
                     <button class="btn btn-primary" id="filterBtn" type="button" onclick="checkTime()">Filter</button>
                     <button class="btn btn-primary dropdown-toggle" type="button" id="advancedSearch"
@@ -211,6 +209,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
-<script src="../../resources/homepage-graphical-view.js"></script>
+<script src="../../resources/time-range-controller.js"></script>
 </body>
 </html>
