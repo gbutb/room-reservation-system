@@ -2,7 +2,7 @@ USE reservations_db;
 
 DROP TABLE IF EXISTS reservations;
 DROP TABLE IF EXISTS rooms;
-DROP TABLE IF EXISTS room_comment;
+DROP TABLE IF EXISTS room_comments;
 DROP TABLE IF EXISTS accounts;
 
 CREATE TABLE room_comments
