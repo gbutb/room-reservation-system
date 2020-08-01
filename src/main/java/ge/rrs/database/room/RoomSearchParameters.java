@@ -50,4 +50,8 @@ public class RoomSearchParameters extends SearchParameters {
     public void addRoomSizeParameter(int size) throws Exception {
         addParameter(RoomSearchParameter.withRoomSize(size));
     }
+
+    public void addRoomIdParameter(int id) throws Exception {
+        addParameter(RoomSearchParameter.withRoomId(id));
+    }
 }

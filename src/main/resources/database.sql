@@ -153,5 +153,9 @@ VALUES (100, 1, 1, true, true, 0, '253.12 488.25 118.13 51.75'),
 
 INSERT INTO reservations VALUES
 	(0, 200, STR_TO_DATE('10,7,2020 14,40,0', '%d,%m,%Y %H,%i,%s'),
-			 STR_TO_DATE('10,7,2020 15,40,0', '%d,%m,%Y %H,%i,%s'), false, 0);
+			 STR_TO_DATE('10,7,2020 15,40,0', '%d,%m,%Y %H,%i,%s'), false, 0),
+    (1, 200, STR_TO_DATE('10,7,2020 15,50,0', '%d,%m,%Y %H,%i,%s'),
+             STR_TO_DATE('10,7,2020 16,50,0', '%d,%m,%Y %H,%i,%s'), false, 0),
+    (2, 200, STR_TO_DATE('10,7,2020 20,50,0', '%d,%m,%Y %H,%i,%s'),
+             STR_TO_DATE('10,7,2020 21,50,0', '%d,%m,%Y %H,%i,%s'), false, 0);
 

@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: dadak
-  Date: 31.07.2020
-  Time: 12:37
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -72,23 +65,142 @@
     </div>
 
     <%-- Container for bottom space after navigation bar --%>
-    <div class="d-flex flex-row justify-content-between align-items-start bg-light" style="width: 100%; height: 90%;">
+    <div class="d-flex flex-column justify-content-center align-items-center bg-light"
+         style="width: 100%; height: 90%;">
 
         <%-- Container for room title --%>
-        <div class="d-flex justify-content-between align-items-center" style="width: 90%;">
-            <h2>Room</h2>
-
-            <a href="${pageContext.request.contextPath}/homepage-lv" role="button"
-               class="btn btn-outline-secondary btn-sm">Homepage</a>
+        <div class="d-flex justify-content-between align-items-center" style="width: 70%;">
+            <h2>Room ${param.id}</h2>
         </div>
 
         <%-- Container for room view --%>
         <span class="d-flex justify-content-center align-items-center border rounded p-4"
-              style="border-width: 1.5px !important; width: 90%; height: 550px;">
+              style="border-width: 1.5px !important; width: 70%; height: 550px;">
 
-            <%-- TODO: User code start --%>
+            <%-- Container for room information --%>
+            <div class="d-flex flex-column justify-content-center align-items-start bg-light"
+                 style="width: 70%; height: 100%;">
 
-            <%-- TODO: User code end --%>
+                <%-- Room diagram and properties --%>
+                <div class="d-flex flex-row justify-content-start align-items-center bg-light"
+                     style="width: 100%; height: 50%;">
+
+                    <%-- Room diagram --%>
+                    <div class="d-flex flex-row justify-content-center align-items-center bg-light border mr-4"
+                         style="width: 40%; height: 100%; border-radius: 15px">
+                        <img src="/resources/images/room-${room.roomSize}.jpg" alt="Room Diagram">
+                    </div>
+
+                    <%-- Room properties --%>
+                    <div class="d-flex flex-column justify-content-center align-items-center bg-light" style="width: 50%; height: 100%;">
+                        <div class="d-flex flex-row justify-content-start align-items-center" style="width: 100%; font-size: x-large">
+                            <svg height="20" width="20">
+                                <circle cx="10" cy="10" r="8" fill= "${room.occupied ? "#d9534f" : "#28a745"}"></circle>
+                            </svg> <b>${room.occupied ? "Reserved" : "Available"}</b>
+                        </div>
+                        <br>
+                        <div class="d-flex flex-row justify-content-start align-items-center"
+                             style="width: 100%; height: 100%;">
+                            Room ID: &nbsp <b>${room.roomId}</b>
+                        </div>
+                        <div class="d-flex flex-row justify-content-start align-items-center"
+                             style="width: 100%; height: 100%;">
+                                Floor: &nbsp
+                                <c:forEach var="i" begin="1" end="4">
+                                    <button type="button" class="btn disabled btn-${i == room.floor ? "primary" : "outline-secondary"} btn-sm mr-1">${i}</button>
+                                </c:forEach>
+                        </div>
+                        <div class="d-flex flex-row justify-content-start align-items-center"
+                             style="width: 100%; height: 100%;">
+                            Size: &nbsp
+                            <c:forEach var="i" begin="1" end="4">
+                                <button type="button" class="btn disabled btn-${i == room.roomSize ? "primary" : "outline-secondary"} btn-sm mr-1">
+                                        ${i == 1 ? "Mini" : i == 2 ? "Small" : i == 3 ? "Medium" : "Large"}</button>
+                            </c:forEach>
+                        </div>
+                        <div class="d-flex flex-row justify-content-start align-items-end"
+                             style="width: 100%; height: 100%;">
+                            <div class="checkbox disabled">
+                              <label>Air Conditioning:  &nbsp<input type="checkbox" value="" disabled ${room.conditioner ? "checked" : ""}></label>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-row justify-content-start align-items-start"
+                             style="width: 100%; height: 100%;">
+                            <div class="checkbox disabled">
+                              <label>Projector: &nbsp<input type="checkbox" value="" disabled ${room.projector ? "checked" : ""}></label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <%-- Room Comment --%>
+                <div class="d-flex flex-column justify-content-start align-items-start bg-light border rounded mt-5 p-3"
+                     style="width: 95%; height: 25%;">
+                    Latest Comment --
+                </div>
+
+                <%-- Room Reservation --%>
+                <div class="d-flex flex-row justify-content-start align-items-center bg-light border rounded"
+                     style="width: 95%; height: 15%;">
+                </div>
+
+            </div>
+
+            <%-- Container for room reservation table --%>
+            <div class="d-flex flex-column align-items-center justify-content-center bg-light"
+                 style="width: 30%; height: 100%;">
+
+                Room Reservations<br>
+                <%-- Helper container for room reservation table --%>
+                <div class="d-flex flex-column overflow-auto align-items-center justify-content-center bg-light"
+                     style="width: 100%; height: 100%;">
+
+
+                    <%-- Container for room reservation table --%>
+                    <div class="d-flex flex-row align-items-start justify-content-center bg-light"
+                         style="width: 100%; height: 100%;">
+
+                        <%-- Timeline list for room reservation table --%>
+                        <div class="d-flex flex-column align-items-center justify-items-start"
+                             style="height: 120%; width: 20%;">
+                            <c:forEach var="i" begin="9" end="32">
+                                <svg width="100%" height="100%">
+
+                                    <rect x="0" y="0" fill="transparent" width="100%" height="90%"></rect>
+                                    <line x1="8%" y1="0%" x2="98%" y2="0%" stroke="#C8C8C8"></line>
+                                    <line x1="8%" y1="100%" x2="98%" y2="100%" stroke="#C8C8C8"></line>
+                                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+                                          style="fill: #484848;"
+                                          font-size="0.9rem">${((i >= 24) ? (i - 24) : i)}:00-</text>
+                                </svg>
+                            </c:forEach>
+                        </div>
+
+                        <%-- Room reservation table --%>
+                        <div class="d-flex flex-column align-items-center justify-items-start ml-2"
+                             style="height: 120%; width: 80%;">
+
+                            <svg x="0" y="50%" width="100%" height="1px">
+                                <line x1="0%" y1="50%" x2="100%" y2="50%" stroke="#484848"></line>
+                            </svg>
+                            <c:forEach var="timePortion" items="${timePortions}">
+                                <svg width="100%" height="${timePortion.timePortion * 100}%">
+                                    <rect x="0" y="0" rx="6" ry="6"
+                                          width="100%"
+                                          height="100%"
+                                          style="fill: ${timePortion.reservation ? '#d9534f' : 'transparent'};">
+                                    </rect>
+                                </svg>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
 
         </span>
     </div>
