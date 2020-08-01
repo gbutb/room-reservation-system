@@ -152,16 +152,16 @@ VALUES (100, 4, 1, false, true, 0, '253.12 488.25 118.13 51.75'),
        (422, 2, 4, false, true, 0, '608.62 0 51.75 55.13');
 
 INSERT INTO reservations
-VALUES (0, 115, STR_TO_DATE('1,8,2020 1,30,0', '%d,%m,%Y %H,%i,%s'),
-        STR_TO_DATE('1,8,2020 2,30,0', '%d,%m,%Y %H,%i,%s'), false, 0),
-       (1, 202, STR_TO_DATE('1,8,2020 2,30,0', '%d,%m,%Y %H,%i,%s'),
+VALUES (0, 110, STR_TO_DATE('1,6,2020 1,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('1,10,2020 2,30,0', '%d,%m,%Y %H,%i,%s'), false, 0),
+       (1, 115, STR_TO_DATE('1,8,2020 2,30,0', '%d,%m,%Y %H,%i,%s'),
         STR_TO_DATE('1,8,2020 3,0,0', '%d,%m,%Y %H,%i,%s'), false, 0),
        (2, 208, STR_TO_DATE('1,8,2020 3,30,0', '%d,%m,%Y %H,%i,%s'),
         STR_TO_DATE('1,8,2020 4,30,0', '%d,%m,%Y %H,%i,%s'), false, 0),
-       (3, 209, STR_TO_DATE('1,8,2020 4,30,0', '%d,%m,%Y %H,%i,%s'),
-        STR_TO_DATE('1,8,2020 6,30,0', '%d,%m,%Y %H,%i,%s'), false, 0),
-       (4, 210, STR_TO_DATE('1,8,2020 5,30,0', '%d,%m,%Y %H,%i,%s'),
-        STR_TO_DATE('1,8,2020 7,30,0', '%d,%m,%Y %H,%i,%s'), false, 0),
+       (3, 209, STR_TO_DATE('1,7,2020 4,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('1,9,2020 6,30,0', '%d,%m,%Y %H,%i,%s'), false, 0),
+       (4, 210, STR_TO_DATE('1,7,2020 5,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('1,9,2020 7,30,0', '%d,%m,%Y %H,%i,%s'), false, 0),
        (5, 212, STR_TO_DATE('1,8,2020 6,30,0', '%d,%m,%Y %H,%i,%s'),
         STR_TO_DATE('1,8,2020 8,30,0', '%d,%m,%Y %H,%i,%s'), false, 0),
        (6, 307, STR_TO_DATE('26,2,2020 1,30,0', '%d,%m,%Y %H,%i,%s'),
@@ -176,4 +176,3 @@ VALUES (0, 115, STR_TO_DATE('1,8,2020 1,30,0', '%d,%m,%Y %H,%i,%s'),
         STR_TO_DATE('26,9,2020 7,30,0', '%d,%m,%Y %H,%i,%s'), false, 0),
        (11, 415, STR_TO_DATE('26,2,2020 6,30,0', '%d,%m,%Y %H,%i,%s'),
         STR_TO_DATE('26,9,2020 23,00,0', '%d,%m,%Y %H,%i,%s'), false, 0);
-

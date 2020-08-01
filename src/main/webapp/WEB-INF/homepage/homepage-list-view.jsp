@@ -180,9 +180,9 @@
                                 </svg>
                             </td>
                             <td>${room.floor}</td>
-                            <td>${room.roomSize}</td>
-                            <td>${room.conditioner == true ? 'Has' : 'Doesn\'t have'}</td>
-                            <td>${room.projector == true ? 'Has' : 'Doesn\'t have'}</td>
+                            <td>${room.roomSize == 1 ? 'Mini' : room.roomSize == 2 ? 'Small' : room.roomSize == 3 ? 'Medium' : 'Large'}</td>
+                            <td>${room.conditioner == true ? 'Yes' : 'No'}</td>
+                            <td>${room.projector == true ? 'Yes' : 'No'}</td>
                             <td></td>
                             <td>
                                 <a class="btn btn-primary" style="width: 87px" role="button"
