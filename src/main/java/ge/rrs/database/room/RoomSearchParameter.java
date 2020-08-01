@@ -81,6 +81,17 @@ public class RoomSearchParameter implements SearchParameter {
         );
     }
 
+    static RoomSearchParameter withRoomId(int id) {
+        return new RoomSearchParameter(
+                "room_id", " = ", "?",
+                new ArrayList<String>() {
+                    {
+                        add("" + id);
+                    }
+                }
+        );
+    }
+
     /**
      * Fetches reservations that overlap the given time period and
      * then returns a parameter which ignores rooms corresponding

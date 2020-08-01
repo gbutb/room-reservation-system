@@ -49,4 +49,8 @@ public class RoomSearchParameters extends SearchParameters implements Cloneable 
     public void addRoomSizeParameter(int mini, int small, int medium, int large) throws Exception {
         addParameter(RoomSearchParameter.withRoomSize(mini, small, medium, large));
     }
+
+    public void addRoomIdParameter(int id) throws Exception {
+        addParameter(RoomSearchParameter.withRoomId(id));
+    }
 }
