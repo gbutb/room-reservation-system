@@ -34,7 +34,7 @@ public class RRSGraphicalViewController {
         // filters room according to 'floor' parameter only
         RoomSearchParameters roomSearchParameters = new RoomSearchParameters();
         roomSearchParameters.addFloorParameter(Integer.parseInt(req.getParameter("floor")));
-        Collection<Room> allRooms = Room.getFilteredRooms(roomSearchParameters, new DBConnection());
+        Collection<Room> allRooms = Room.getFilteredRooms(roomSearchParameters, DBConnection.getContextConnection());
 
         // extracts RoomSearchParameters from HttpSession
         HttpSession session = req.getSession();
@@ -46,7 +46,7 @@ public class RRSGraphicalViewController {
                 roomSearchParameters.getArguments());
         roomSearchParameters.addFloorParameter(Integer.parseInt(req.getParameter("floor")));
 
-        Collection<Room> filteredRooms = Room.getFilteredRooms(roomSearchParameters, new DBConnection());
+        Collection<Room> filteredRooms = Room.getFilteredRooms(roomSearchParameters, DBConnection.getContextConnection());
         HashMap<Integer, ArrayList<String>> roomsRenderData = RRSHomepageService.parseRenderData(allRooms);
 
         mv.setViewName("/homepage/homepage-graphical-view");
@@ -67,7 +67,7 @@ public class RRSGraphicalViewController {
         // filters room according to 'floor' parameter only
         RoomSearchParameters roomSearchParameters = new RoomSearchParameters();
         roomSearchParameters.addFloorParameter(Integer.parseInt(req.getParameter("floor")));
-        Collection<Room> allRooms = Room.getFilteredRooms(roomSearchParameters, new DBConnection());
+        Collection<Room> allRooms = Room.getFilteredRooms(roomSearchParameters, DBConnection.getContextConnection());
 
         // generates RoomSearchParameters and stores them in HttpSession
         roomSearchParameters = RRSHomepageService.buildParameters(req);
@@ -78,7 +78,7 @@ public class RRSGraphicalViewController {
                 roomSearchParameters.getArguments());
         roomSearchParameters.addFloorParameter(Integer.parseInt(req.getParameter("floor")));
 
-        Collection<Room> filteredRooms = Room.getFilteredRooms(roomSearchParameters, new DBConnection());
+        Collection<Room> filteredRooms = Room.getFilteredRooms(roomSearchParameters, DBConnection.getContextConnection());
         HashMap<Integer, ArrayList<String>> roomsRenderData = RRSHomepageService.parseRenderData(allRooms);
 
         mv.setViewName("/homepage/homepage-graphical-view");

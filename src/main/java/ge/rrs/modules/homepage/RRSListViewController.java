@@ -28,7 +28,7 @@ public class RRSListViewController {
         HttpSession session = req.getSession();
         RoomSearchParameters roomSearchParameters = (RoomSearchParameters) session.getAttribute("filterParams");
 
-        Collection<Room> rooms = Room.getFilteredRooms(roomSearchParameters, new DBConnection());
+        Collection<Room> rooms = Room.getFilteredRooms(roomSearchParameters, DBConnection.getContextConnection());
 
         mv.setViewName("/homepage/homepage-list-view");
         mv.addObject("rooms", rooms);
@@ -44,7 +44,7 @@ public class RRSListViewController {
         // generates RoomSearchParameters and stores them in HttpSession
         RoomSearchParameters roomSearchParameters = RRSHomepageService.buildParameters(req);
 
-        Collection<Room> filteredRooms = Room.getFilteredRooms(roomSearchParameters, new DBConnection());
+        Collection<Room> filteredRooms = Room.getFilteredRooms(roomSearchParameters, DBConnection.getContextConnection());
 
         mv.setViewName("/homepage/homepage-list-view");
         mv.addObject("rooms", filteredRooms);

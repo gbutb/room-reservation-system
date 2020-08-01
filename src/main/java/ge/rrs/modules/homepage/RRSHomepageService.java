@@ -44,14 +44,14 @@ public class RRSHomepageService {
                 roomSearchParameters.addDateTimeRangeParameter(
                         localDate + " " + fromTime,
                         localDate + " " + toTime,
-                        new DBConnection()
+                        DBConnection.getContextConnection()
                 );
             } else if (from.after(to)) {
                 LocalDate nextDate = localDate.plusDays(1);
                 roomSearchParameters.addDateTimeRangeParameter(
                         localDate + " " + fromTime,
                         nextDate + " " + toTime,
-                        new DBConnection()
+                        DBConnection.getContextConnection()
                 );
             }
         }
