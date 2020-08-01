@@ -31,7 +31,7 @@ function checkTime() {
     var toTime = $('#toTime').val();
 
     if (fromTime.length === 0 && toTime.length === 0) {
-        document.getElementById("filterForm").submit();
+        document.getElementById("timeRangeForm").submit();
     } else {
         var fromTimeDate = Date.parse('09/02/2020 ' + fromTime);
         var toTimeDate = Date.parse('09/02/2020 ' + toTime);
@@ -47,7 +47,7 @@ function checkTime() {
         if (toTimeDate < fromTimeDate) {
             $('#timeInputsModal').modal();
         } else {
-            document.getElementById("filterForm").submit();
+            document.getElementById("timeRangeForm").submit();
         }
     }
 }

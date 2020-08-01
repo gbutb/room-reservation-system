@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
 <head>
     <!-- Required meta tags -->
@@ -51,10 +52,10 @@
 
         <%-- Container for navigation bar branding --%>
         <div class="d-flex justify-content-start align-items-center p-4" style="width: 100px; height: 100%;">
-            <a class="text-light" style="font-size: 1.2rem;" href="#">RRS</a>
+            <a class="text-light" style="font-size: 1.2rem;" href="${pageContext.request.contextPath}/homepage-gv?floor=1">RRS</a>
         </div>
 
-        <%-- Container for search --%>
+        <%-- Container for search and filter --%>
         <div class="d-flex justify-content-center align-items-center" style="width: 1000px; height: 100%;">
 
             <%-- Search by room number --%>
@@ -64,21 +65,19 @@
                 <button class="btn btn-primary mr-5" type="submit">Search</button>
             </form>
 
-            <%-- Time based search and advanced search --%>
-            <form class="form-inline flex-nowrap m-0 needs-validation" novalidate
+            <%-- Time based filter and advanced filter --%>
+            <form:form cssClass="form-inline flex-nowrap m-0"
                   action="${pageContext.request.contextPath}/homepage-gv?floor=${param.floor}"
                   method="post"
-                  id="filterForm">
+                  id="timeRangeForm">
 
                 <label for="fromTime" class="text-light bg-dark mr-2">From:</label>
                 <input id="fromTime" class="form-control mr-2" name="fromTime" type="time">
                 <label for="toTime" class="text-light bg-dark mr-2">To:</label>
                 <input id="toTime" class="form-control mr-2" name="toTime" type="time">
 
-                <input name="isFiltered" type="hidden">
-
                 <div class="btn-group">
-                    <button class="btn btn-primary" id="filterBtn" type="button" onclick="checkTime()">Filter</button>
+                    <button class="btn btn-primary" type="button" onclick="checkTime()">Filter</button>
                     <button class="btn btn-primary dropdown-toggle" type="button" id="advancedSearch"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="advancedSearch">
@@ -120,7 +119,7 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            </form:form>
         </div>
 
         <%-- Container for user dropdown toggler --%>
@@ -133,7 +132,9 @@
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
                     <a class="dropdown-item" href="${pageContext.request.contextPath}/settings">Settings</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Log Out</a>
+                    <form:form cssClass="m-0" action="/logout" method="post">
+                        <input class="dropdown-item" type="submit" value="Log Out">
+                    </form:form>
                 </div>
             </div>
         </div>
@@ -162,7 +163,7 @@
         <div class="d-flex flex-column bg-light justify-content-center align-items-center"
              style="width: 92%; height: 100%;">
 
-            <%-- Container for graphical view title --%>
+            <%-- Container for title --%>
             <div class="d-flex justify-content-between align-items-center" style="width: 1162px;">
                 <h2>Graphical View</h2>
 
@@ -178,7 +179,25 @@
                      style="width: 1152px; height: 540px;" alt="..."/>
 
                 <svg class="position-absolute" width="1152" height="540">
-                    <c:forEach var="room" items="${rooms}">
+                    <c:forEach var="room" items="${allRooms}">
+                        <svg x="${renderData.get(room.roomId).get(0)}"
+                             y="${renderData.get(room.roomId).get(1)}"
+                             width="${renderData.get(room.roomId).get(2)}"
+                             height="${renderData.get(room.roomId).get(3)}">
+                            <rect x="0" y="0" rx="5" ry="5"
+                                  width="${renderData.get(room.roomId).get(2)}"
+                                  height="${renderData.get(room.roomId).get(3)}"
+                                  style="fill: #c4c8ca;">
+                            </rect>
+
+                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+                                  style="fill: #f8f9fa; opacity: 75%;">${room.roomId}</text>
+                        </svg>
+                    </c:forEach>
+                </svg>
+
+                <svg class="position-absolute" width="1152" height="540">
+                    <c:forEach var="room" items="${filteredRooms}">
                         <svg x="${renderData.get(room.roomId).get(0)}"
                              y="${renderData.get(room.roomId).get(1)}"
                              width="${renderData.get(room.roomId).get(2)}"
@@ -187,7 +206,7 @@
                                 <rect x="0" y="0" rx="5" ry="5"
                                       width="${renderData.get(room.roomId).get(2)}"
                                       height="${renderData.get(room.roomId).get(3)}"
-                                      style="fill: #28a745;">
+                                      style="fill: ${room.occupied == true ? '#dc3545' : '#28a745'};">
                                 </rect>
 
                                 <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
@@ -212,6 +231,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
-<script src="homepage-graphical-view.js"></script>
+<script src="../../resources/time-range-controller.js"></script>
 </body>
 </html>
