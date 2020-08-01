@@ -30,7 +30,7 @@ public class ReservationSearchParametersTest {
 
     @Test
     public void testDateTimeOverlap() throws Exception {
-        int overlapNumber[] = new int[] {1, 2, 1, 2, 2, 3};
+        int overlapNumber[] = new int[] {9, 10, 10, 10, 9, 10};
         for (int i = 1; i <= 6; ++i) {
             ReservationSearchParameters params = new ReservationSearchParameters();
             params.addDateTimeRangeOverlapParameter(
@@ -49,7 +49,7 @@ public class ReservationSearchParametersTest {
             "2020-07-31 23:00:00",
             "2020-08-01 06:00:00");
         assertEquals(
-            5, Reservation.getFilteredReservations(params, connection).size());
+            11, Reservation.getFilteredReservations(params, connection).size());
     }
 
     @Test
@@ -59,6 +59,6 @@ public class ReservationSearchParametersTest {
             "2020-08-01 01:35:00",
             "2020-08-01 01:35:00");
         assertEquals(
-            1, Reservation.getFilteredReservations(params, connection).size());
+            9, Reservation.getFilteredReservations(params, connection).size());
     }
 }
