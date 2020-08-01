@@ -67,7 +67,7 @@
 
             <%-- Time based filter and advanced filter --%>
             <form:form cssClass="form-inline flex-nowrap m-0"
-                       action="${pageContext.request.contextPath}/homepage-gv?floor=${param.floor}"
+                       action="${pageContext.request.contextPath}/homepage-lv"
                        method="post"
                        id="filterForm">
 
@@ -168,7 +168,7 @@
                         <th style="width: 12%">Air Conditioner</th>
                         <th style="width: 12%">Projector</th>
                         <th></th>
-                        <th style="width: 6.5%">Room Link</th>
+                        <th style="width: 9%">Room Link</th>
                     </tr>
                 </thead>
                 <tbody>
