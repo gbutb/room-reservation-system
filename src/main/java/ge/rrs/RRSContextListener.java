@@ -13,12 +13,10 @@ public class RRSContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext servletContext = sce.getServletContext();
-        System.out.println("context initialized");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         ServletContext servletContext = sce.getServletContext();
-        System.out.println("context destroyed");
     }
 }

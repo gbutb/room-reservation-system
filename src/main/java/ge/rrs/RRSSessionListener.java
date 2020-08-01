@@ -18,8 +18,6 @@ public class RRSSessionListener implements HttpSessionListener {
 
         RoomSearchParameters roomSearchParameters = new RoomSearchParameters();
         session.setAttribute("filterParams", roomSearchParameters);
-
-        System.out.println("session initialized");
     }
 
     @Override
@@ -27,7 +25,5 @@ public class RRSSessionListener implements HttpSessionListener {
         HttpSession session = se.getSession();
 
         session.removeAttribute("filterParams");
-
-        System.out.println("session destroyed");
     }
 }
