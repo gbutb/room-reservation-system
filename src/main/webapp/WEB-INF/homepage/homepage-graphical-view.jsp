@@ -55,7 +55,7 @@
             <a class="text-light" style="font-size: 1.2rem;" href="${pageContext.request.contextPath}/homepage-gv?floor=1">RRS</a>
         </div>
 
-        <%-- Container for search --%>
+        <%-- Container for search and filter --%>
         <div class="d-flex justify-content-center align-items-center" style="width: 1000px; height: 100%;">
 
             <%-- Search by room number --%>
@@ -65,7 +65,7 @@
                 <button class="btn btn-primary mr-5" type="submit">Search</button>
             </form>
 
-            <%-- Time based search and advanced search --%>
+            <%-- Time based filter and advanced filter --%>
             <form:form cssClass="form-inline flex-nowrap m-0"
                   action="${pageContext.request.contextPath}/homepage-gv?floor=${param.floor}"
                   method="post"
@@ -165,7 +165,7 @@
         <div class="d-flex flex-column bg-light justify-content-center align-items-center"
              style="width: 92%; height: 100%;">
 
-            <%-- Container for graphical view title --%>
+            <%-- Container for title --%>
             <div class="d-flex justify-content-between align-items-center" style="width: 1162px;">
                 <h2>Graphical View</h2>
 
@@ -181,7 +181,25 @@
                      style="width: 1152px; height: 540px;" alt="..."/>
 
                 <svg class="position-absolute" width="1152" height="540">
-                    <c:forEach var="room" items="${rooms}">
+                    <c:forEach var="room" items="${allRooms}">
+                        <svg x="${renderData.get(room.roomId).get(0)}"
+                             y="${renderData.get(room.roomId).get(1)}"
+                             width="${renderData.get(room.roomId).get(2)}"
+                             height="${renderData.get(room.roomId).get(3)}">
+                            <rect x="0" y="0" rx="5" ry="5"
+                                  width="${renderData.get(room.roomId).get(2)}"
+                                  height="${renderData.get(room.roomId).get(3)}"
+                                  style="fill: #c4c8ca;">
+                            </rect>
+
+                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+                                  style="fill: #f8f9fa; opacity: 75%;">${room.roomId}</text>
+                        </svg>
+                    </c:forEach>
+                </svg>
+
+                <svg class="position-absolute" width="1152" height="540">
+                    <c:forEach var="room" items="${filteredRooms}">
                         <svg x="${renderData.get(room.roomId).get(0)}"
                              y="${renderData.get(room.roomId).get(1)}"
                              width="${renderData.get(room.roomId).get(2)}"

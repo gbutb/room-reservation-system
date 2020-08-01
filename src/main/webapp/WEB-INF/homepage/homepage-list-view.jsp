@@ -52,8 +52,7 @@
 
         <%-- Container for navigation bar branding --%>
         <div class="d-flex justify-content-start align-items-center p-4" style="width: 100px; height: 100%;">
-            <a class="text-light" style="font-size: 1.2rem;"
-               href="${pageContext.request.contextPath}/homepage-gv?floor=1">RRS</a>
+            <a class="text-light" style="font-size: 1.2rem;" href="${pageContext.request.contextPath}/homepage-gv?floor=1">RRS</a>
         </div>
 
         <%-- Container for search and filter --%>
@@ -86,8 +85,7 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="advancedSearch">
                         <h6 class="dropdown-header p-0 ml-2 mb-1">Must include:</h6>
                         <div class="d-flex justify-content-start align-items-center" style="width: 315px;">
-                            <input type="checkbox" name="hasAirConditioner" class="form-check-input ml-3"
-                                   id="hasAirConditioner">
+                            <input type="checkbox" name="hasAirConditioner" class="form-check-input ml-3" id="hasAirConditioner">
                             <label class="form-check-label" for="hasAirConditioner">
                                 Air Conditioner
                             </label>
@@ -157,7 +155,7 @@
         </div>
 
         <%-- Container for list view --%>
-        <span class="d-flex justify-content-center align-items-start border rounded p-4"
+        <span class="d-flex justify-content-center align-items-start border rounded p-4 overflow-auto"
               style="border-width: 1.5px !important; width: 90%; height: 550px;">
 
             <table class="table table-bordered table-hover">
@@ -185,8 +183,8 @@
                             </td>
                             <td>${room.floor}</td>
                             <td>${room.roomSize}</td>
-                            <td>${room.conditioner}</td>
-                            <td>${room.projector}</td>
+                            <td>${room.conditioner == true ? 'Has' : 'Doesn\'t have'}</td>
+                            <td>${room.projector == true ? 'Has' : 'Doesn\'t have'}</td>
                             <td></td>
                             <td>
                                 <a class="btn btn-primary" style="width: 87px" role="button"
