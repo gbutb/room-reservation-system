@@ -1,15 +1,16 @@
 // RoomSearchParameter.java
 package ge.rrs.database.room;
 
+import ge.rrs.database.DBConnection;
+import ge.rrs.database.SearchParameter;
+import ge.rrs.database.reservation.Reservation;
+import ge.rrs.database.reservation.ReservationSearchParameters;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 // ge.rrs
-import ge.rrs.database.DBConnection;
-import ge.rrs.database.SearchParameter;
-import ge.rrs.database.reservation.Reservation;
-import ge.rrs.database.reservation.ReservationSearchParameters;
 
 public class RoomSearchParameter implements SearchParameter {
 
@@ -46,22 +47,35 @@ public class RoomSearchParameter implements SearchParameter {
 
     static RoomSearchParameter withAirConditioner() {
         return new RoomSearchParameter(
-                "air_conditioner", " = ", "true", new ArrayList<>()
+                "air_conditioner", " = ", "?",
+                new ArrayList<String>() {
+                    {
+                        add("" + 1);
+                    }
+                }
         );
     }
 
     static RoomSearchParameter withProjector() {
         return new RoomSearchParameter(
-                "projector", " = ", "true", new ArrayList<>()
+                "projector", " = ", "?",
+                new ArrayList<String>() {
+                    {
+                        add("" + 1);
+                    }
+                }
         );
     }
 
-    static RoomSearchParameter withRoomSize(int size) {
+    static RoomSearchParameter withRoomSize(int mini, int small, int medium, int large) {
         return new RoomSearchParameter(
-                "room_size", " = ", "?",
+                "room_size", " IN ", "(?, ?, ?, ?)",
                 new ArrayList<String>() {
                     {
-                        add("" + size);
+                        add("" + mini);
+                        add("" + small);
+                        add("" + medium);
+                        add("" + large);
                     }
                 }
         );
@@ -72,8 +86,8 @@ public class RoomSearchParameter implements SearchParameter {
      * then returns a parameter which ignores rooms corresponding
      * to the overlapping reservations
      *
-     * @param dateFrom start of the given time period
-     * @param dateTo end of the given time period
+     * @param dateFrom   start of the given time period
+     * @param dateTo     end of the given time period
      * @param connection DBConnection
      * @return returns corresponding parameter
      * @throws Exception error
@@ -89,13 +103,21 @@ public class RoomSearchParameter implements SearchParameter {
         filteredReservations.addAll(Reservation.getFilteredReservations(rParams, connection));
 
         StringBuilder valueExpression = new StringBuilder();
-        valueExpression.append("(");
         List<String> args = new ArrayList<>();
         for (Reservation reservation : filteredReservations) {
-            if (valueExpression.length() != 0) valueExpression.append(", ");
+            if (valueExpression.length() != 0) {
+                valueExpression.append(", ");
+            }
             valueExpression.append("?");
+
             args.add(Integer.toString(reservation.getRoomId()));
         }
+
+        if (valueExpression.length() == 0) {
+            return new RoomSearchParameter("1", "=", "1", new ArrayList<>());
+        }
+
+        valueExpression.insert(0, "(");
         valueExpression.append(")");
 
         return new RoomSearchParameter("room_id", " NOT IN ", valueExpression.toString(), args);
@@ -109,8 +131,8 @@ public class RoomSearchParameter implements SearchParameter {
     @Override
     public String getValue() {
         return String.format(
-            valueExpression.replace("?", "%s"),
-            args.toArray());
+                valueExpression.replace("?", "%s"),
+                args.toArray());
     }
 
     @Override

@@ -40,7 +40,7 @@ public class RoomSearchParameters extends SearchParameters {
         addParameter(RoomSearchParameter.withProjector());
     }
 
-    public void addRoomSizeParameter(int size) throws Exception {
-        addParameter(RoomSearchParameter.withRoomSize(size));
+    public void addRoomSizeParameter(int mini, int small, int medium, int large) throws Exception {
+        addParameter(RoomSearchParameter.withRoomSize(mini, small, medium, large));
     }
 }
