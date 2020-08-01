@@ -9,10 +9,12 @@ import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 // ge.rrs
 import ge.rrs.database.DBConnection;
+import ge.rrs.database.FreeSearchParameter;
 import ge.rrs.database.SearchParameters;
 import ge.rrs.database.TableEntry;
 
@@ -25,13 +27,22 @@ public class RRSUser extends TableEntry implements UserDetails {
     // this table entry corresponds to.
     private static final String TABLE_NAME = "accounts";
 
+    // Names of the table columns
+    private static final String ACCOUNT_ID_NAME = "account_id";
+    private static final String USERNAME_NAME = "username";
+    private static final String PASSWORD_NAME = "encryptedPassword";
+    private static final String EMAIL_NAME = "email";
+    private static final String PHONENUMBER_NAME = "phoneNumber";
+
     // Reference to DBConnection
     private DBConnection connection;
 
     // User Details
+    private Integer primaryKey;
     private String username;
     private String encryptedPassword;
     private String email;
+    private String phoneNumber;
 
     // User status
     private boolean nonExpired;
@@ -39,11 +50,23 @@ public class RRSUser extends TableEntry implements UserDetails {
     private boolean credentialsNonExpired;
     private boolean enabled;
 
-    // Meta
-    private boolean isNull;
-
     // Authorities
     private Collection<GrantedAuthority> authorities;
+
+    /**
+     * Initializes From result set.
+     * @param rs result set corresponding to the entry.
+     * @param connection A reference to DBConnection.
+     */
+    public RRSUser(ResultSet rs, DBConnection connection) throws SQLException {
+        this(
+            rs.getString(USERNAME_NAME),
+            rs.getString(PASSWORD_NAME),
+            rs.getString(EMAIL_NAME),
+            rs.getString(PHONENUMBER_NAME),
+            connection);
+        primaryKey = rs.getInt(ACCOUNT_ID_NAME);
+    }
 
     /**
      * Initializes new RRS User.
@@ -51,11 +74,13 @@ public class RRSUser extends TableEntry implements UserDetails {
      * @param encryptedPassword BCrypt encrypted password.
      * @param email Email of the account.
      * @param connection a reference to the DBConnection.
+     * @param phoneNumber a 9-digit phone number.
      */
-    public RRSUser(String username, String encryptedPassword, String email, DBConnection connection) {
+    public RRSUser(String username, String encryptedPassword, String email, String phoneNumber, DBConnection connection) {
         this.username = username;
         this.encryptedPassword = encryptedPassword;
         this.email = email;
+        this.phoneNumber = phoneNumber;
         
         this.nonExpired = true;
         this.nonLocked = true;
@@ -65,15 +90,14 @@ public class RRSUser extends TableEntry implements UserDetails {
         this.authorities = new ArrayList<>();
 
         this.connection = connection;
-        this.isNull = false;
     }
 
     /**
      * Null user constructor.
      */
     public RRSUser(DBConnection connection) {
-        this(null, null, null, connection);
-        this.isNull = true;
+        this(null, null, null, null, connection);
+        this.primaryKey = null;
     }
 
     /**
@@ -91,6 +115,18 @@ public class RRSUser extends TableEntry implements UserDetails {
     @Override
     public String getTableName() {
         return TABLE_NAME;
+    }
+
+    @Override
+    public Integer getPrimaryKey() {
+        if (primaryKey == null) {
+            try {
+                RRSUser user = getUser(
+                    getUsername(), connection);
+                primaryKey = user.getPrimaryKey();
+            } catch (Exception e) {}
+        }
+        return primaryKey;
     }
 
     /////////////////
@@ -113,25 +149,67 @@ public class RRSUser extends TableEntry implements UserDetails {
         while (rs.next()) {
             // Add new entry
             entries.add(new RRSUser(
-                rs.getString("username"),
-                rs.getString("encryptedPassword"),
-                rs.getString("email"),
-                connection));
+                rs, connection));
         }
         return entries;
     }
 
+    /**
+     * Filters users with given entris.
+     * @param connection reference to DBConnection
+     * @return a collection of users which match the entry.
+     * @throws Exception should any error occur.
+     */
+    public static RRSUser getUser(
+            String username, DBConnection connection) throws Exception {
+        // Initialize Search parameters
+        SearchParameters params = new SearchParameters();
+        params.addParameter(new FreeSearchParameter(USERNAME_NAME, "=", username));
+
+        // Query
+        Collection<RRSUser> users = getFilteredUsers(params, connection);
+
+        // Return the first user
+        for (RRSUser user : users) {
+            return user;
+        }
+
+        return null;
+    }
+
     @Override
-    public void save() throws Exception {
-        // TODO: move this to DBConnection
+    public void insertEntry() throws Exception {
+        if (getPrimaryKey() != null)
+            throw new Exception("Entry already exists!");
+        // Insert the entry
         getConnection().executeUpdate(
-            "INSERT INTO accounts VALUES (?, ?, ?, ?)",
-            Arrays.asList(
-                new String[] {
-                    getFilteredUsers(new SearchParameters(), getConnection()).size() + "",
-                    getUsername(),
-                    getPassword(),
-                    getEmail() }));
+            String.format(
+                "INSERT INTO %s VALUES (0, ?, ?, ?, ?)",
+                getTableName()),
+            Arrays.asList(new String[] {
+                getUsername(),
+                getPassword(),
+                getEmail(),
+                getPhoneNumber() }));
+    }
+
+    @Override
+    public void updateEntry() throws Exception {
+        if (getPrimaryKey() == null)
+            throw new Exception("No such entry exists");
+        // Update the entry
+        getConnection().executeUpdate(
+            String.format(
+                "UPDATE %s SET %s=?, %s=?, %s=?, %s=? WHERE %s=?",
+                getTableName(),
+                USERNAME_NAME, PASSWORD_NAME, EMAIL_NAME, PHONENUMBER_NAME,
+                ACCOUNT_ID_NAME),
+            Arrays.asList(new String[] {
+                getUsername(),
+                getPassword(),
+                getEmail(),
+                getPhoneNumber(),
+                getPrimaryKey().toString() }));
     }
 
     /////////////////
@@ -157,6 +235,10 @@ public class RRSUser extends TableEntry implements UserDetails {
         return email;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return nonExpired;
@@ -175,6 +257,34 @@ public class RRSUser extends TableEntry implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    /////////////
+    // Setters //
+    /////////////
+
+    /**
+     * Sets an BCrypt encrypted password
+     * @param encryptedPassword encrypted password.
+     */
+    public void setEncryptedPassword(String encryptedPassword) {
+        this.encryptedPassword = encryptedPassword;
+    }
+
+    /**
+     * Sets password.
+     * @param password unencrypted password.
+     */
+    public void setPassword(String password) {
+        setEncryptedPassword((new BCryptPasswordEncoder()).encode(password));
+    }
+
+    /**
+     * Sets phone number.
+     * @param phoneNumber 9-digit phone number.
+     */
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     ///////////
@@ -196,7 +306,7 @@ public class RRSUser extends TableEntry implements UserDetails {
         if (!(other instanceof RRSUser)) return false;
         RRSUser otherUser = (RRSUser)other;
         if ((otherUser.getUsername() != this.getUsername()) ||
-            (otherUser.getPassword() != this.getPassword())) return false;
+            (otherUser.getEmail() != this.getEmail())) return false;
         return true;
     }
 }

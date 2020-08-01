@@ -18,6 +18,10 @@ public class SearchParameters {
         clause = new Clause();
     }
 
+    public SearchParameters(String parameterStatement, List<String> arguments) {
+        clause = new Clause(parameterStatement, arguments);
+    }
+
     /**
      * Processes and adds given parameter to all saved parameters
      * Given parameter (if not the first parameter) is logically
@@ -76,29 +80,35 @@ public class SearchParameters {
         // Data Structure to save all parameters' arguments
         private List<String> arguments;
 
-        private boolean closed;
+        public Clause(String parameters, List<String> arguments) {
+            clause = new StringBuilder();
+
+            if (parameters.length() != 0) {
+                clause.append(parameters, 0, parameters.length() - 1);
+            } else {
+                clause.append("(");
+            }
+
+            this.arguments = new ArrayList<>(arguments);
+        }
 
         public Clause() {
             clause = new StringBuilder();
             arguments = new ArrayList<>();
-            closed = false;
             clause.append("(");
         }
 
         public void addClause(String operator, Clause clause) {
-            if (closed) return;
-            this.clause.append(" " + operator + " ");
+            this.clause.append(" ").append(operator).append(" ");
             addClause(clause);
         }
 
         public void addClause(Clause clause) {
-            if (closed) return;
             this.clause.append(clause.getClause());
             arguments.addAll(clause.getArguments());
         }
 
         public void addParameter(SearchParameter parameter) throws Exception {
-            if (closed) return;
             clause.append(parameter.getKey());
             clause.append(parameter.getRelation());
             clause.append(parameter.getValueExpression());
@@ -107,8 +117,7 @@ public class SearchParameters {
         }
 
         public void addParameter(String operator, SearchParameter parameter) throws Exception {
-            if (closed) return;
-            this.clause.append(" " + operator + " ");
+            this.clause.append(" ").append(operator).append(" ");
             addParameter(parameter);
         }
 
@@ -121,11 +130,7 @@ public class SearchParameters {
         }
 
         public String getClause() {
-            if (!closed) {
-                clause.append(")");
-                closed = true;
-            }
-            return clause.toString();
+            return clause.toString() + ")";
         }
 
     }

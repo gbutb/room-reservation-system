@@ -1,27 +1,26 @@
 // RoomSearchParameters.java
 package ge.rrs.database.room;
 
-import java.sql.SQLException;
-
-// ge.rrs
 import ge.rrs.database.DBConnection;
 import ge.rrs.database.SearchParameters;
 
-public class RoomSearchParameters extends SearchParameters {
+import java.sql.SQLException;
+import java.util.List;
+
+// ge.rrs
+
+public class RoomSearchParameters extends SearchParameters implements Cloneable {
 
     public RoomSearchParameters() {
         super();
     }
 
-    /**
-     * Adds parameters, which serve fetching rooms which are on the
-     * user given range of floors
-     *
-     * @param start start of the floor range
-     * @param end   end of the floor range (inclusive)
-     */
-    public void addFloorRangeParameter(int start, int end) throws Exception {
-        addParameter(RoomSearchParameter.fromFloorRange(start, end));
+    public RoomSearchParameters(String parameterStatement, List<String> arguments) {
+        super(parameterStatement, arguments);
+    }
+
+    public void addFloorParameter(int floor) throws Exception {
+        addParameter(RoomSearchParameter.fromFloor(floor));
     }
 
     /**
@@ -47,8 +46,8 @@ public class RoomSearchParameters extends SearchParameters {
         addParameter(RoomSearchParameter.withProjector());
     }
 
-    public void addRoomSizeParameter(int size) throws Exception {
-        addParameter(RoomSearchParameter.withRoomSize(size));
+    public void addRoomSizeParameter(int mini, int small, int medium, int large) throws Exception {
+        addParameter(RoomSearchParameter.withRoomSize(mini, small, medium, large));
     }
 
     public void addRoomIdParameter(int id) throws Exception {
