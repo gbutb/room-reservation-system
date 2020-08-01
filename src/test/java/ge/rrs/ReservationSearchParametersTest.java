@@ -38,7 +38,17 @@ public class ReservationSearchParametersTest {
                 String.format("2020-08-01 %d:40:00", i));
             assertEquals(
                 String.format("At %d", i),
-                overlapNumber[i-1],  Reservation.getFilteredReservations(params, connection).size());
+                overlapNumber[i-1], Reservation.getFilteredReservations(params, connection).size());
         }
+    }
+
+    @Test
+    public void testAllButOne() throws Exception {
+        ReservationSearchParameters params = new ReservationSearchParameters();
+        params.addDateTimeRangeOverlapParameter(
+            "2020-07-31 23:00:00",
+            "2020-08-01 06:00:00");
+        assertEquals(
+            5, Reservation.getFilteredReservations(params, connection).size());
     }
 }
