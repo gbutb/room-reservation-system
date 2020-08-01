@@ -52,7 +52,7 @@ public class ReservationSearchParameter implements SearchParameter {
                 new ArrayList<String>() {
                     {
                         add(dateTime);
-                        add("%Y-%M-%d %H:%i:%s");
+                        add("%Y-%m-%d %H:%i:%s");
                     }
                 });
     }
@@ -88,7 +88,7 @@ public class ReservationSearchParameter implements SearchParameter {
                 new ArrayList<String>() {
                     {
                         add(date);
-                        add("%Y-%M-%d %H:%i:%s");
+                        add("%Y-%m-%d %H:%i:%s");
                     }
                 });
     }
