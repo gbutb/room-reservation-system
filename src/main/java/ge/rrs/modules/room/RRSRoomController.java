@@ -4,6 +4,7 @@ import ge.rrs.database.DBConnection;
 import ge.rrs.database.reservation.Reservation;
 import ge.rrs.database.room.Room;
 import ge.rrs.database.room.RoomSearchParameters;
+import ge.rrs.database.room.comment.RoomComment;
 import ge.rrs.modules.auth.RRSUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,7 +59,9 @@ public class RRSRoomController {
 
         mv.setViewName("/room/room");
         mv.addObject("room", currentRoom);
-        mv.addObject("roomComment", currentRoom.getRoomComment());
+        RoomComment comment = currentRoom.getRoomComment();
+        if (comment != null)
+            mv.addObject("roomComment", comment);
         mv.addObject("reservations", reservations);
         mv.addObject("timePortions", timePortions);
 

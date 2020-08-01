@@ -4,7 +4,9 @@ import ge.rrs.database.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 public class RoomComment extends TableEntry {
 
@@ -90,9 +92,11 @@ public class RoomComment extends TableEntry {
         SearchParameters params = new SearchParameters();
         params.addParameter(new FreeSearchParameter("comment_id", " = ", "" + commentId));
         ResultSet rSet = TableEntry.filter(params, connection, RoomComment.TABLE_NAME);
-        rSet.next();
-
-        return new RoomComment(rSet, connection);
+        Collection<RoomComment> comments = new ArrayList<>();
+        while (rSet.next()) {
+            comments.add(new RoomComment(rSet, connection));
+        }
+        return (comments.size() > 0) ? comments.iterator().next() : null;
     }
 
     // Getter Methods
