@@ -51,4 +51,14 @@ public class ReservationSearchParametersTest {
         assertEquals(
             5, Reservation.getFilteredReservations(params, connection).size());
     }
+
+    @Test
+    public void testSingleTime() throws Exception {
+        ReservationSearchParameters params = new ReservationSearchParameters();
+        params.addDateTimeRangeOverlapParameter(
+            "2020-08-01 01:35:00",
+            "2020-08-01 01:35:00");
+        assertEquals(
+            1, Reservation.getFilteredReservations(params, connection).size());
+    }
 }
