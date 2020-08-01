@@ -20,22 +20,18 @@ import java.util.StringTokenizer;
 public class RRSHomepageService {
 
     /**
-     * Filters rooms according to given parameters from request and returns Collection
-     * of rooms that satisfy given constraints.
+     * Creates RoomSearchParameters object according to parameters taken from
+     * given HttpServletRequest and stores it inside HttpSession. Parameters doesn't
+     * include floor data, it's added separately in controllers.
      *
-     * @param req        servlet request
-     * @param connection database connection
-     * @return collection of filtered rooms
+     * @param req servlet request
+     * @return generated RoomSearchParameters
      */
-    public static Collection<Room> filterRooms(HttpServletRequest req, DBConnection connection) throws Exception {
+    public static RoomSearchParameters buildParameters(HttpServletRequest req) throws Exception {
         String fromTime = req.getParameter("fromTime");
         String toTime = req.getParameter("toTime");
 
         RoomSearchParameters roomSearchParameters = new RoomSearchParameters();
-
-        if (req.getParameter("floor") != null) {
-            roomSearchParameters.addFloorParameter(Integer.parseInt(req.getParameter("floor")));
-        }
 
         // filter rooms by time
         if (fromTime.length() != 0 && toTime.length() != 0) {
@@ -84,7 +80,10 @@ public class RRSHomepageService {
             );
         }
 
-        return Room.getFilteredRooms(roomSearchParameters, connection);
+        // roomSearchParameters is stored without 'floor' value
+        req.getSession().setAttribute("filterParams", roomSearchParameters);
+
+        return roomSearchParameters;
     }
 
     /**
