@@ -21,12 +21,12 @@ public class ReservationSearchParameters extends SearchParameters {
         Clause tempClause = new Clause();
 
         Clause startOverlap = new Clause();
-        startOverlap.addParameter(ReservationSearchParameter.startsBefore(dateFrom, true));
-        startOverlap.addParameter("AND", ReservationSearchParameter.endsAfter(dateFrom, false));
+        startOverlap.addParameter(ReservationSearchParameter.startsAfter(dateFrom, true));
+        startOverlap.addParameter("AND", ReservationSearchParameter.startsBefore(dateTo, false));
 
         Clause endOverlap = new Clause();
-        endOverlap.addParameter(ReservationSearchParameter.startsBefore(dateTo, false));
-        endOverlap.addParameter("AND", ReservationSearchParameter.endsAfter(dateTo, true));
+        endOverlap.addParameter(ReservationSearchParameter.endsAfter(dateFrom, false));
+        endOverlap.addParameter("AND", ReservationSearchParameter.endsBefore(dateTo, true));
 
         tempClause.addClause(startOverlap);
         tempClause.addClause("OR", endOverlap);
@@ -49,12 +49,12 @@ public class ReservationSearchParameters extends SearchParameters {
         Clause timeRangeClause = new Clause();
 
         Clause startOverlap = new Clause();
-        startOverlap.addParameter(ReservationSearchParameter.startsBeforeTime(timeFrom, true));
-        startOverlap.addParameter("AND", ReservationSearchParameter.endsAfterTime(timeFrom, false));
+        startOverlap.addParameter(ReservationSearchParameter.startsAfterTime(timeFrom, true));
+        startOverlap.addParameter("AND", ReservationSearchParameter.startsBeforeTime(timeTo, false));
 
         Clause endOverlap = new Clause();
-        endOverlap.addParameter(ReservationSearchParameter.startsBeforeTime(timeTo, false));
-        endOverlap.addParameter("AND", ReservationSearchParameter.endsAfterTime(timeTo, true));
+        endOverlap.addParameter(ReservationSearchParameter.endsAfterTime(timeFrom, false));
+        endOverlap.addParameter("AND", ReservationSearchParameter.endsBeforeTime(timeTo, true));
 
         timeRangeClause.addClause(startOverlap);
         timeRangeClause.addClause("OR", endOverlap);

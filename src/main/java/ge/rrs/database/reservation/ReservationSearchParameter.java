@@ -36,10 +36,37 @@ public class ReservationSearchParameter implements SearchParameter {
         String relation = " < ";
         if (inclusive) relation = " <= ";
         return new ReservationSearchParameter(
-                "start_date", relation, "STR_TO_DATE(?)",
+                "start_date", relation, "STR_TO_DATE(?, ?)",
                 new ArrayList<String>() {
                     {
                         add(dateTime);
+                        add("%Y-%M-%d %H:%i:%s");
+                    }
+                });
+    }
+
+    public static SearchParameter startsAfter(String dateTime, boolean inclusive) {
+        String relation = " > ";
+        if (inclusive) relation = " >= ";
+        return new ReservationSearchParameter(
+                "start_date", relation, "STR_TO_DATE(?, ?)",
+                new ArrayList<String>() {
+                    {
+                        add(dateTime);
+                        add("%Y-%M-%d %H:%i:%s");
+                    }
+                });
+    }
+
+    public static SearchParameter endsBefore(String dateTime, boolean inclusive) {
+        String relation = " < ";
+        if (inclusive) relation = " <= ";
+        return new ReservationSearchParameter(
+                "end_date", relation, "STR_TO_DATE(?, ?)",
+                new ArrayList<String>() {
+                    {
+                        add(dateTime);
+                        add("%Y-%M-%d %H:%i:%s");
                     }
                 });
     }
@@ -48,10 +75,11 @@ public class ReservationSearchParameter implements SearchParameter {
         String relation = " > ";
         if (inclusive) relation = " >= ";
         return new ReservationSearchParameter(
-                "end_date", relation, "STR_TO_DATE(?)",
+                "end_date", relation, "STR_TO_DATE(?, ?)",
                 new ArrayList<String>() {
                     {
                         add(dateTime);
+                        add("%Y-%M-%d %H:%i:%s");
                     }
                 });
     }
@@ -60,7 +88,19 @@ public class ReservationSearchParameter implements SearchParameter {
         String relation = " < ";
         if (inclusive) relation = " <= ";
         return new ReservationSearchParameter(
-                "end_date", relation, "TIME(?)",
+                "start_date", relation, "TIME(?)",
+                new ArrayList<String>() {
+                    {
+                        add(time);
+                    }
+                });
+    }
+
+    public static SearchParameter startsAfterTime(String time, boolean inclusive) {
+        String relation = " > ";
+        if (inclusive) relation = " >= ";
+        return new ReservationSearchParameter(
+                "start_date", relation, "TIME(?)",
                 new ArrayList<String>() {
                     {
                         add(time);
@@ -71,6 +111,18 @@ public class ReservationSearchParameter implements SearchParameter {
     static ReservationSearchParameter endsAfterTime(String time, boolean inclusive) {
         String relation = " > ";
         if (inclusive) relation = " >= ";
+        return new ReservationSearchParameter(
+                "end_date", relation, "TIME(?)",
+                new ArrayList<String>() {
+                    {
+                        add(time);
+                    }
+                });
+    }
+
+    public static SearchParameter endsBeforeTime(String time, boolean inclusive) {
+        String relation = " < ";
+        if (inclusive) relation = " <= ";
         return new ReservationSearchParameter(
                 "end_date", relation, "TIME(?)",
                 new ArrayList<String>() {
