@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,8 +26,10 @@ import java.util.HashMap;
 public class RRSGraphicalViewController {
 
     @GetMapping("/homepage-gv")
-    public ModelAndView renderGraphicalView(HttpServletRequest req) throws Exception {
+    public ModelAndView renderGraphicalView(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         ModelAndView mv = new ModelAndView();
+
+        if (!RRSHomepageService.floorIsValid(req)) resp.sendRedirect("/homepage-gv?floor=1");
 
         // filters room according to 'floor' parameter only
         RoomSearchParameters roomSearchParameters = new RoomSearchParameters();
@@ -56,8 +59,10 @@ public class RRSGraphicalViewController {
     }
 
     @PostMapping("/homepage-gv")
-    public ModelAndView renderFilteredGraphicalView(HttpServletRequest req) throws Exception {
+    public ModelAndView renderFilteredGraphicalView(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         ModelAndView mv = new ModelAndView();
+
+        if (!RRSHomepageService.floorIsValid(req)) resp.sendRedirect("/homepage-gv?floor=1");
 
         // filters room according to 'floor' parameter only
         RoomSearchParameters roomSearchParameters = new RoomSearchParameters();

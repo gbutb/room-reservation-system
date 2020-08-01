@@ -112,4 +112,17 @@ public class RRSHomepageService {
 
         return roomsRenderData;
     }
+
+    /**
+     * Checks if given floor parameter is valid and returns
+     * true or false accordingly.
+     *
+     * @param req HttpServletRequest
+     * @return true or false
+     */
+    public static boolean floorIsValid(HttpServletRequest req) {
+        int floor = Integer.parseInt(req.getParameter("floor"));
+
+        return floor >= 1 && floor <= 4;
+    }
 }
