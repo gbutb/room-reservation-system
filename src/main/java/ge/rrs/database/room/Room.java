@@ -1,15 +1,6 @@
 // Room.java
 package ge.rrs.database.room;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-
-// ge.rrs
 import ge.rrs.database.DBConnection;
 import ge.rrs.database.FreeSearchParameter;
 import ge.rrs.database.SearchParameters;
@@ -17,6 +8,14 @@ import ge.rrs.database.TableEntry;
 import ge.rrs.database.reservation.Reservation;
 import ge.rrs.database.reservation.ReservationSearchParameters;
 import ge.rrs.database.room.comment.RoomComment;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class Room extends TableEntry {
 
@@ -98,7 +97,7 @@ public class Room extends TableEntry {
     }
 
     public static Collection<Room> getFilteredRooms(SearchParameters parameters,
-                                                     DBConnection connection) throws SQLException {
+                                                    DBConnection connection) throws SQLException {
         ResultSet rs = TableEntry.filter(parameters, connection, Room.TABLE_NAME);
         Collection<Room> entries = new ArrayList<>();
         while (rs.next()) {
@@ -137,7 +136,7 @@ public class Room extends TableEntry {
     }
 
     public boolean isOccupied() throws Exception {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime now = LocalDateTime.now();
 
         ReservationSearchParameters parameters = new ReservationSearchParameters();
@@ -152,12 +151,17 @@ public class Room extends TableEntry {
     }
 
     public void setRoomComment(String comment) throws Exception {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         RoomComment roomComment = RoomComment.getRoomComment(getRoomId(), getConnection());
-        roomComment.setCommentDate(dtf.format(now));
-        roomComment.setUserComment(comment);
-        roomComment.updateEntry();
+        if (roomComment != null) {
+            roomComment.setCommentDate(dtf.format(now));
+            roomComment.setUserComment(comment);
+            roomComment.updateEntry();
+        } else {
+            roomComment = new RoomComment(dtf.format(now), comment, getRoomId(), connection);
+            roomComment.insertEntry();
+        }
     }
 
     // Getter Methods
@@ -190,16 +194,16 @@ public class Room extends TableEntry {
     public void insertEntry() throws Exception {
         // Insert the entry
         getConnection().executeUpdate(
-            String.format(
-                "INSERT %s VALUES (?, ?, ?, ?, ?, ?)",
-                getTableName()),
-            Arrays.asList(new String[] {
-                Integer.toString(getRoomId()),
-                Integer.toString(getRoomSize()),
-                Integer.toString(getFloor()),
-                isConditioner() ? "1" : "0",
-                isProjector() ? "1" : "0",
-                getRenderData() }));
+                String.format(
+                        "INSERT %s VALUES (?, ?, ?, ?, ?, ?)",
+                        getTableName()),
+                Arrays.asList(new String[]{
+                        Integer.toString(getRoomId()),
+                        Integer.toString(getRoomSize()),
+                        Integer.toString(getFloor()),
+                        isConditioner() ? "1" : "0",
+                        isProjector() ? "1" : "0",
+                        getRenderData()}));
     }
 
     @Override
@@ -208,21 +212,21 @@ public class Room extends TableEntry {
             throw new Exception("No such entry exists");
         // Update the entry
         getConnection().executeUpdate(
-            String.format(
-                "UPDATE %s SET %s=?, %s=?, %s=?, %s=?, %s=? WHERE %s=?",
-                getTableName(),
-                ROOM_SIZE_NAME,
-                FLOOR_NAME,
-                CONDITIONER_NAME,
-                PROJECTOR_NAME,
-                RENDER_DATA_NAME,
-                ROOM_ID_NAME),
-            Arrays.asList(new String[] {
-                Integer.toString(getRoomSize()),
-                Integer.toString(getFloor()),
-                isConditioner() ? "1" : "0",
-                isProjector() ? "1" : "0",
-                getRenderData(),
-                Integer.toString(getRoomId()) }));
+                String.format(
+                        "UPDATE %s SET %s=?, %s=?, %s=?, %s=?, %s=? WHERE %s=?",
+                        getTableName(),
+                        ROOM_SIZE_NAME,
+                        FLOOR_NAME,
+                        CONDITIONER_NAME,
+                        PROJECTOR_NAME,
+                        RENDER_DATA_NAME,
+                        ROOM_ID_NAME),
+                Arrays.asList(new String[]{
+                        Integer.toString(getRoomSize()),
+                        Integer.toString(getFloor()),
+                        isConditioner() ? "1" : "0",
+                        isProjector() ? "1" : "0",
+                        getRenderData(),
+                        Integer.toString(getRoomId())}));
     }
 }
