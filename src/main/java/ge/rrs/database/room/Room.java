@@ -29,7 +29,6 @@ public class Room extends TableEntry {
     private static final String ROOM_ID_NAME = "room_id";
     private static final String ROOM_SIZE_NAME = "room_size";
     private static final String FLOOR_NAME = "floor";
-    private static final String COMMENT_ID_NAME = "comment_id";
     private static final String CONDITIONER_NAME = "air_conditioner";
     private static final String PROJECTOR_NAME = "projector";
     private static final String RENDER_DATA_NAME = "render_data";
@@ -41,7 +40,6 @@ public class Room extends TableEntry {
     private Integer roomId;
     private int roomSize;
     private int floor;
-    private int commentId;
     private boolean conditioner;
     private boolean projector;
     private String renderData;
@@ -57,19 +55,17 @@ public class Room extends TableEntry {
         roomId = rSet.getInt(ROOM_ID_NAME);
         roomSize = rSet.getInt(ROOM_SIZE_NAME);
         floor = rSet.getInt(FLOOR_NAME);
-        commentId = rSet.getInt(COMMENT_ID_NAME);
         conditioner = rSet.getBoolean(CONDITIONER_NAME);
         projector = rSet.getBoolean(PROJECTOR_NAME);
         renderData = rSet.getString(RENDER_DATA_NAME);
         this.connection = connection;
     }
 
-    public Room(int roomId, int roomSize, int floor, int commentId,
-                boolean conditioner, boolean projector, String renderData, DBConnection connection) {
+    public Room(int roomId, int roomSize, int floor, boolean conditioner, boolean projector,
+                String renderData, DBConnection connection) {
         this.roomId = roomId;
         this.roomSize = roomSize;
         this.floor = floor;
-        this.commentId = commentId;
         this.conditioner = conditioner;
         this.projector = projector;
         this.renderData = renderData;
@@ -119,14 +115,29 @@ public class Room extends TableEntry {
      * @throws Exception SQL database error
      */
     public Collection<Reservation> getReservations() throws Exception {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("HH");
+        LocalDateTime now = LocalDateTime.now();
+        String fromDate;
+        String toDate;
+
+        if (Integer.parseInt(dtf1.format(now)) < 9) {
+            fromDate = "'" + dtf.format(now.minusDays(1)) + " 09:00:00'";
+            toDate = dtf.format(now) + " 09:00:00";
+        } else {
+            fromDate = "'" + dtf.format(now) + " 09:00:00'";
+            toDate = dtf.format(now.plusDays(1)) + " 09:00:00";
+        }
+
         ReservationSearchParameters rParams = new ReservationSearchParameters();
         rParams.addParameter(new FreeSearchParameter("room_id", " = ",
                 Integer.toString(roomId)));
+        rParams.addParameter(new FreeSearchParameter("start_date BETWEEN" + fromDate, " AND ", toDate));
         return Reservation.getFilteredReservations(rParams, getConnection());
     }
 
     public boolean isOccupied() throws Exception {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm");
         LocalDateTime now = LocalDateTime.now();
 
         ReservationSearchParameters parameters = new ReservationSearchParameters();
@@ -140,16 +151,13 @@ public class Room extends TableEntry {
         return RoomComment.getRoomComment(getRoomId(), getConnection());
     }
 
-    public void setRoomComment(String comment) {
+    public void setRoomComment(String comment) throws Exception {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
         LocalDateTime now = LocalDateTime.now();
-        RoomComment roomComment = new RoomComment(0, dtf.format(now), comment, getConnection());
-    }
-
-    public void setRoomComment(RoomComment roomComment) throws Exception {
-        roomComment.insertEntry();
-        commentId = roomComment.getCommentId();
-        this.updateEntry();
+        RoomComment roomComment = RoomComment.getRoomComment(getRoomId(), getConnection());
+        roomComment.setCommentDate(dtf.format(now));
+        roomComment.setUserComment(comment);
+        roomComment.updateEntry();
     }
 
     // Getter Methods
@@ -164,10 +172,6 @@ public class Room extends TableEntry {
 
     public int getFloor() {
         return floor;
-    }
-
-    public int getCommentId() {
-        return commentId;
     }
 
     public boolean isConditioner() {
@@ -187,7 +191,7 @@ public class Room extends TableEntry {
         // Insert the entry
         getConnection().executeUpdate(
             String.format(
-                "INSERT %s VALUES (?, ?, ?, ?, ?, ?, ?)",
+                "INSERT %s VALUES (?, ?, ?, ?, ?, ?)",
                 getTableName()),
             Arrays.asList(new String[] {
                 Integer.toString(getRoomId()),
@@ -195,7 +199,6 @@ public class Room extends TableEntry {
                 Integer.toString(getFloor()),
                 isConditioner() ? "1" : "0",
                 isProjector() ? "1" : "0",
-                Integer.toString(getCommentId()),
                 getRenderData() }));
     }
 
@@ -206,11 +209,10 @@ public class Room extends TableEntry {
         // Update the entry
         getConnection().executeUpdate(
             String.format(
-                "UPDATE %s SET %s=?, %s=?, %s=?, %s=?, %s=?, %s=? WHERE %s=?",
+                "UPDATE %s SET %s=?, %s=?, %s=?, %s=?, %s=? WHERE %s=?",
                 getTableName(),
                 ROOM_SIZE_NAME,
                 FLOOR_NAME,
-                COMMENT_ID_NAME,
                 CONDITIONER_NAME,
                 PROJECTOR_NAME,
                 RENDER_DATA_NAME,
@@ -220,7 +222,6 @@ public class Room extends TableEntry {
                 Integer.toString(getFloor()),
                 isConditioner() ? "1" : "0",
                 isProjector() ? "1" : "0",
-                Integer.toString(getCommentId()),
                 getRenderData(),
                 Integer.toString(getRoomId()) }));
     }

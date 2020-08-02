@@ -73,7 +73,7 @@ public class ReservationSearchParameter implements SearchParameter {
     }
 
     static ReservationSearchParameter isRepeated(boolean repeated) {
-        String repeatedStr = (repeated ? "TRUE" : "FALSE");
+        String repeatedStr = (repeated ? "1" : "0");
 
         List<String> arguments = new ArrayList<>();
         arguments.add(repeatedStr);

@@ -19,26 +19,35 @@ public class RoomComment extends TableEntry {
     private static final String COMMENT_ID_NAME = "comment_id";
     private static final String COMMENT_DATE_NAME = "comment_date";
     private static final String USER_COMMENT_NAME = "user_comment";
+    private static final String ROOM_ID_NAME = "room_id";
 
     // Reference to DBConnection
     private final DBConnection connection;
 
-    private int commentId;
+    private Integer commentId;
     private String commentDate;
     private String userComment;
+    private int roomId;
 
-    public RoomComment(int commentId, String commentDate, String userComment, DBConnection connection) {
+    public RoomComment(int commentId, String commentDate, String userComment, int roomId, DBConnection connection) {
         this.commentId = commentId;
         this.commentDate = commentDate;
         this.userComment = userComment;
+        this.roomId = roomId;
 
         this.connection = connection;
+    }
+
+    public RoomComment(String commentDate, String userComment, int roomId, DBConnection connection) {
+        this(0, commentDate, userComment, roomId, connection);
+        this.commentId = null;
     }
 
     public RoomComment(ResultSet rSet, DBConnection connection) throws SQLException {
         commentId = rSet.getInt(COMMENT_ID_NAME);
         commentDate = rSet.getString(COMMENT_DATE_NAME);
         userComment = rSet.getString(USER_COMMENT_NAME);
+        roomId = rSet.getInt(ROOM_ID_NAME);
 
         this.connection = connection;
     }
@@ -63,12 +72,12 @@ public class RoomComment extends TableEntry {
         // Insert the entry
         getConnection().executeUpdate(
                 String.format(
-                        "INSERT %s VALUES (?, ?, ?)",
+                        "INSERT %s VALUES (0, ?, ?, ?)",
                         getTableName()),
                 Arrays.asList(new String[] {
-                        Integer.toString(getCommentId()),
                         getCommentDate(),
-                        getUserComment()}));
+                        getUserComment(),
+                        Integer.toString(getRoomId())}));
     }
 
     @Override
@@ -78,19 +87,23 @@ public class RoomComment extends TableEntry {
         // Update the entry
         getConnection().executeUpdate(
                 String.format(
-                        "UPDATE %s SET %s=?, %s=? WHERE %s=?",
+                        "UPDATE %s SET %s=?, %s=?, %s=? WHERE %s=?",
                         getTableName(),
                         COMMENT_DATE_NAME,
                         USER_COMMENT_NAME,
-                        getCommentId()),
+                        ROOM_ID_NAME,
+                        COMMENT_ID_NAME),
                 Arrays.asList(new String[] {
                         getCommentDate(),
-                        getUserComment() }));
+                        getUserComment(),
+                        Integer.toString(getRoomId()),
+                        Integer.toString(getPrimaryKey())
+                }));
     }
 
-    public static RoomComment getRoomComment(int commentId, DBConnection connection) throws Exception {
+    public static RoomComment getRoomComment(int roomId, DBConnection connection) throws Exception {
         SearchParameters params = new SearchParameters();
-        params.addParameter(new FreeSearchParameter("comment_id", " = ", "" + commentId));
+        params.addParameter(new FreeSearchParameter("room_id", " = ", "" + roomId));
         ResultSet rSet = TableEntry.filter(params, connection, RoomComment.TABLE_NAME);
         Collection<RoomComment> comments = new ArrayList<>();
         while (rSet.next()) {
@@ -109,8 +122,8 @@ public class RoomComment extends TableEntry {
         return userComment;
     }
 
-    public int getCommentId() {
-        return commentId;
+    public int getRoomId() {
+        return roomId;
     }
 
     // Setter Methods

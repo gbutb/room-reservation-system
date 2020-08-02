@@ -23,82 +23,49 @@ public class RRSRoomController {
     public ModelAndView loadRoomView(HttpServletRequest req) throws Exception {
 
         ModelAndView mv = new ModelAndView();
-        int roomId = Integer.parseInt(req.getParameter("id"));
-
-        // Only for test purposes
-        DBConnection connection = new DBConnection();
-        //
-
-        RoomSearchParameters params = new RoomSearchParameters();
-        params.addRoomIdParameter(roomId);
-        Room currentRoom = Room.getFilteredRooms(params, connection).iterator().next();
-
-        Collection<Reservation> reservations = currentRoom.getReservations();
-
-        double lastReservation = 9;
-        ArrayList<TimePortion> timePortions = new ArrayList<>();
-        for (Reservation reservation : reservations) {
-            double startDate = Integer.parseInt(reservation.getStartDate().substring(11, 13));
-            startDate += Integer.parseInt(reservation.getStartDate().substring(14, 16)) / 60.0;
-            if (startDate < 9) startDate += 24;
-            double endDate = Integer.parseInt(reservation.getEndDate().substring(11, 13));
-            endDate += Integer.parseInt(reservation.getEndDate().substring(14, 16)) / 60.0;
-            if (startDate < 9) endDate += 24;
-
-            if (startDate != lastReservation) {
-                double freeTimeSpan = startDate - lastReservation;
-                timePortions.add(new TimePortion(lastReservation, freeTimeSpan, false));
-            }
-            double reservationSpan = endDate - startDate;
-            timePortions.add(new TimePortion(startDate, reservationSpan, true));
-
-            lastReservation = endDate;
-        }
-        double lastTimeSpan = 33 - lastReservation;
-        if (lastTimeSpan != 0) timePortions.add(new TimePortion(lastReservation, lastTimeSpan, false));
-
         mv.setViewName("/room/room");
-        mv.addObject("room", currentRoom);
-        RoomComment comment = currentRoom.getRoomComment();
-        if (comment != null)
-            mv.addObject("roomComment", comment);
-        mv.addObject("reservations", reservations);
-        mv.addObject("timePortions", timePortions);
+
+        DBConnection connection = DBConnection.getContextConnection();
+        Room currentRoom = RRSRoomService.getCurrentRoom(req);
+        RRSUser currentUser = RRSUser.getCurrentUser();
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
         LocalDateTime now = LocalDateTime.now();
         double time = Integer.parseInt(dtf.format(now).substring(0, 2));
         time += Integer.parseInt(dtf.format(now).substring(3)) / 60.0;
         if (time <= 9) time += 24;
-        time -= 9;
 
-        System.out.println(dtf.format(now));
+        // Update Comment
+        if (req.getParameter("comment") != null && !req.getParameter("commentString").isEmpty()) {
+            currentRoom.setRoomComment(req.getParameter("commentString"));
+        }
+
         mv.addObject("currentTime", dtf.format(now));
-        mv.addObject("currentTimeRelativePosition", time / 24);
-        mv.addObject("username", RRSUser.getCurrentUser().getUsername());
+        mv.addObject("currentTimeRelativePosition", (time - 9) / 24);
+        mv.addObject("user", currentUser);
+
+        Collection<Reservation> reservations = currentRoom.getReservations();
+        System.out.println(reservations);
+
+        ArrayList<RRSRoomService.ReservationTimePortion> timePortions = new ArrayList<>();
+
+        RRSRoomService.getTimePortions(timePortions, reservations, time, mv);
+
+        mv.addObject("room", currentRoom);
+        mv.addObject("timePortions", timePortions);
+
+        RoomComment comment = currentRoom.getRoomComment();
+        if (comment == null) {
+            mv.addObject("roomComment", "-");
+            mv.addObject("roomCommentDate", "(No Comment For This Room)");
+        } else {
+            DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+            mv.addObject("roomComment", comment.getUserComment());
+            mv.addObject("roomCommentDate", "Latest Comment - " + comment.getCommentDate().substring(0, 16));
+        }
 
         return mv;
     }
 
-    public class TimePortion {
-        private final double timePortion;
-        private final double relativePosition;
-        private final boolean isReservation;
 
-        TimePortion(double time, double timeSpan, boolean isReservation) {
-            relativePosition = (time - 9) / 24;
-            timePortion = timeSpan / 24;
-            this.isReservation = isReservation;
-        }
-
-        public double getRelativePosition() { return relativePosition; }
-
-        public double getTimePortion() {
-            return timePortion;
-        }
-
-        public boolean isReservation() {
-            return isReservation;
-        }
-    }
 }

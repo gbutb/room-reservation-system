@@ -24,13 +24,35 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title text-danger"
-                        id="timeInputsModalLabel"><%-- TODO: Error message title --%></h5>
+                        id="timeInputsModalLabel">Incorrect Time Range!</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <%-- TODO: Error message content --%>
+                    You can only filter rooms from 09:00 o'clock to 09:00 o'clock of the next day.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%-- Modal for reservation overlap --%>
+    <div class="modal fade" id="reservationOverlapModal" tabindex="-1" role="dialog"
+         aria-labelledby="reservationOverlapModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger"
+                        id="reservationOverlapModalLabel">Incorrect Time Range!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    You Can Only Reserve Rooms When They Are Not Reserved
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
@@ -92,11 +114,13 @@
                     </div>
 
                     <%-- Room properties --%>
-                    <div class="d-flex flex-column justify-content-center align-items-center bg-light" style="width: 50%; height: 100%;">
-                        <div class="d-flex flex-row justify-content-start align-items-center" style="width: 100%; font-size: x-large">
+                    <div class="d-flex flex-column justify-content-center align-items-center bg-light"
+                         style="width: 50%; height: 100%;">
+                        <div class="d-flex flex-row justify-content-start align-items-center"
+                             style="width: 100%; font-size: x-large">
                             <b class="mr-2">${room.occupied ? "Reserved" : "Available"}</b>
                             <svg height="20" width="20">
-                                <circle cx="10" cy="10" r="8" fill= "${room.occupied ? "#d9534f" : "#28a745"}"></circle>
+                                <circle cx="10" cy="10" r="8" fill="${room.occupied ? "#d9534f" : "#28a745"}"></circle>
                             </svg>
                         </div>
                         <br>
@@ -122,13 +146,15 @@
                         <div class="d-flex flex-row justify-content-start align-items-end"
                              style="width: 100%; height: 100%;">
                             <div class="checkbox disabled">
-                              <label>Air Conditioning:  &nbsp<input type="checkbox" value="" disabled ${room.conditioner ? "checked" : ""}></label>
+                              <label>Air Conditioning:  &nbsp<input type="checkbox" value=""
+                                                                    disabled ${room.conditioner ? "checked" : ""}></label>
                             </div>
                         </div>
                         <div class="d-flex flex-row justify-content-start align-items-start"
                              style="width: 100%; height: 100%;">
                             <div class="checkbox disabled">
-                              <label>Projector: &nbsp<input type="checkbox" value="" disabled ${room.projector ? "checked" : ""}></label>
+                              <label>Projector: &nbsp<input type="checkbox" value=""
+                                                            disabled ${room.projector ? "checked" : ""}></label>
                             </div>
                         </div>
                     </div>
@@ -136,15 +162,23 @@
                 </div>
 
                 <%-- Room Comment --%>
-                <div class="card secondary mt-3" style="width: 100%; height: 30%; background-color: #F0F0F0">
-<%--                  <div class="card-header" style="height:15%">Latest Comment</div>--%>
+                <div class="d-flex flex-column border rounded mt-3"
+                     style="width: 100%; height: 30%; background-color: #F0F0F0">
                     <div class=" d-flex flex-column justify-content-center rounded"
                          style="width: 100%; height: 30%; background-color: #F0F0F0">
-                        <text class="ml-4" style="color: darkslategrey !important; font-size: smaller">Latest Comment</text>
+                        <text class="ml-4"
+                              style="color: darkslategrey !important; font-size: smaller">${roomCommentDate}</text>
                     </div>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" maxlength="255" rows="4"
-                              disabled
-                              style="border-width: 0; resize: unset; background-color: white;">&nbsp;&nbsp;&mdash;</textarea>
+                    <form:form cssClass="m-0"
+                               action="${pageContext.request.contextPath}/room?id=${param.id}"
+                               method="post"
+                               id="commentForm">
+                        <input type="hidden" name="comment">
+                        <textarea class="form-control" id="exampleFormControlTextarea1" maxlength="255" rows="4"
+                                  name="commentString"
+                            ${(room.occupied && currentReservation.accountId == user.primaryKey) ? "" : "disabled"}
+                                  style="border-width: 0; resize: unset; background-color: white; outline: 0px !important; -webkit-appearance: none; box-shadow: none !important">${roomComment}</textarea>
+                    </form:form>
                 </div>
 
                 <%-- Room Reservation Panel --%>
@@ -152,9 +186,9 @@
                      style="width: 100%; height: 15%;">
                     <%-- Time Range Entry --%>
                     <form:form cssClass="form-inline flex-nowrap m-0"
-                          action="${pageContext.request.contextPath}/room?id=${param.id}"
-                          method="post"
-                          id="timeRangeForm">
+                               action="${pageContext.request.contextPath}/room?id=${param.id}"
+                               method="post"
+                               id="timeRangeForm">
 
                         <label for="fromTime" class="mr-2">From:</label>
                         <input id="fromTime" class="form-control mr-2" name="fromTime" type="time">
@@ -163,9 +197,10 @@
 
                         <button class="btn btn-primary" type="button" onclick="checkTime()">Reserve</button>
                     </form:form>
-                    <button class="btn btn-primary" type="button" onclick="checkTime()">Comment</button>
-                </div>
 
+                    <button class="btn btn-primary" type="submit" name="commentBtn"
+                            form="commentForm" ${(room.occupied && currentReservation.accountId == user.primaryKey) ? "" : "disabled"}>Comment</button>
+                </div>
             </div>
 
             <%-- Container for room reservation table --%>
@@ -185,7 +220,8 @@
                                 <svg x="0%" y="0%" width="100%" height="100%">
                                     <c:forEach var="i" begin="1" end="23">
                                         <svg y="${(i/24)*100}%" width="100%" height="${100/24}%">
-                                            <line x1="15%" y1="0%" x2="100%" y2="0%" stroke="#484848" opacity="10%" stroke-width="2px"></line>
+                                            <line x1="15%" y1="0%" x2="100%" y2="0%" stroke="#484848" opacity="10%"
+                                                  stroke-width="2px"></line>
                                         </svg>
                                     </c:forEach>
                                 </svg>
@@ -206,11 +242,12 @@
                                 <%-- Room reservation table --%>
                                 <svg x="18%" y="0%" width="79%" height="100%">
                                     <c:forEach var="timePortion" items="${timePortions}">
-                                        <svg y="${timePortion.relativePosition * 100}%" width="100%" height="${timePortion.timePortion * 100}%">
+                                        <svg y="${timePortion.relativePosition * 100}%" width="100%"
+                                             height="${timePortion.timePortion * 100}%">
                                             <rect x="0" y="0" rx="3" ry="3"
                                                   width="100%"
                                                   height="100%"
-                                                  style="fill: ${timePortion.reservation ? '#d9534f' : 'transparent'}; opacity: 80%">
+                                                  style="fill: #d9534f; opacity: 80%">
                                             </rect>
                                         </svg>
                                     </c:forEach>
@@ -218,11 +255,15 @@
 
                                 <%-- Current Time Indicator --%>
                                 <svg x="0%" y="0%" width="100%" height="100%">
-                                    <text x="2%" y="${currentTimeRelativePosition*100 + 0.3}%" dominant-baseline="middle" text-anchor="start"
-                                          style="fill: #000000; font-size: smaller" font-weight="bold">${currentTime}</text>
-                                    <line x1="15%" y1="${currentTimeRelativePosition*100}%" x2="100%" y2="${currentTimeRelativePosition*100}%" stroke="#484848"></line>
-                                    <svg x="15%" y="${(currentTimeRelativePosition-(1/48))*100}%" height="20" width="20">
-                                        <circle cx="4" cy="12" r="4" fill= "#484848"></circle>
+                                    <text x="2%" y="${currentTimeRelativePosition*100 + 0.3}%"
+                                          dominant-baseline="middle" text-anchor="start"
+                                          style="fill: #000000; font-size: smaller"
+                                          font-weight="bold">${currentTime}</text>
+                                    <line x1="15%" y1="${currentTimeRelativePosition*100}%" x2="100%"
+                                          y2="${currentTimeRelativePosition*100}%" stroke="#484848"></line>
+                                    <svg x="15%" y="${(currentTimeRelativePosition-(1/48))*100}%" height="20"
+                                         width="20">
+                                        <circle cx="4" cy="12" r="4" fill="#484848"></circle>
                                     </svg>
                                 </svg>
                             </svg>
