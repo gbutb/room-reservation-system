@@ -51,9 +51,11 @@ CREATE TABLE reservations
     PRIMARY KEY (reservation_id)
 );
 
+
 INSERT INTO accounts
 VALUES (0, 'Human', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO', 'human@humans.org', '123456789'),
        (0, 'Human 1', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO', 'human1@humans.org', '123456789');
+
 
 INSERT INTO rooms
 VALUES (100, 4, 1, false, true, '253.12 488.25 118.13 51.75'),

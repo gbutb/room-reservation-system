@@ -168,7 +168,7 @@
                 samePasswords=false;
                 $('#message').html("Your passwords should match").css('color', 'red');
             } else {
-                samePasswords=true;
+                if($('#password').val()===$('#repeatPassword').val()&&$('#repeatPassword').val() != "")samePasswords=true;
                 $('#message').html("");
                 checkIfRight(validUsername,validMail,validNumber,samePasswords, validPassword);
             }

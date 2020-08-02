@@ -22,7 +22,7 @@
     <div class="container">
         <div id="login-row" class="row justify-content-center">
             <div id="login-column" class="col-md-6">
-                <div id="login-box" class="col-md-10">
+                <div id="login-box">
                     <form:form action="/login" id="login-form" class="form" method="POST">
                         <h2 class="text-center text-dark">Login</h2>
                         <div class="form-group">
@@ -37,7 +37,7 @@
 
                         <div class="form-group">
 
-                            <input type="submit" id="submit" name="submit" class="btn btn-info btn-md" value="login" disabled>
+                            <input type="submit" id="submit" name="submit" class="btn btn-primary btn-md" value="login" disabled>
                         </div>
                         <div id="register-link" class="text-right">
                             <a href="/register"  class="text-dark">Register</a>

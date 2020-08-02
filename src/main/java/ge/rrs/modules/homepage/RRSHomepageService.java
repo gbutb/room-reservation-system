@@ -5,13 +5,10 @@ import ge.rrs.database.room.Room;
 import ge.rrs.database.room.RoomSearchParameters;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Time;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Initial implementation of homepage service class used by
@@ -35,25 +32,13 @@ public class RRSHomepageService {
 
         // filter rooms by time
         if (fromTime.length() != 0 && toTime.length() != 0) {
-            SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
-            Time from = new Time(timeFormatter.parse(fromTime).getTime());
-            Time to = new Time(timeFormatter.parse(toTime).getTime());
-            LocalDate localDate = LocalDate.now();
+            String[] fromTo = convertToDates(fromTime, toTime);
 
-            if (from.before(to) || from.equals(to)) {
-                roomSearchParameters.addDateTimeRangeParameter(
-                        localDate + " " + fromTime,
-                        localDate + " " + toTime,
-                        DBConnection.getContextConnection()
-                );
-            } else if (from.after(to)) {
-                LocalDate nextDate = localDate.plusDays(1);
-                roomSearchParameters.addDateTimeRangeParameter(
-                        localDate + " " + fromTime,
-                        nextDate + " " + toTime,
-                        DBConnection.getContextConnection()
-                );
-            }
+            System.out.println(fromTo[0]);
+            System.out.println(fromTo[1]);
+
+            roomSearchParameters.addDateTimeRangeParameter(fromTo[0], fromTo[1],
+                    DBConnection.getContextConnection());
         }
 
         // filter rooms by advanced options
@@ -82,6 +67,59 @@ public class RRSHomepageService {
         req.getSession().setAttribute("filterParams", roomSearchParameters);
 
         return roomSearchParameters;
+    }
+
+    /**
+     * Reads two strings containing time in 24 hour format and generates
+     * date using current system date.
+     * Example 1: Consider that when you passed time parameters to this method
+     * it was 2020-08-02
+     * <p>
+     * 18:00 - 19:00 -> 2020-08-02 18:00 - 2020-08-02 19:00
+     * 20:00 - 02:00 -> 2020-08-02 20:00 - 2020-08-03 02:00
+     * 01:00 - 05:00 -> 2020-08-03 01:00 - 2020-08-03 05:00
+     * <p>
+     * Example 2: Consider that when you passed time parameters to this method
+     * it was 2020-08-03 but the "same" day
+     * <p>
+     * 01:00 - 05:00 -> 2020-08-03 01:00 - 2020-08-03 05:00
+     *
+     * @param fromTime first input
+     * @param toTime   second input
+     * @return array containing to dates
+     */
+    public static String[] convertToDates(String fromTime, String toTime) throws ParseException {
+        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+
+        Calendar now = new GregorianCalendar();
+        Calendar from = new GregorianCalendar();
+        Calendar to = new GregorianCalendar();
+        now.setTime(new Date());
+        from.setTime(timeFormatter.parse(fromTime));
+        to.setTime(timeFormatter.parse(toTime));
+
+        int nowHour = now.get(Calendar.HOUR_OF_DAY);
+        int fromHour = from.get(Calendar.HOUR_OF_DAY);
+        int toHour = to.get(Calendar.HOUR_OF_DAY);
+
+        LocalDate localDate = LocalDate.now();
+        LocalDate nextDate = localDate.plusDays(1);
+
+        String[] result = new String[2];
+        if (fromHour <= toHour) {
+            if (fromHour < 9 && nowHour >= 9) {
+                result[0] = nextDate + " " + timeFormatter.format(from.getTime());
+                result[1] = nextDate + " " + timeFormatter.format(to.getTime());
+            } else {
+                result[0] = localDate + " " + timeFormatter.format(from.getTime());
+                result[1] = localDate + " " + timeFormatter.format(to.getTime());
+            }
+        } else {
+            result[0] = localDate + " " + timeFormatter.format(from.getTime());
+            result[1] = nextDate + " " + timeFormatter.format(to.getTime());
+        }
+
+        return result;
     }
 
     /**

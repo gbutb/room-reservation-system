@@ -148,10 +148,10 @@
             <ul class="nav d-flex flex-column justify-content-center align-items-center w-100 h-100">
                 <c:forEach var="btnId" begin="1" end="4">
                     <li class="nav-item pb-3">
-                        <a href="?floor=${btnId}">
-                            <button type="button" class="btn ${param.floor == btnId ? 'btn-primary' : 'btn-dark'}"
+                        <a href="?floor=${5 - btnId}">
+                            <button type="button" class="btn ${param.floor == (5 - btnId) ? 'btn-primary' : 'btn-dark'}"
                                     style="width: 80px; height: 80px; font-size: 2rem;">
-                                    ${btnId}
+                                    ${5 - btnId}
                             </button>
                         </a>
                     </li>
