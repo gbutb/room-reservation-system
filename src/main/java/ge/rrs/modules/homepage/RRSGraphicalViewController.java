@@ -38,7 +38,9 @@ public class RRSGraphicalViewController {
 
         // extracts RoomSearchParameters from HttpSession
         HttpSession session = req.getSession();
-        roomSearchParameters = (RoomSearchParameters) session.getAttribute("filterParams");
+        if (session.getAttribute("filterParams") != null) {
+            roomSearchParameters = (RoomSearchParameters) session.getAttribute("filterParams");
+        }
 
         // makes copy of RoomSearchParameters to add 'floor' parameter
         // without changing main object in HttpSession
