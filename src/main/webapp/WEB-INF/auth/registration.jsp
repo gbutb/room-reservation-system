@@ -82,7 +82,7 @@
                         </div>
                         <div >
                             <div class="form-group" style="display: inline-block;">
-                                <input type="submit" name="submit" id="submit" class="btn btn-primary btn-md" value="register" disabled>
+                                <input type="submit" name="submit" id="submit" class="btn btn-primary btn-md" value="Register" disabled>
                             </div>
                         </div>
                         <div id="login-link" class="text-right">

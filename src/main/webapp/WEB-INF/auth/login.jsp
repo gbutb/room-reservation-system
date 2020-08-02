@@ -37,7 +37,7 @@
 
                         <div class="form-group">
 
-                            <input type="submit" id="submit" name="submit" class="btn btn-primary btn-md" value="login" disabled>
+                            <input type="submit" id="submit" name="submit" class="btn btn-primary btn-md" value="Login" disabled>
                         </div>
                         <div id="register-link" class="text-right">
                             <a href="/register"  class="text-dark">Register</a>

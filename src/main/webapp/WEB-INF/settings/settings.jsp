@@ -86,7 +86,7 @@
                         </div>
                         <div class="form-group">
                             <input type="submit" id="change" name="change" class="btn btn-primary btn-md"
-                                   value="submit changes" disabled>
+                                   value="Submit Changes" disabled>
                         </div>
                     </form:form>
                 </div>
