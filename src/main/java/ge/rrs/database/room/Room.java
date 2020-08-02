@@ -136,7 +136,7 @@ public class Room extends TableEntry {
     }
 
     public boolean isOccupied() throws Exception {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
 
         ReservationSearchParameters parameters = new ReservationSearchParameters();
