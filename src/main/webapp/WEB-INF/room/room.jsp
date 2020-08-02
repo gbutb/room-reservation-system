@@ -39,35 +39,14 @@
         </div>
     </div>
 
-    <%-- Modal for reservation overlap --%>
-    <div class="modal fade" id="reservationOverlapModal" tabindex="-1" role="dialog"
-         aria-labelledby="reservationOverlapModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-danger"
-                        id="reservationOverlapModalLabel">Incorrect Time Range!</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    You Can Only Reserve Rooms When They Are Not Reserved
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <%-- Container for top navigation bar --%>
     <div class="d-flex flex-row justify-content-between align-items-center sticky-top bg-dark"
          style="width: 100%; height: 10%;">
 
         <%-- Container for navigation bar branding --%>
         <div class="d-flex justify-content-start align-items-center p-4" style="width: 100px; height: 100%;">
-            <a class="text-light" style="font-size: 1.2rem;" href="#">RRS</a>
+            <a class="text-light" style="font-size: 1.2rem;"
+               href="${pageContext.request.contextPath}/homepage-gv?floor=1">RRS</a>
         </div>
 
         <%-- Container for user dropdown toggler --%>
@@ -75,12 +54,14 @@
             <div class="dropdown">
                 <a class="dropdown-toggle text-muted" href="#" style="font-size: 1.2rem" id="userMenu"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    ${username}
+                    ${user.username}
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
                     <a class="dropdown-item" href="${pageContext.request.contextPath}/settings">Settings</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Log Out</a>
+                    <form:form cssClass="m-0" action="/logout" method="post">
+                        <input class="dropdown-item" type="submit" value="Log Out">
+                    </form:form>
                 </div>
             </div>
         </div>
@@ -110,7 +91,8 @@
                     <%-- Room diagram --%>
                     <div class="d-flex flex-row justify-content-center align-items-center bg-light border rounded mr-4"
                          style="width: 40%; height: 100%;">
-                        <img src="/resources/images/room-${room.roomSize}.png" class="img-fluid" alt="Room Diagram">
+                        <img src="/resources/images/room-${room.roomSize}.png" class="img-fluid" alt="Room Diagram"
+                             width="auto" height="auto" style="max-height: 100%; max-width: 100%">
                     </div>
 
                     <%-- Room properties --%>
@@ -177,12 +159,12 @@
                         <textarea class="form-control" id="exampleFormControlTextarea1" maxlength="255" rows="4"
                                   name="commentString"
                             ${(room.occupied && currentReservation.accountId == user.primaryKey) ? "" : "disabled"}
-                                  style="border-width: 0; resize: unset; background-color: white; outline: 0px !important; -webkit-appearance: none; box-shadow: none !important">${roomComment}</textarea>
+                                  style="border-width: 0; resize: unset; background-color: white; outline: 0 !important; -webkit-appearance: none; box-shadow: none !important">${roomComment}</textarea>
                     </form:form>
                 </div>
 
                 <%-- Room Reservation Panel --%>
-                <div class="d-flex flex-row justify-content-between align-items-center bg-light "
+                <div class="d-flex flex-row align-items-center bg-light"
                      style="width: 100%; height: 15%;">
                     <%-- Time Range Entry --%>
                     <form:form cssClass="form-inline flex-nowrap m-0"
@@ -194,11 +176,15 @@
                         <input id="fromTime" class="form-control mr-2" name="fromTime" type="time">
                         <label for="toTime" class="mr-2">To:</label>
                         <input id="toTime" class="form-control mr-2" name="toTime" type="time">
+                        <input type="hidden" name="reserve">
 
-                        <button class="btn btn-primary" type="button" onclick="checkTime()">Reserve</button>
+                        <button class="btn btn-primary" type="button" onclick="checkReservationTime()">Reserve</button>
                     </form:form>
 
-                    <button class="btn btn-primary" type="submit" name="commentBtn"
+                    <text class="ml-2 text-danger"
+                          style="font-size: medium;">${invalidReservation ? "Error Already Reserved!" : ""}</text>
+
+                    <button class="btn btn-primary ml-auto" type="submit" name="commentBtn"
                             form="commentForm" ${(room.occupied && currentReservation.accountId == user.primaryKey) ? "" : "disabled"}>Comment</button>
                 </div>
             </div>
@@ -248,6 +234,7 @@
                                                   width="100%"
                                                   height="100%"
                                                   style="fill: #d9534f; opacity: 80%">
+                                        <title>${timePortion.reservation.startDate.substring(10)} -${timePortion.reservation.endDate.substring(10)}</title>
                                             </rect>
                                         </svg>
                                     </c:forEach>

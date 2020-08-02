@@ -4,9 +4,12 @@ import ge.rrs.database.DBConnection;
 import ge.rrs.database.reservation.Reservation;
 import ge.rrs.database.room.Room;
 import ge.rrs.database.room.RoomSearchParameters;
+import ge.rrs.modules.auth.RRSUser;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -43,6 +46,62 @@ public class RRSRoomService {
         if (currentReservation != null) mv.addObject("currentReservation", currentReservation);
     }
 
+    public static void handleReservationAndSetAttributes(ArrayList<ReservationTimePortion> timePortions,
+                                                         Collection<Reservation> reservations, LocalDateTime now, double time, Room currentRoom,
+                                                         HttpServletRequest req, ModelAndView mv) throws Exception {
+        boolean invalidReservation = false;
+        if (req.getParameter("reserve") != null) {
+            double startDate = Integer.parseInt(req.getParameter("fromTime").substring(0, 2));
+            startDate += Integer.parseInt(req.getParameter("fromTime").substring(3, 5)) / 60.0;
+            if (startDate < 9) startDate += 24;
+            startDate -= 9;
+            double endDate = Integer.parseInt(req.getParameter("toTime").substring(0, 2));
+            endDate += Integer.parseInt(req.getParameter("toTime").substring(3, 5)) / 60.0;
+            if (endDate <= 9) endDate += 24;
+            endDate -= 9;
+
+            for (RRSRoomService.ReservationTimePortion portion : timePortions) {
+                double rPos = portion.getRelativePosition();
+                double rPor = portion.getTimePortion();
+                if ((rPos >= startDate / 24.0 && rPos < endDate / 24.0)
+                        || (rPos + rPor > startDate / 24.0 && rPos + rPor <= endDate / 24.0)
+                        || rPos < startDate / 24.0 && rPos + rPor > endDate / 24.0) {
+                    invalidReservation = true;
+                    break;
+                }
+            }
+
+            if (!invalidReservation) {
+                DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+                String resStartDate = dtf1.format(now);
+                String resEndDate = dtf1.format(now);
+
+                if (startDate < 15 && endDate >= 15) {
+                    resEndDate = dtf1.format(now.plusDays(1));
+                } else if (startDate >= 15 && endDate > 15 && time <= 24) {
+                    resStartDate = dtf1.format(now.plusDays(1));
+                    resEndDate = dtf1.format(now.plusDays(1));
+                }
+                Reservation newReservation = new Reservation(currentRoom.getRoomId(),
+                        resStartDate + " " + req.getParameter("fromTime"),
+                        resEndDate + " " + req.getParameter("toTime"),
+                        false,
+                        RRSUser.getCurrentUser().getPrimaryKey(),
+                        DBConnection.getContextConnection());
+                newReservation.insertEntry();
+
+                reservations = currentRoom.getReservations();
+                timePortions = new ArrayList<>();
+                RRSRoomService.getTimePortions(timePortions, reservations, time, mv);
+            }
+        }
+
+        mv.addObject("invalidReservation", invalidReservation);
+        mv.addObject("reservations", reservations);
+        mv.addObject("timePortions", timePortions);
+    }
+
     public static class ReservationTimePortion {
         private final double timePortion;
         private final double relativePosition;
@@ -54,7 +113,9 @@ public class RRSRoomService {
             this.reservation = reservation;
         }
 
-        public double getRelativePosition() { return relativePosition; }
+        public double getRelativePosition() {
+            return relativePosition;
+        }
 
         public double getTimePortion() {
             return timePortion;
