@@ -1,11 +1,12 @@
 // ReservationSearchParameter.java
 package ge.rrs.database.reservation;
 
+import ge.rrs.database.SearchParameter;
+
 import java.util.ArrayList;
 import java.util.List;
 
 // ge.rrs
-import ge.rrs.database.SearchParameter;
 
 public class ReservationSearchParameter implements SearchParameter {
 
@@ -16,6 +17,14 @@ public class ReservationSearchParameter implements SearchParameter {
     private final List<String> args;
 
     private boolean empty;
+
+    /**
+     * Used by compareDateTime and compareTime
+     */
+    enum Comparator {
+        MORE,
+        LESS
+    }
 
     /**
      * Initializes Reservation Search parameter.
@@ -32,47 +41,30 @@ public class ReservationSearchParameter implements SearchParameter {
         this.args = args;
     }
 
-    static ReservationSearchParameter startsBefore(String dateTime, boolean inclusive) {
-        String relation = " < ";
-        if (inclusive) relation = " <= ";
+    static ReservationSearchParameter compareDateTime(String dateAnchor, String dateTime,
+                                                      boolean inclusive, Comparator comparator) {
+        String relation = (comparator == Comparator.MORE ? " >" : " <");
+        if (inclusive) relation += "=";
+        relation += " ";
+
         return new ReservationSearchParameter(
-                "start_date", relation, "STR_TO_DATE(?)",
+                dateAnchor, relation, "STR_TO_DATE(?, ?)",
                 new ArrayList<String>() {
                     {
                         add(dateTime);
+                        add("%Y-%m-%d %H:%i:%s");
                     }
                 });
     }
 
-    static ReservationSearchParameter endsAfter(String dateTime, boolean inclusive) {
-        String relation = " > ";
-        if (inclusive) relation = " >= ";
-        return new ReservationSearchParameter(
-                "end_date", relation, "STR_TO_DATE(?)",
-                new ArrayList<String>() {
-                    {
-                        add(dateTime);
-                    }
-                });
-    }
+    static ReservationSearchParameter compareTime(String dateAnchor, String time,
+                                                  boolean inclusive, Comparator comparator) {
+        String relation = (comparator == Comparator.MORE ? " >" : " <");
+        if (inclusive) relation += "=";
+        relation += " ";
 
-    static ReservationSearchParameter startsBeforeTime(String time, boolean inclusive) {
-        String relation = " < ";
-        if (inclusive) relation = " <= ";
         return new ReservationSearchParameter(
-                "end_date", relation, "TIME(?)",
-                new ArrayList<String>() {
-                    {
-                        add(time);
-                    }
-                });
-    }
-
-    static ReservationSearchParameter endsAfterTime(String time, boolean inclusive) {
-        String relation = " > ";
-        if (inclusive) relation = " >= ";
-        return new ReservationSearchParameter(
-                "end_date", relation, "TIME(?)",
+                dateAnchor, relation, "TIME(?)",
                 new ArrayList<String>() {
                     {
                         add(time);
@@ -81,8 +73,7 @@ public class ReservationSearchParameter implements SearchParameter {
     }
 
     static ReservationSearchParameter isRepeated(boolean repeated) {
-        String repeatedStr = "FALSE";
-        if (repeated) repeatedStr = "TRUE";
+        String repeatedStr = (repeated ? "TRUE" : "FALSE");
 
         List<String> arguments = new ArrayList<>();
         arguments.add(repeatedStr);
@@ -93,10 +84,11 @@ public class ReservationSearchParameter implements SearchParameter {
 
     static ReservationSearchParameter containsDate(String date) {
         return new ReservationSearchParameter(
-                "TO_DATE(?)", " BETWEEN ", "start_date AND end_date",
+                "STR_TO_DATE(?, ?)", " BETWEEN ", "start_date AND end_date",
                 new ArrayList<String>() {
                     {
                         add(date);
+                        add("%Y-%m-%d %H:%i:%s");
                     }
                 });
     }

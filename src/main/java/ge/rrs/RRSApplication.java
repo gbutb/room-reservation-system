@@ -6,24 +6,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
-import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpSessionListener;
 import java.util.Collections;
 
 @SpringBootApplication
 public class RRSApplication {
-
-    /**
-     * Registers new ServletContextListener.
-     *
-     * @return registration bean
-     */
-    @Bean
-    public ServletListenerRegistrationBean<ServletContextListener> contextListenerRegistrationBean() {
-        ServletListenerRegistrationBean<ServletContextListener> bean = new ServletListenerRegistrationBean<>();
-        bean.setListener(new RRSContextListener());
-        return bean;
-    }
 
     /**
      * Registers new HttpSessionListener.

@@ -55,39 +55,41 @@
     <div class="d-flex flex-column justify-content-center align-items-center bg-light" style="width: 100%; height: 90%;">
 
         <%-- Container for title --%>
-        <div class="d-flex justify-content-between align-items-center" style="width: 90%;">
+        <div class="d-flex justify-content-between align-items-center" style="width: 50%;">
             <h2>Settings</h2>
         </div>
 
         <%-- Container for settings view --%>
-        <span class="d-flex justify-content-center align-items-start border rounded  p-4"
-              style="border-width: 1.5px !important; width: 90%; height: 550px;">
+        <span class="d-flex justify-content-center align-items-start border rounded  p-4 align-items-center"
+              style="border-width: 1.5px !important; width: 50%; height: 550px;">
 
             <%-- TODO: User code here --%>
 
                 <div class="container">
-                    <form:form id="afterSave" class="form" action="settings" method="POST">
-                        <div class="form-group">
-                            <label for="number" class="text-dark">New Phone Number: </label><br>
-                            <input type="text"  name="number" id="number" class="form-control">
-                             <span id = 'numMessage'></span>
-                        </div>
-                        <div class="form-group">
-                            <label for="password"  class="text-dark">New Password: </label>
-                            <br>
-                            <input type="password"  name="password" id="password" class="form-control">
-                            <span id = 'strongMessage'></span>
-                        </div>
-                        <div class="form-group">
-                                <label for="repeatPassword"  class="text-dark">Repeat Password: </label>
+                    <div class="column justify-content-center col-md-4 mx-auto">
+                        <form:form id="afterSave" class="form" action="settings" method="POST">
+                            <div class="form-group">
+                                <label for="number" class="text-dark">New Phone Number: </label><br>
+                                <input type="text"  name="number" id="number" class="form-control">
+                                 <span id = 'numMessage'></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="password"  class="text-dark">New Password: </label>
                                 <br>
-                                <input type="password" id="repeatPassword" class="form-control">
-                                <span id = 'repeatMessage'></span>
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" id="change" name="change" class="btn btn-info btn-md" value="submit changes" disabled>
-                        </div>
-                    </form:form>
+                                <input type="password"  name="password" id="password" class="form-control">
+                                <span id = 'strongMessage'></span>
+                            </div>
+                            <div class="form-group">
+                                    <label for="repeatPassword"  class="text-dark">Repeat Password: </label>
+                                    <br>
+                                    <input type="password" id="repeatPassword" class="form-control">
+                                    <span id = 'repeatMessage'></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" id="change" name="change" class="btn btn-primary btn-md" value="submit changes" disabled>
+                            </div>
+                        </form:form>
+                    </div>
                 </div>
 
         </span>
