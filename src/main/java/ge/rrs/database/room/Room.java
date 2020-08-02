@@ -137,7 +137,7 @@ public class Room extends TableEntry {
     }
 
     public boolean isOccupied() throws Exception {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
 
         ReservationSearchParameters parameters = new ReservationSearchParameters();
@@ -152,7 +152,7 @@ public class Room extends TableEntry {
     }
 
     public void setRoomComment(String comment) throws Exception {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         RoomComment roomComment = RoomComment.getRoomComment(getRoomId(), getConnection());
         roomComment.setCommentDate(dtf.format(now));
