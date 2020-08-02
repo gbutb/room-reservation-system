@@ -37,7 +37,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    You can only filter rooms from 09:00 o'clock to 09:00 o'clock of the next day.
+                    You can only filter rooms from current time to 09:00 o'clock in the morning.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>

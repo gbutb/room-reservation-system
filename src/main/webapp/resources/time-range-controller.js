@@ -30,7 +30,16 @@ function checkTime() {
     var fromTime = $('#fromTime').val();
     var toTime = $('#toTime').val();
 
-    if (fromTime.length === 0 && toTime.length === 0) {
+    var now = new Date();
+    var alteredTime = now.getHours() + now.getMinutes() / 60.0;
+    if (alteredTime < 9) alteredTime += 24;
+    var from = parseFloat(fromTime.substr(0, 2));
+    from += parseFloat(fromTime.substr(3, 2)) / 60.0;
+    if (from < 9) from += 24;
+
+    if (alteredTime > from) {
+        $('#timeInputsModal').modal();
+    } else if (fromTime.length === 0 && toTime.length === 0) {
         document.getElementById("timeRangeForm").submit();
     } else {
         var fromTimeDate = Date.parse('09/02/2020 ' + fromTime);
@@ -61,7 +70,16 @@ function checkReservationTime() {
     var fromTime = $('#fromTime').val();
     var toTime = $('#toTime').val();
 
-    if (fromTime.length !== 0 && toTime.length !== 0) {
+    var now = new Date();
+    var alteredTime = now.getHours() + now.getMinutes() / 60.0;
+    if (alteredTime < 9) alteredTime += 24;
+    var from = parseFloat(fromTime.substr(0, 2));
+    from += parseFloat(fromTime.substr(3, 2)) / 60.0;
+    if (from < 9) from += 24;
+
+    if (alteredTime > from) {
+        $('#timeInputsModal').modal();
+    } else if (fromTime.length !== 0 && toTime.length !== 0) {
         var fromTimeDate = Date.parse('09/02/2020 ' + fromTime);
         var toTimeDate = Date.parse('09/02/2020 ' + toTime);
 
