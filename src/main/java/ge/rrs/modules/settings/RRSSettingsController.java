@@ -15,6 +15,7 @@ public class RRSSettingsController {
         // Initialize result
         ModelAndView modelView = new ModelAndView();
         modelView.setViewName("/settings/settings");
+        modelView.addObject("username", RRSUser.getCurrentUser().getUsername());
         return modelView;
     }
 
@@ -29,7 +30,6 @@ public class RRSSettingsController {
             
         }
         // Initialize redirect
-        ModelAndView mv = new ModelAndView("redirect:/homepage-gv?floor=1");
-        return mv;
+        return new ModelAndView("redirect:/homepage-gv?floor=1");
     }
 }
