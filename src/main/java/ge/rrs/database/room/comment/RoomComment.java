@@ -27,7 +27,7 @@ public class RoomComment extends TableEntry {
     private Integer commentId;
     private String commentDate;
     private String userComment;
-    private int roomId;
+    private final int roomId;
 
     public RoomComment(int commentId, String commentDate, String userComment, int roomId, DBConnection connection) {
         this.commentId = commentId;
