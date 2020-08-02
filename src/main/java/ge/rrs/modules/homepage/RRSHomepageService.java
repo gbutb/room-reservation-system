@@ -5,13 +5,9 @@ import ge.rrs.database.room.Room;
 import ge.rrs.database.room.RoomSearchParameters;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Initial implementation of homepage service class used by
@@ -36,24 +32,36 @@ public class RRSHomepageService {
         // filter rooms by time
         if (fromTime.length() != 0 && toTime.length() != 0) {
             SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
-            Time from = new Time(timeFormatter.parse(fromTime).getTime());
-            Time to = new Time(timeFormatter.parse(toTime).getTime());
-            LocalDate localDate = LocalDate.now();
 
-            if (from.before(to) || from.equals(to)) {
-                roomSearchParameters.addDateTimeRangeParameter(
-                        localDate + " " + fromTime,
-                        localDate + " " + toTime,
-                        DBConnection.getContextConnection()
-                );
-            } else if (from.after(to)) {
-                LocalDate nextDate = localDate.plusDays(1);
-                roomSearchParameters.addDateTimeRangeParameter(
-                        localDate + " " + fromTime,
-                        nextDate + " " + toTime,
-                        DBConnection.getContextConnection()
-                );
+            Calendar from = new GregorianCalendar();
+            Calendar to = new GregorianCalendar();
+            from.setTime(timeFormatter.parse(fromTime));
+            to.setTime(timeFormatter.parse(toTime));
+
+            int fromHour = from.get(Calendar.HOUR_OF_DAY);
+            int toHour = to.get(Calendar.HOUR_OF_DAY);
+
+            LocalDate localDate = LocalDate.now();
+            LocalDate nextDate = localDate.plusDays(1);
+
+            String fromDate;
+            String toDate;
+
+            if (fromHour < toHour || fromHour == toHour) {
+                if (fromHour < 9) {
+                    fromDate = nextDate + " " + timeFormatter.format(from.getTime());
+                    toDate = nextDate + " " + timeFormatter.format(to.getTime());
+                } else {
+                    fromDate = localDate + " " + timeFormatter.format(from.getTime());
+                    toDate = localDate + " " + timeFormatter.format(to.getTime());
+                }
+            } else {
+                fromDate = localDate + " " + timeFormatter.format(from.getTime());
+                toDate = nextDate + " " + timeFormatter.format(to.getTime());
             }
+
+            roomSearchParameters.addDateTimeRangeParameter(fromDate, toDate,
+                    DBConnection.getContextConnection());
         }
 
         // filter rooms by advanced options
