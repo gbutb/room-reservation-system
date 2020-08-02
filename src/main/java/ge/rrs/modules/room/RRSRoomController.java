@@ -1,9 +1,7 @@
 package ge.rrs.modules.room;
 
-import ge.rrs.database.DBConnection;
 import ge.rrs.database.reservation.Reservation;
 import ge.rrs.database.room.Room;
-import ge.rrs.database.room.RoomSearchParameters;
 import ge.rrs.database.room.comment.RoomComment;
 import ge.rrs.modules.auth.RRSUser;
 import org.springframework.stereotype.Controller;
@@ -25,47 +23,48 @@ public class RRSRoomController {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("/room/room");
 
-        DBConnection connection = DBConnection.getContextConnection();
         Room currentRoom = RRSRoomService.getCurrentRoom(req);
         RRSUser currentUser = RRSUser.getCurrentUser();
 
+        // Take Current Time
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
         LocalDateTime now = LocalDateTime.now();
         double time = Integer.parseInt(dtf.format(now).substring(0, 2));
         time += Integer.parseInt(dtf.format(now).substring(3)) / 60.0;
         if (time <= 9) time += 24;
 
-        // Update Comment
+        // Update Room Comment
         if (req.getParameter("comment") != null && !req.getParameter("commentString").isEmpty()) {
             currentRoom.setRoomComment(req.getParameter("commentString"));
         }
 
+        // Add Room Attribute
+        mv.addObject("room", currentRoom);
+
+        // Set Current Time And User Attributes
         mv.addObject("currentTime", dtf.format(now));
         mv.addObject("currentTimeRelativePosition", (time - 9) / 24);
         mv.addObject("user", currentUser);
 
+
+        // Get Reservations And Time Portions Respectively
         Collection<Reservation> reservations = currentRoom.getReservations();
-        System.out.println(reservations);
-
         ArrayList<RRSRoomService.ReservationTimePortion> timePortions = new ArrayList<>();
-
         RRSRoomService.getTimePortions(timePortions, reservations, time, mv);
 
-        mv.addObject("room", currentRoom);
-        mv.addObject("timePortions", timePortions);
-
+        // Set Comment Attributes
         RoomComment comment = currentRoom.getRoomComment();
         if (comment == null) {
-            mv.addObject("roomComment", "-");
+            mv.addObject("roomComment", "");
             mv.addObject("roomCommentDate", "(No Comment For This Room)");
         } else {
-            DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
             mv.addObject("roomComment", comment.getUserComment());
             mv.addObject("roomCommentDate", "Latest Comment - " + comment.getCommentDate().substring(0, 16));
         }
 
+        // Make New Reservation If Valid Reservation Is Requested And Set Attributes Accordingly
+        RRSRoomService.handleReservationAndSetAttributes(timePortions, reservations, now, time, currentRoom, req, mv);
+
         return mv;
     }
-
-
 }
