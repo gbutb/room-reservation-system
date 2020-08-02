@@ -40,7 +40,7 @@ public class AuthTest {
             MockDatabaseCredentials.USER,
             MockDatabaseCredentials.PASSWORD,
             MockDatabaseCredentials.DB_NAME);
-		connection.executeSQLFrom(MockDatabaseCredentials.CLEAN);
+		connection.executeSQLFrom(MockDatabaseCredentials.SOURCE);
 		connection.closeConnection();
     }
 

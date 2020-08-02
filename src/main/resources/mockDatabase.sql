@@ -51,6 +51,12 @@ CREATE TABLE reservations
     PRIMARY KEY (reservation_id)
 );
 
+
+INSERT INTO accounts
+VALUES (0, 'Human', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO', 'human@humans.org', '123456789'),
+       (0, 'Human 1', '$2a$10$1jkMI4yZEz0GvzAzVuwqUeHaEaOtKSntbVeFcO4TN3rJKW6U2qqtO', 'human1@humans.org', '123456789');
+
+
 INSERT INTO rooms
 VALUES (100, 4, 1, false, true, '253.12 488.25 118.13 51.75'),
        (101, 2, 1, false, true, '373.5 488.25 55.13 51.75'),
@@ -149,3 +155,42 @@ VALUES (100, 4, 1, false, true, '253.12 488.25 118.13 51.75'),
        (420, 4, 4, false, true, '608.62 114.75 68.63 83.25'),
        (421, 2, 4, false, true, '608.62 57.38 51.75 55.13'),
        (422, 2, 4, false, true, '608.62 0 51.75 55.13');
+
+INSERT INTO room_comments
+VALUES (0, STR_TO_DATE('9,7,2020 14,30,0', '%d,%m,%Y %H,%i,%s'), 'Hello room!', 201),
+       (0, STR_TO_DATE('9,7,2020 14,30,0', '%d,%m,%Y %H,%i,%s'), 'Found a lost red ring, placed it on the table', 200);
+
+INSERT INTO reservations
+VALUES (1, 110, STR_TO_DATE('1,6,2020 1,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('1,10,2020 2,30,0', '%d,%m,%Y %H,%i,%s'), false, 1),
+       (2, 115, STR_TO_DATE('1,8,2020 2,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('1,8,2020 3,0,0', '%d,%m,%Y %H,%i,%s'), false, 1),
+       (3, 208, STR_TO_DATE('1,8,2020 3,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('1,8,2020 4,30,0', '%d,%m,%Y %H,%i,%s'), false, 1),
+       (4, 209, STR_TO_DATE('1,7,2020 4,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('1,9,2020 6,30,0', '%d,%m,%Y %H,%i,%s'), false, 1),
+       (5, 210, STR_TO_DATE('1,7,2020 5,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('1,9,2020 7,30,0', '%d,%m,%Y %H,%i,%s'), false, 1),
+       (6, 212, STR_TO_DATE('1,8,2020 6,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('1,8,2020 8,30,0', '%d,%m,%Y %H,%i,%s'), false, 1),
+       (7, 307, STR_TO_DATE('26,2,2020 1,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('26,9,2020 2,30,0', '%d,%m,%Y %H,%i,%s'), false, 1),
+       (8, 310, STR_TO_DATE('26,2,2020 2,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('26,9,2020 3,0,0', '%d,%m,%Y %H,%i,%s'), false, 1),
+       (9, 400, STR_TO_DATE('26,2,2020 3,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('26,9,2020 4,30,0', '%d,%m,%Y %H,%i,%s'), false, 1),
+       (10, 402, STR_TO_DATE('26,2,2020 4,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('26,9,2020 22,30,0', '%d,%m,%Y %H,%i,%s'), false, 1),
+       (11, 412, STR_TO_DATE('26,2,2020 5,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('26,9,2020 7,30,0', '%d,%m,%Y %H,%i,%s'), false, 1),
+       (12, 415, STR_TO_DATE('26,2,2020 6,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('26,9,2020 23,00,0', '%d,%m,%Y %H,%i,%s'), false, 1),
+       (13, 409, STR_TO_DATE('26,7,2020 1,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('26,7,2020 5,30,0', '%d,%m,%Y %H,%i,%s'), true, 1),
+       (14, 200, STR_TO_DATE('2,8,2020 13,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('2,8,2020 14,30,0', '%d,%m,%Y %H,%i,%s'), false, 1),
+       (15, 200, STR_TO_DATE('2,8,2020 14,40,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('2,8,2020 16,10,0', '%d,%m,%Y %H,%i,%s'), false, 1),
+       (16, 200, STR_TO_DATE('3,8,2020 6,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('3,8,2020 9,00,0', '%d,%m,%Y %H,%i,%s'), false, 1);
+
