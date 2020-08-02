@@ -1,8 +1,11 @@
 // AuthTest.javs
 package ge.rrs;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,11 +22,38 @@ import static org.springframework.security.test.web.servlet.response.SecurityMoc
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
+// ge.rrs
+import ge.rrs.database.DBConnection;
+
+
+@TestInstance(Lifecycle.PER_CLASS)
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AuthTest {
 	@Autowired
 	private MockMvc mockMvc;
+
+    @BeforeAll
+    public void initialize() throws Exception {
+        DBConnection connection = new DBConnection(
+            MockDatabaseCredentials.SERVER,
+            MockDatabaseCredentials.USER,
+            MockDatabaseCredentials.PASSWORD,
+            MockDatabaseCredentials.DB_NAME);
+		connection.executeSQLFrom(MockDatabaseCredentials.CLEAN);
+		connection.closeConnection();
+    }
+
+    @AfterAll
+    public void destroy() throws Exception {
+		DBConnection connection = new DBConnection(
+            MockDatabaseCredentials.SERVER,
+            MockDatabaseCredentials.USER,
+            MockDatabaseCredentials.PASSWORD,
+            MockDatabaseCredentials.DB_NAME);
+        connection.executeSQLFrom(MockDatabaseCredentials.CLEAN);
+        connection.closeConnection();
+    }
 
 	@Test
 	public void testValidLogin() throws Exception {

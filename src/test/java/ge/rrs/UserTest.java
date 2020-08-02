@@ -1,12 +1,16 @@
 // UserTest.java
 package ge.rrs;
 
-import java.sql.SQLException;
 import java.util.*;
 
 // JUnit
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.After;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
+
 import static org.junit.Assert.*;
 
 // Spring
@@ -20,17 +24,25 @@ import ge.rrs.database.SearchParameters;
 import ge.rrs.database.TableEntry;
 import ge.rrs.modules.auth.RRSUser;
 
+@TestInstance(Lifecycle.PER_CLASS)
 public class UserTest {
     // Database credentials
     private DBConnection connection;
 
-    @BeforeEach
-    public void initialize() throws SQLException {
+    @BeforeAll
+    public void initialize() throws Exception {
         connection = new DBConnection(
             MockDatabaseCredentials.SERVER,
             MockDatabaseCredentials.USER,
             MockDatabaseCredentials.PASSWORD,
             MockDatabaseCredentials.DB_NAME);
+        connection.executeSQLFrom(MockDatabaseCredentials.SOURCE);
+    }
+
+    @AfterAll
+    public void destroy() throws Exception {
+        connection.executeSQLFrom(MockDatabaseCredentials.CLEAN);
+        connection.closeConnection();
     }
 
     @Test

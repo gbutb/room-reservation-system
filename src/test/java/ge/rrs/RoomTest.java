@@ -1,13 +1,16 @@
 // RoomTest.java
 package ge.rrs;
 
-import java.sql.SQLException;
 import java.util.*;
 
+import org.junit.jupiter.api.AfterAll;
 // JUnit
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import static org.junit.Assert.*;
+
 
 // ge.rrs
 import ge.rrs.database.DBConnection;
@@ -17,18 +20,25 @@ import ge.rrs.database.TableEntry;
 import ge.rrs.database.room.Room;
 import ge.rrs.database.room.RoomSearchParameter;
 
-
+@TestInstance(Lifecycle.PER_CLASS)
 public class RoomTest {
     // Database credentials
     private DBConnection connection;
 
-    @BeforeEach
-    public void initialize() throws SQLException {
+    @BeforeAll
+    public void initialize() throws Exception {
         connection = new DBConnection(
             MockDatabaseCredentials.SERVER,
             MockDatabaseCredentials.USER,
             MockDatabaseCredentials.PASSWORD,
             MockDatabaseCredentials.DB_NAME);
+        connection.executeSQLFrom(MockDatabaseCredentials.SOURCE);
+    }
+
+    @AfterAll
+    public void destroy() throws Exception {
+        connection.executeSQLFrom(MockDatabaseCredentials.CLEAN);
+        connection.closeConnection();
     }
 
     @Test

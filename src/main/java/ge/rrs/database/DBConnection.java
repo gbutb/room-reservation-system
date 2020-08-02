@@ -112,6 +112,7 @@ public class DBConnection {
     public void executeSQLFrom(String filename) throws FileNotFoundException {
         ScriptRunner scriptRunner = new ScriptRunner(connection);
         Reader reader = new BufferedReader(new FileReader(filename));
+        scriptRunner.setLogWriter(null);
 
         scriptRunner.runScript(reader);
     }

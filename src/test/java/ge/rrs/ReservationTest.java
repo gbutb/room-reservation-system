@@ -1,14 +1,17 @@
 // ReservationTest.java
 package ge.rrs;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 
 // JUnit
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
+
 import static org.junit.Assert.*;
 
 // ge.rrs
@@ -17,17 +20,25 @@ import ge.rrs.database.FreeSearchParameter;
 import ge.rrs.database.SearchParameters;
 import ge.rrs.database.reservation.Reservation;
 
+@TestInstance(Lifecycle.PER_CLASS)
 public class ReservationTest {
     // Database credentials
     private DBConnection connection;
 
-    @BeforeEach
-    public void initialize() throws SQLException {
+    @BeforeAll
+    public void initialize() throws Exception {
         connection = new DBConnection(
             MockDatabaseCredentials.SERVER,
             MockDatabaseCredentials.USER,
             MockDatabaseCredentials.PASSWORD,
             MockDatabaseCredentials.DB_NAME);
+        connection.executeSQLFrom(MockDatabaseCredentials.SOURCE);
+    }
+
+    @AfterAll
+    public void destroy() throws Exception {
+        connection.executeSQLFrom(MockDatabaseCredentials.CLEAN);
+        connection.closeConnection();
     }
 
     @Test
