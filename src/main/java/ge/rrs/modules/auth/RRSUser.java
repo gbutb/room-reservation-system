@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+// spring
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -299,6 +301,16 @@ public class RRSUser extends TableEntry implements UserDetails {
         Object user = SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
         return (RRSUser)user;
+    }
+
+    /**
+     * @return true if the user is authenticated.
+     */
+    public static boolean isAuthenticated() {
+        return (SecurityContextHolder.getContext().getAuthentication() != null &&
+                SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
+                !(SecurityContextHolder.getContext().getAuthentication() 
+                instanceof AnonymousAuthenticationToken));
     }
 
     @Override

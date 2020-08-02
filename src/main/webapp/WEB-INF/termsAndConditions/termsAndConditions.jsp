@@ -67,6 +67,9 @@
                 <p><strong>Service</strong> refers to the Website.</p>
                 </li>
                 <li>
+                <p><strong>Contributors</strong> A contributor is a user with read and write access to a repository who has committed to the project.</p>
+                </li>
+                <li>
                 <p><strong>Terms and Conditions</strong> (also referred as &quot;Terms&quot;) mean these Terms and Conditions that form the entire agreement between You and the Company regarding the use of the Service.</p>
                 </li>
                 <li>
@@ -109,7 +112,7 @@
             </div>
         </div>
         <div class="d-flex justify-content-center">
-            <a role="button" aria-pressed="true" class="btn btn-dark" style="margin-top: 2%" href="/register">
+            <a role="button" aria-pressed="true" class="btn btn-dark" style="margin-top: 2%" href="/register" onclick="window.self.opener = window.self; window.self.close();">
             <span class="glyphicon glyphicon-chevron-left"></span> Go Back</a>
         </div>
     </div>

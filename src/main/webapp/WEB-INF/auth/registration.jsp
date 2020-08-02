@@ -56,7 +56,9 @@
                         </div>
                         <div class="form-check mb-3">
                             <input type="checkbox" class="form-check-input" id="termsAndConditions">
-                            <label class="form-check-label" for="termsAndConditions">I agree to the <a href="/terms-and-conditions">Terms and Conditions</a></label>
+                            <label class="form-check-label" for="termsAndConditions">I agree to the 
+                                <a href="/terms-and-conditions" target="popup" 
+                                    onclick="window.open('/terms-and-conditions', 'popup', 'width=1000,height=800'); return false;">Terms and Conditions</a></label>
                         </div>
 
                         <div class="modal fade" id="inputsModal" tabindex="-1" role="dialog"

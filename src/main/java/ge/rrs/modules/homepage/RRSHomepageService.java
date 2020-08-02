@@ -159,6 +159,9 @@ public class RRSHomepageService {
      * @return true or false
      */
     public static boolean floorIsValid(HttpServletRequest req) {
+        if (req.getParameter("floor") == null)
+            return false;
+
         int floor = Integer.parseInt(req.getParameter("floor"));
 
         return floor >= 1 && floor <= 4;
