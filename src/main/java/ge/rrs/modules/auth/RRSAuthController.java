@@ -20,23 +20,25 @@ public class RRSAuthController {
         userService = new RRSUserService();
     }
 
-    // TODO: remove this
-    @GetMapping("/")
-    public String home() {
-        return "/index";
-    }
-
     @GetMapping("/login")
 	public String login() {
+        if (RRSUser.isAuthenticated())
+            return "redirect:/";
 		return "/auth/login";
 	}
 
 	@GetMapping("/register")
 	public ModelAndView register() {
         // Initialize result
-        ModelAndView modelView = new ModelAndView();
-        modelView.setViewName("/auth/registration");
-        modelView.addObject("failed", false);
+        ModelAndView modelView;
+        if (RRSUser.isAuthenticated()) {
+            modelView = new ModelAndView("redirect:/");
+        } else {
+            modelView = new ModelAndView();
+            modelView.setViewName("/auth/registration");
+            modelView.addObject("failed", false);
+        }
+
 		return modelView;
 	}
 
@@ -48,16 +50,25 @@ public class RRSAuthController {
             @RequestParam(value = "phoneNumber", required = true) String phoneNumber) throws Exception {
 
         // Initialize result
-        ModelAndView modelView = new ModelAndView();
-        modelView.setViewName("/auth/registration");
-        modelView.addObject("failed", false);
+        ModelAndView modelView;
+
+        // Ignore if the user is authenticated
+        if (RRSUser.isAuthenticated()) {
+            modelView = new ModelAndView("redirect:/");
+            return modelView;
+        }
+
+        // Try to register user
         try {
             userService.registerNewUser(
                 new RRSUser(
                     username, userService.getEncoder().encode(password),
                     email, phoneNumber, DBConnection.getContextConnection()));
+            modelView = new ModelAndView("redirect:/login");
         } catch (Exception e) {
-            System.out.println(e.toString());
+            // System.out.println(e.toString());
+            modelView = new ModelAndView();
+            modelView.setViewName("/auth/registration");
             modelView.addObject("failed", true);
         }
         return modelView;

@@ -24,12 +24,21 @@ import java.util.HashMap;
  */
 @Controller
 public class RRSGraphicalViewController {
+    /**
+     * Redirects to homepage.
+     */
+    @GetMapping("/")
+    public String indexHomepage() {
+        return "redirect:/homepage-gv";
+    }
 
     @GetMapping("/homepage-gv")
-    public ModelAndView renderGraphicalView(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        ModelAndView mv = new ModelAndView();
+    public ModelAndView renderGraphicalView(HttpServletRequest req, HttpServletResponse resp) throws Exception {        
+        // Check if input request is valid
+        if (!RRSHomepageService.floorIsValid(req))
+            return new ModelAndView("redirect:/homepage-gv?floor=1");
 
-        if (!RRSHomepageService.floorIsValid(req)) resp.sendRedirect("/homepage-gv?floor=1");
+        ModelAndView mv = new ModelAndView();
 
         // filters room according to 'floor' parameter only
         RoomSearchParameters roomSearchParameters = new RoomSearchParameters();
