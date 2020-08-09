@@ -31,7 +31,7 @@ public class RRSRoomController {
         LocalDateTime now = LocalDateTime.now();
         double time = Integer.parseInt(dtf.format(now).substring(0, 2));
         time += Integer.parseInt(dtf.format(now).substring(3)) / 60.0;
-        if (time <= 9) time += 24;
+        if (time < 9) time += 24;
 
         // Update Room Comment
         if (req.getParameter("comment") != null && !req.getParameter("commentString").isEmpty()) {

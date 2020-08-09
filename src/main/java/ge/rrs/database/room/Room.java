@@ -2,10 +2,10 @@
 package ge.rrs.database.room;
 
 import ge.rrs.database.DBConnection;
-import ge.rrs.database.FreeSearchParameter;
 import ge.rrs.database.SearchParameters;
 import ge.rrs.database.TableEntry;
 import ge.rrs.database.reservation.Reservation;
+import ge.rrs.database.reservation.ReservationSearchParameter;
 import ge.rrs.database.reservation.ReservationSearchParameters;
 import ge.rrs.database.room.comment.RoomComment;
 
@@ -108,31 +108,38 @@ public class Room extends TableEntry {
     }
 
     /**
-     * Returns a collection of reservations of the room
+     * Returns a collection of reservations of the room for today
      *
      * @return returns a collection of reservations of the room
      * @throws Exception SQL database error
      */
     public Collection<Reservation> getReservations() throws Exception {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("HH");
+        DateTimeFormatter dtfDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter dtfHour = DateTimeFormatter.ofPattern("HH");
         LocalDateTime now = LocalDateTime.now();
         String fromDate;
         String toDate;
 
-        if (Integer.parseInt(dtf1.format(now)) < 9) {
-            fromDate = "'" + dtf.format(now.minusDays(1)) + " 09:00:00'";
-            toDate = dtf.format(now) + " 09:00:00";
+        if (Integer.parseInt(dtfHour.format(now)) < 9) {
+            fromDate = dtfDate.format(now.minusDays(1)) + " 09:00:00";
+            toDate = dtfDate.format(now) + " 09:00:00";
         } else {
-            fromDate = "'" + dtf.format(now) + " 09:00:00'";
-            toDate = dtf.format(now.plusDays(1)) + " 09:00:00";
+            fromDate = dtfDate.format(now) + " 09:00:00";
+            toDate = dtfDate.format(now.plusDays(1)) + " 09:00:00";
         }
 
-        ReservationSearchParameters rParams = new ReservationSearchParameters();
-        rParams.addParameter(new FreeSearchParameter("room_id", " = ",
-                Integer.toString(roomId)));
-        rParams.addParameter(new FreeSearchParameter("start_date BETWEEN" + fromDate, " AND ", toDate));
-        return Reservation.getFilteredReservations(rParams, getConnection());
+        ReservationSearchParameters parameters = new ReservationSearchParameters();
+        parameters.addParameter(ReservationSearchParameter.ofRoom(getRoomId()));
+        parameters.addDateTimeRangeOverlapParameter(fromDate, toDate);
+        Collection<Reservation> result = Reservation.getFilteredReservations(parameters, getConnection());
+
+        parameters = new ReservationSearchParameters();
+        parameters.addParameter(ReservationSearchParameter.ofRoom(getRoomId()));
+        parameters.addTodaysRepeatedParameter();
+        result.addAll(Reservation.compareAndFilterReservations(Reservation.getFilteredReservations(parameters, getConnection()),
+                fromDate, toDate));
+        System.out.println(result.size());
+        return result;
     }
 
     public boolean isOccupied() throws Exception {
@@ -140,8 +147,16 @@ public class Room extends TableEntry {
         LocalDateTime now = LocalDateTime.now();
 
         ReservationSearchParameters parameters = new ReservationSearchParameters();
-        parameters.addRoomSpecificDateOverlapParameter(getRoomId(), dtf.format(now));
+        parameters.addParameter(ReservationSearchParameter.ofRoom(getRoomId()));
+        parameters.addDateTimeRangeOverlapParameter(dtf.format(now), dtf.format(now));
         Collection<Reservation> reservations = Reservation.getFilteredReservations(parameters, getConnection());
+
+        parameters = new ReservationSearchParameters();
+        parameters.addParameter(ReservationSearchParameter.ofRoom(getRoomId()));
+        parameters.addTodaysRepeatedParameter();
+        reservations.addAll(Reservation.compareAndFilterReservations(
+                Reservation.getFilteredReservations(parameters, getConnection()), dtf.format(now), dtf.format(now)
+        ));
 
         return reservations.size() != 0;
     }
@@ -197,13 +212,12 @@ public class Room extends TableEntry {
                 String.format(
                         "INSERT %s VALUES (?, ?, ?, ?, ?, ?)",
                         getTableName()),
-                Arrays.asList(new String[]{
-                        Integer.toString(getRoomId()),
+                Arrays.asList(Integer.toString(getRoomId()),
                         Integer.toString(getRoomSize()),
                         Integer.toString(getFloor()),
                         isConditioner() ? "1" : "0",
                         isProjector() ? "1" : "0",
-                        getRenderData()}));
+                        getRenderData()));
     }
 
     @Override
@@ -221,12 +235,11 @@ public class Room extends TableEntry {
                         PROJECTOR_NAME,
                         RENDER_DATA_NAME,
                         ROOM_ID_NAME),
-                Arrays.asList(new String[]{
-                        Integer.toString(getRoomSize()),
+                Arrays.asList(Integer.toString(getRoomSize()),
                         Integer.toString(getFloor()),
                         isConditioner() ? "1" : "0",
                         isProjector() ? "1" : "0",
                         getRenderData(),
-                        Integer.toString(getRoomId())}));
+                        Integer.toString(getRoomId())));
     }
 }
