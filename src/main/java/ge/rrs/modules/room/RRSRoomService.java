@@ -28,7 +28,6 @@ public class RRSRoomService {
                                        double currentTime, ModelAndView mv) {
         Reservation currentReservation = null;
 
-        double lastReservation = 9;
         for (Reservation reservation : reservations) {
             double startDate = Integer.parseInt(reservation.getStartDate().substring(11, 13));
             startDate += Integer.parseInt(reservation.getStartDate().substring(14, 16)) / 60.0;
@@ -125,5 +124,4 @@ public class RRSRoomService {
             return reservation;
         }
     }
-
 }
