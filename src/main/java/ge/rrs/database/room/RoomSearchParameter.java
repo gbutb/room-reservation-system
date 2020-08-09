@@ -6,6 +6,7 @@ import ge.rrs.database.SearchParameter;
 import ge.rrs.database.reservation.Reservation;
 import ge.rrs.database.reservation.ReservationSearchParameters;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -110,7 +111,7 @@ public class RoomSearchParameter implements SearchParameter {
                 Reservation.getFilteredReservations(parameters, connection);
 
         parameters = new ReservationSearchParameters();
-        parameters.addTodaysRepeatedParameter();
+        parameters.addTodaysRepeatedParameter(LocalDateTime.now());
         filteredReservations.addAll(Reservation.compareAndFilterReservations(
                 Reservation.getFilteredReservations(parameters, connection), dateFrom, dateTo
         ));

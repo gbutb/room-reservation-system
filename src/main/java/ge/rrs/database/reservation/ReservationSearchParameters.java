@@ -55,7 +55,7 @@ public class ReservationSearchParameters extends SearchParameters {
      * Adds parameters, which serve fetching repeated reservations
      * of today
      */
-    public void addTodaysRepeatedParameter() throws Exception {
+    public void addTodaysRepeatedParameter(LocalDateTime now) throws Exception {
         // TODO repeated parameter setting can be done with another method
         Clause tempClause = new Clause();
         tempClause.addParameter(ReservationSearchParameter.isRepeated(true));
@@ -64,7 +64,6 @@ public class ReservationSearchParameters extends SearchParameters {
 
         DateTimeFormatter dtfWeekday = DateTimeFormatter.ofPattern("e");
         DateTimeFormatter dtfHour = DateTimeFormatter.ofPattern("HH");
-        LocalDateTime now = LocalDateTime.now();
 
         String comparator1;
         String comparator2;

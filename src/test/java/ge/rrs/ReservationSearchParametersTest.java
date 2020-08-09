@@ -10,6 +10,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import static org.junit.Assert.*;
 
+import java.time.LocalDateTime;
+
 // ge.rrs
 import ge.rrs.database.DBConnection;
 import ge.rrs.database.reservation.Reservation;
@@ -68,5 +70,18 @@ public class ReservationSearchParametersTest {
             "2020-08-01 01:35:00");
         assertEquals(
             9, Reservation.getFilteredReservations(params, connection).size());
+    }
+
+    @Test
+    public void testDoRepeat() throws Exception {
+        int repeated[] = {1, 1, 1, 1, 1, 1, 2};
+        for (int i = 0; i < repeated.length; ++i) {
+            ReservationSearchParameters params = new ReservationSearchParameters();
+            params.addTodaysRepeatedParameter(
+               LocalDateTime.of(2020, 8, 3 + i, 00, 00, 01));
+            assertEquals(
+                String.format("At %d", i),
+                repeated[i], Reservation.getFilteredReservations(params, connection).size());
+        }
     }
 }
