@@ -12,6 +12,8 @@
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
     <title>Room ${param.roomId}</title>
+
+    <meta http-equiv="refresh" content="60"> <%-- Refresh page every minute --%>
 </head>
 <body>
 <%-- Container for entire screen --%>
@@ -31,6 +33,27 @@
                 </div>
                 <div class="modal-body">
                     You can only filter rooms from current time to 09:00 o'clock in the morning.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%-- Modal for min time range --%>
+    <div class="modal fade" id="minRangeModal" tabindex="-1" role="dialog"
+         aria-labelledby="minRangeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger" id="minRangeModalLabel">Incorrect Time Range!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    You can only reserve rooms from 20 minutes up to 2 hours.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
