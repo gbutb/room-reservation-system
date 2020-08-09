@@ -70,6 +70,11 @@ function checkReservationTime() {
     var fromTime = $('#fromTime').val();
     var toTime = $('#toTime').val();
 
+    if (checkMinRange(fromTime, toTime)) {
+        $('#minRangeModal').modal();
+        return;
+    }
+
     var now = new Date();
     var alteredTime = now.getHours() + now.getMinutes() / 60.0;
     if (alteredTime < 9) alteredTime += 24;
@@ -97,4 +102,27 @@ function checkReservationTime() {
             document.getElementById("timeRangeForm").submit();
         }
     }
+}
+
+/**
+ * Checks gap between two time inputs.
+ */
+function checkMinRange(fromTime, toTime) {
+    var fromHours = parseInt(fromTime.substr(0, 2));
+    var fromMinutes = parseInt(fromTime.substr(3, 2));
+
+    var toHours = parseInt(toTime.substr(0, 2));
+    var toMinutes = parseInt(toTime.substr(3, 2));
+
+    if (fromHours < 9) fromHours += 24;
+    if (toHours <= 9) toHours += 24;
+
+    if (fromHours === toHours && (toMinutes - fromMinutes) < 20) {
+        return true;
+    } else if ((toHours - fromHours) > 2 ||
+        ((toHours - fromHours) === 2 && toMinutes > fromMinutes)) {
+        return true;
+    }
+
+    return false;
 }
