@@ -256,8 +256,8 @@
                                             <rect x="0" y="0" rx="3" ry="3"
                                                   width="100%"
                                                   height="100%"
-                                                  style="fill: #d9534f; opacity: 80%">
-                                        <title>${timePortion.reservation.startDate.substring(10)} -${timePortion.reservation.endDate.substring(10)}</title>
+                                                  style="fill: ${timePortion.reservation.doRepeat ? "#ffc107" : "#dc3545"}; opacity: 80%">
+                                        <title>${timePortion.reservation.startDate.substring(10)} -${timePortion.reservation.endDate.substring(10)} ${timePortion.reservation.doRepeat ? "(Repeated)" : ""}</title>
                                             </rect>
                                         </svg>
                                     </c:forEach>
