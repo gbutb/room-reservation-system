@@ -20,8 +20,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 // ge.rrs
 import ge.rrs.database.DBConnection;
 import ge.rrs.database.FreeSearchParameter;
+import ge.rrs.database.SearchParameter;
 import ge.rrs.database.SearchParameters;
 import ge.rrs.database.TableEntry;
+import ge.rrs.database.reservation.Reservation;
+import ge.rrs.database.reservation.ReservationSearchParameters;
 import ge.rrs.modules.auth.RRSUser;
 
 @TestInstance(Lifecycle.PER_CLASS)
@@ -193,5 +196,38 @@ public class UserTest {
 
         RRSUser user_from_db = RRSUser.getUser("testUpdateUsername", connection);
         assertTrue(encoder.matches("newPassword", user_from_db.getPassword()));
+    }
+
+
+    @Test
+    public void testReservations() throws Exception {
+        // Get user
+        SearchParameters params = new SearchParameters();
+        params.addParameter(new FreeSearchParameter("username", "=", "Human"));
+        RRSUser user = RRSUser.getFilteredUsers(params, connection).iterator().next();
+
+        // Find reservations assigned to that user
+        ReservationSearchParameters reservation_params = new ReservationSearchParameters();
+        reservation_params.addMadeByUser(user);
+
+        // Assert that the user has non-zero reservations
+        assertTrue(
+            Reservation.getFilteredReservations(reservation_params, connection).size() >= 1);
+    }
+
+    @Test
+    public void testNoReservations() throws Exception {
+        // Get user
+        SearchParameters params = new SearchParameters();
+        params.addParameter(new FreeSearchParameter("username", "=", "Human 1"));
+        RRSUser user = RRSUser.getFilteredUsers(params, connection).iterator().next();
+
+        // Find reservations assigned to that user
+        ReservationSearchParameters reservation_params = new ReservationSearchParameters();
+        reservation_params.addMadeByUser(user);
+
+        // Assert that the user has non-zero reservations
+        assertTrue(
+            Reservation.getFilteredReservations(reservation_params, connection).size() == 0);
     }
 }

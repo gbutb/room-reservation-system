@@ -5,6 +5,7 @@ package ge.rrs.database.reservation;
 
 import ge.rrs.database.FreeSearchParameter;
 import ge.rrs.database.SearchParameters;
+import ge.rrs.modules.auth.RRSUser;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -125,5 +126,17 @@ public class ReservationSearchParameters extends SearchParameters {
 
         if (clause.isEmpty()) clause.addClause(tempClause);
         else clause.addClause("AND", tempClause);
+    }
+
+    /**
+     * Filters out all reservations made by the specified user.
+     * @param user An instance of RRSUser which exists in the database.
+     * @throws Exception if no such user exists or if there are some
+     *  connection issues.
+     */
+    public void addMadeByUser(RRSUser user) throws Exception {
+        this.addParameter("AND",
+            new FreeSearchParameter(
+                "account_id", "=", Integer.toString(user.getPrimaryKey())));
     }
 }
