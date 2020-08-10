@@ -61,6 +61,20 @@ function checkTime() {
     }
 }
 
+function hasReservations() {
+    var success = false;
+    $.ajax({
+        url: "/has_reservations",
+        type: 'GET',
+        async: false,
+        success: function(res) {
+            success = (res == "true") ?
+                true : false;
+        }
+    });
+    return success;
+}
+
 /**
  * Validates input time range of given form. Alerts the user
  * if inputs are invalid or submits the form successfully.
@@ -72,6 +86,11 @@ function checkReservationTime() {
 
     if (checkMinRange(fromTime, toTime)) {
         $('#minRangeModal').modal();
+        return;
+    }
+
+    if (hasReservations()) {
+        $('#hasReservationsModal').modal();
         return;
     }
 
