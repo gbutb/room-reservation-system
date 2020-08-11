@@ -88,7 +88,7 @@ public class RRSRoomController {
             // NOTE: User might reserve [1, 2] and [1.5, 2.5] with no issues. Maybe it's better to check if any other reservation intersects this one ?
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            params.addDateTimeRangeOverlapParameter(dtf.format(now), dtf.format(now));
+            params.addEndsAfter(dtf.format(now));
 
             return (Reservation.getFilteredReservations(params, DBConnection.getContextConnection()).size() > 0) ?
                 "true" : "false";

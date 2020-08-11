@@ -1,7 +1,6 @@
 // ReservationSearchParametersTest.java
 package ge.rrs;
 
-
 // JUnit
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -11,6 +10,8 @@ import org.junit.jupiter.api.BeforeAll;
 import static org.junit.Assert.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 
 // ge.rrs
 import ge.rrs.database.DBConnection;
@@ -82,6 +83,40 @@ public class ReservationSearchParametersTest {
             assertEquals(
                 String.format("At %d", i),
                 repeated[i], Reservation.getFilteredReservations(params, connection).size());
+        }
+    }
+
+    @Test
+    public void testEndedBefore() throws Exception {
+        ReservationSearchParameters params = new ReservationSearchParameters();
+        LocalDateTime time = LocalDateTime.of(
+            2020, 8, 1, 23, 0, 0);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        params.addEndedBefore("2020-08-01 23:00:00");
+
+        // Filter out reservations
+        Collection<Reservation> reservations = Reservation.getFilteredReservations(params, connection);
+        assertTrue(reservations.size() > 0);
+        for (Reservation reservation : reservations) {
+            LocalDateTime endDate = LocalDateTime.parse(reservation.getEndDate(), dtf);
+            assertTrue(endDate.isBefore(time));
+        }
+    }
+
+    @Test
+    public void testEndsAfter() throws Exception {
+        ReservationSearchParameters params = new ReservationSearchParameters();
+        LocalDateTime time = LocalDateTime.of(
+            2020, 8, 1, 23, 0, 0);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        params.addEndsAfter("2020-08-01 23:00:00");
+
+        // Filter out reservations
+        Collection<Reservation> reservations = Reservation.getFilteredReservations(params, connection);
+        assertTrue(reservations.size() > 0);
+        for (Reservation reservation : reservations) {
+            LocalDateTime endDate = LocalDateTime.parse(reservation.getEndDate(), dtf);
+            assertTrue(endDate.isAfter(time));
         }
     }
 }

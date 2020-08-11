@@ -139,4 +139,26 @@ public class ReservationSearchParameters extends SearchParameters {
             new FreeSearchParameter(
                 "account_id", "=", Integer.toString(user.getPrimaryKey())));
     }
+
+    /**
+     * Filters out all reservations which ended before the specified date.
+     * @param date Specifies the date.
+     * @throws Exception should the parameter be invalid.
+     */
+    public void addEndedBefore(String date) throws Exception {
+        this.addParameter(
+            ReservationSearchParameter.compareDateTime(
+                "end_date", LESS, date, false));
+    }
+
+    /**
+     * Filters out all reservations which end after the specified date.
+     * @param date Specifies the date.
+     * @throws Exception should the parameter be invalid.
+     */
+    public void addEndsAfter(String date) throws Exception {
+        this.addParameter(
+            ReservationSearchParameter.compareDateTime(
+                "end_date", MORE, date, true));
+    }
 }
