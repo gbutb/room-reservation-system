@@ -5,6 +5,7 @@ package ge.rrs.database.reservation;
 
 import ge.rrs.database.FreeSearchParameter;
 import ge.rrs.database.SearchParameters;
+import ge.rrs.modules.auth.RRSUser;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -55,7 +56,7 @@ public class ReservationSearchParameters extends SearchParameters {
      * Adds parameters, which serve fetching repeated reservations
      * of today
      */
-    public void addTodaysRepeatedParameter() throws Exception {
+    public void addTodaysRepeatedParameter(LocalDateTime now) throws Exception {
         // TODO repeated parameter setting can be done with another method
         Clause tempClause = new Clause();
         tempClause.addParameter(ReservationSearchParameter.isRepeated(true));
@@ -64,7 +65,6 @@ public class ReservationSearchParameters extends SearchParameters {
 
         DateTimeFormatter dtfWeekday = DateTimeFormatter.ofPattern("e");
         DateTimeFormatter dtfHour = DateTimeFormatter.ofPattern("HH");
-        LocalDateTime now = LocalDateTime.now();
 
         String comparator1;
         String comparator2;
@@ -126,5 +126,39 @@ public class ReservationSearchParameters extends SearchParameters {
 
         if (clause.isEmpty()) clause.addClause(tempClause);
         else clause.addClause("AND", tempClause);
+    }
+
+    /**
+     * Filters out all reservations made by the specified user.
+     * @param user An instance of RRSUser which exists in the database.
+     * @throws Exception if no such user exists or if there are some
+     *  connection issues.
+     */
+    public void addMadeByUser(RRSUser user) throws Exception {
+        this.addParameter("AND",
+            new FreeSearchParameter(
+                "account_id", "=", Integer.toString(user.getPrimaryKey())));
+    }
+
+    /**
+     * Filters out all reservations which ended before the specified date.
+     * @param date Specifies the date.
+     * @throws Exception should the parameter be invalid.
+     */
+    public void addEndedBefore(String date) throws Exception {
+        this.addParameter(
+            ReservationSearchParameter.compareDateTime(
+                "end_date", LESS, date, false));
+    }
+
+    /**
+     * Filters out all reservations which end after the specified date.
+     * @param date Specifies the date.
+     * @throws Exception should the parameter be invalid.
+     */
+    public void addEndsAfter(String date) throws Exception {
+        this.addParameter(
+            ReservationSearchParameter.compareDateTime(
+                "end_date", MORE, date, true));
     }
 }

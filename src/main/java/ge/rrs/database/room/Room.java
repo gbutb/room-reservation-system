@@ -135,7 +135,7 @@ public class Room extends TableEntry {
 
         parameters = new ReservationSearchParameters();
         parameters.addParameter(ReservationSearchParameter.ofRoom(getRoomId()));
-        parameters.addTodaysRepeatedParameter();
+        parameters.addTodaysRepeatedParameter(LocalDateTime.now());
         result.addAll(Reservation.compareAndFilterReservations(Reservation.getFilteredReservations(parameters, getConnection()),
                 fromDate, toDate));
         System.out.println(result.size());
@@ -153,7 +153,7 @@ public class Room extends TableEntry {
 
         parameters = new ReservationSearchParameters();
         parameters.addParameter(ReservationSearchParameter.ofRoom(getRoomId()));
-        parameters.addTodaysRepeatedParameter();
+        parameters.addTodaysRepeatedParameter(LocalDateTime.now());
         reservations.addAll(Reservation.compareAndFilterReservations(
                 Reservation.getFilteredReservations(parameters, getConnection()), dtf.format(now), dtf.format(now)
         ));

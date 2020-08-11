@@ -1,11 +1,17 @@
 package ge.rrs.modules.room;
 
+import ge.rrs.database.DBConnection;
 import ge.rrs.database.reservation.Reservation;
+import ge.rrs.database.reservation.ReservationSearchParameter;
+import ge.rrs.database.reservation.ReservationSearchParameters;
 import ge.rrs.database.room.Room;
 import ge.rrs.database.room.comment.RoomComment;
 import ge.rrs.modules.auth.RRSUser;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,5 +72,28 @@ public class RRSRoomController {
         RRSRoomService.handleReservationAndSetAttributes(timePortions, reservations, now, time, currentRoom, req, mv);
 
         return mv;
+    }
+
+
+    @GetMapping("/has_reservations")
+    @ResponseBody
+    public String hasReservations() {
+        RRSUser user = RRSUser.getCurrentUser();
+        // Filter reservations with user
+        ReservationSearchParameters params = new ReservationSearchParameters();
+        try {
+            params.addMadeByUser(user);
+
+            // Add current time
+            // NOTE: User might reserve [1, 2] and [1.5, 2.5] with no issues. Maybe it's better to check if any other reservation intersects this one ?
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            params.addEndsAfter(dtf.format(now));
+
+            return (Reservation.getFilteredReservations(params, DBConnection.getContextConnection()).size() > 0) ?
+                "true" : "false";
+        } catch (Exception e) {
+            return "nil";
+        }
     }
 }
