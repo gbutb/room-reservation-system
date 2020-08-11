@@ -44,8 +44,12 @@ public class RRSSecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 				.and()
 			.logout()
-				.permitAll();
-	}
+				.permitAll()
+				.and()
+			.requiresChannel()
+			.anyRequest()
+			.requiresSecure();
+}
 
 	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {

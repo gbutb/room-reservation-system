@@ -118,3 +118,7 @@ target/*
 ## Other stuff
 garbage/*
 *_ignore*
+
+## Ignore keys
+*.jks
+*.p12
