@@ -119,8 +119,6 @@ public class Reservation extends TableEntry {
         for (Reservation reservation : reservations) {
             double reservationStart = hoursToDouble(reservation.startDate, false);
             double reservationEnd = hoursToDouble(reservation.endDate, true);
-            System.out.println(to + " > " + reservationStart);
-            System.out.println("AND " + from + " < " + reservationEnd);
 
             if (to > reservationStart && from < reservationEnd) result.add(reservation);
         }
