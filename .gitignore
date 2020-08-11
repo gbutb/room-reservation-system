@@ -121,4 +121,3 @@ garbage/*
 
 ## Ignore keys
 *.jks
-*.p12
