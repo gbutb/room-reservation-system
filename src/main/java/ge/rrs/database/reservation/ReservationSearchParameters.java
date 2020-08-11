@@ -3,35 +3,23 @@ package ge.rrs.database.reservation;
 
 // ge.rrs
 
+import ge.rrs.database.FreeSearchParameter;
 import ge.rrs.database.SearchParameters;
+import ge.rrs.modules.auth.RRSUser;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class ReservationSearchParameters extends SearchParameters {
 
+    private static final ReservationSearchParameter.Comparator MORE = ReservationSearchParameter.Comparator.MORE;
+    private static final ReservationSearchParameter.Comparator LESS = ReservationSearchParameter.Comparator.LESS;
+
+    private static final int SQL_WEEKDAY_OFFSET = -1;
+
     public ReservationSearchParameters() {
         super();
-    }
-
-    private Clause generateIntersectionClause(String dateFrom, String dateTo, boolean dontReverse) throws Exception {
-        Clause tempClause = new Clause();
-
-        Clause startOverlap = new Clause();
-        ReservationSearchParameter.Comparator more = ReservationSearchParameter.Comparator.MORE;
-        ReservationSearchParameter.Comparator less = ReservationSearchParameter.Comparator.LESS;
-        startOverlap.addParameter(ReservationSearchParameter.compareDateTime(
-            "start_date", dateFrom, true, (dontReverse) ? more : less));
-        startOverlap.addParameter("AND", ReservationSearchParameter.compareDateTime(
-            (dontReverse) ? "start_date" : "end_date", dateTo, false, (dontReverse) ? less : more));
-
-        Clause endOverlap = new Clause();
-        endOverlap.addParameter(ReservationSearchParameter.compareDateTime(
-            (dontReverse) ? "end_date" : "start_date", dateFrom, false, (dontReverse) ? more : less));
-        endOverlap.addParameter("AND", ReservationSearchParameter.compareDateTime(
-            "end_date", dateTo, true, (dontReverse) ? less : more));
-
-        tempClause.addClause(startOverlap);
-        tempClause.addClause("OR", endOverlap);
-
-        return tempClause;
     }
 
     /**
@@ -43,68 +31,134 @@ public class ReservationSearchParameters extends SearchParameters {
      */
     public void addDateTimeRangeOverlapParameter(String dateFrom, String dateTo) throws Exception {
         Clause tempClause = new Clause();
-        tempClause.addClause(generateIntersectionClause(dateFrom, dateTo, true));
-        tempClause.addClause("OR", generateIntersectionClause(dateFrom, dateTo, false));
+
+        tempClause.addParameter(ReservationSearchParameter.isRepeated(false));
+
+        tempClause.addParameter(
+                "AND",
+                ReservationSearchParameter.compareDateTime(
+                        "end_date", MORE, dateFrom, false
+                )
+        );
+
+        tempClause.addParameter(
+                "AND",
+                ReservationSearchParameter.compareDateTime(
+                        "start_date", LESS, dateTo, false
+                )
+        );
+
         if (clause.isEmpty()) clause.addClause(tempClause);
         else clause.addClause("AND", tempClause);
     }
 
     /**
      * Adds parameters, which serve fetching repeated reservations
-     * which overlap the user given time range (only hours and minutes are considered)
-     *
-     * @param timeFrom start of the time interval
-     * @param timeTo   end of the time interval
+     * of today
      */
-    public void addRepeatAndTimeRangeOverlapParameter(String timeFrom, String timeTo) throws Exception {
+    public void addTodaysRepeatedParameter(LocalDateTime now) throws Exception {
+        // TODO repeated parameter setting can be done with another method
         Clause tempClause = new Clause();
         tempClause.addParameter(ReservationSearchParameter.isRepeated(true));
 
-        Clause timeRangeClause = new Clause();
+        Clause timeClause = new Clause();
 
-        Clause startOverlap = new Clause();
-        ReservationSearchParameter.Comparator more = ReservationSearchParameter.Comparator.MORE;
-        ReservationSearchParameter.Comparator less = ReservationSearchParameter.Comparator.LESS;
-        startOverlap.addParameter(ReservationSearchParameter.compareTime("start_date", timeFrom, true, more));
-        startOverlap.addParameter("AND", ReservationSearchParameter.compareTime("start_date", timeTo, false, less));
+        DateTimeFormatter dtfWeekday = DateTimeFormatter.ofPattern("e");
+        DateTimeFormatter dtfHour = DateTimeFormatter.ofPattern("HH");
 
-        Clause endOverlap = new Clause();
-        endOverlap.addParameter(ReservationSearchParameter.compareTime("end_date", timeFrom, false, more));
-        endOverlap.addParameter("AND", ReservationSearchParameter.compareTime("end_date", timeTo, true, less));
+        String comparator1;
+        String comparator2;
+        String weekday;
 
-        timeRangeClause.addClause(startOverlap);
-        timeRangeClause.addClause("OR", endOverlap);
+        if (Integer.parseInt(dtfHour.format(now)) < 9) {
+            comparator1 = " >= ";
+            comparator2 = " < ";
+            weekday = "" + (Integer.parseInt(dtfWeekday.format(now.minusDays(1))) + SQL_WEEKDAY_OFFSET);
+        } else {
+            comparator1 = " < ";
+            comparator2 = " >= ";
+            weekday = "" + (Integer.parseInt(dtfWeekday.format(now.plusDays(1))) + SQL_WEEKDAY_OFFSET);
+        }
 
-        tempClause.addClause("AND", timeRangeClause);
+        Clause nightClause = new Clause();
+        Clause dayClause = new Clause();
+
+        dayClause.addParameter(
+                new FreeSearchParameter(
+                        "WEEKDAY(start_date)", " = ", weekday
+                )
+        );
+
+        dayClause.addParameter(
+                "AND",
+                new ReservationSearchParameter(
+                        "TIME(start_date)", comparator1, "TIME(?)",
+                        new ArrayList<String>() {
+                            {
+                                add("09:00");
+                            }
+                        }
+                )
+        );
+
+        nightClause.addParameter(
+                new FreeSearchParameter(
+                        "WEEKDAY(start_date)", " = ",
+                        "" + (Integer.parseInt(dtfWeekday.format(now)) + SQL_WEEKDAY_OFFSET)
+                )
+        );
+
+        nightClause.addParameter(
+                "AND",
+                new ReservationSearchParameter(
+                        "TIME(start_date)", comparator2, "TIME(?)",
+                        new ArrayList<String>() {
+                            {
+                                add("09:00");
+                            }
+                        }
+                )
+        );
+
+        timeClause.addClause(dayClause);
+        timeClause.addClause("OR", nightClause);
+        tempClause.addClause("AND", timeClause);
 
         if (clause.isEmpty()) clause.addClause(tempClause);
         else clause.addClause("AND", tempClause);
     }
 
     /**
-     * Adds parameters, which serve fetching reservations
-     * which contain the user given date
-     *
-     * @param date user given date
-     * @throws Exception error
+     * Filters out all reservations made by the specified user.
+     * @param user An instance of RRSUser which exists in the database.
+     * @throws Exception if no such user exists or if there are some
+     *  connection issues.
      */
-    public void addRoomSpecificDateOverlapParameter(int roomId, String date) throws Exception {
-        Clause tempClause = new Clause();
+    public void addMadeByUser(RRSUser user) throws Exception {
+        this.addParameter("AND",
+            new FreeSearchParameter(
+                "account_id", "=", Integer.toString(user.getPrimaryKey())));
+    }
 
-        tempClause.addParameter(ReservationSearchParameter.ofRoom(roomId));
+    /**
+     * Filters out all reservations which ended before the specified date.
+     * @param date Specifies the date.
+     * @throws Exception should the parameter be invalid.
+     */
+    public void addEndedBefore(String date) throws Exception {
+        this.addParameter(
+            ReservationSearchParameter.compareDateTime(
+                "end_date", LESS, date, false));
+    }
 
-        Clause timeContainClause = new Clause();
-        timeContainClause.addParameter(ReservationSearchParameter.containsDate(date));
-
-        Clause rptTimeContainClause = new Clause();
-        rptTimeContainClause.addParameter(ReservationSearchParameter.isRepeated(true));
-        rptTimeContainClause.addParameter("AND", ReservationSearchParameter.containsTime(date));
-
-        timeContainClause.addClause("OR", rptTimeContainClause);
-
-        tempClause.addClause("AND", timeContainClause);
-
-        if (clause.isEmpty()) clause.addClause(tempClause);
-        else clause.addClause("AND", tempClause);
+    /**
+     * Filters out all reservations which end after the specified date.
+     * @param date Specifies the date.
+     * @throws Exception should the parameter be invalid.
+     */
+    public void addEndsAfter(String date) throws Exception {
+        this.addParameter(
+            ReservationSearchParameter.compareDateTime(
+                "end_date", MORE, date, true));
     }
 }

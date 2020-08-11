@@ -12,6 +12,8 @@
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
     <title>Room ${param.roomId}</title>
+
+    <meta http-equiv="refresh" content="60"> <%-- Refresh page every minute --%>
 </head>
 <body>
 <%-- Container for entire screen --%>
@@ -38,6 +40,50 @@
             </div>
         </div>
     </div>
+
+    <%-- Modal for min time range --%>
+    <div class="modal fade" id="minRangeModal" tabindex="-1" role="dialog"
+         aria-labelledby="minRangeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger" id="minRangeModalLabel">Incorrect Time Range!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    You can only reserve rooms from 20 minutes up to 2 hours.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%-- Modal for hasReservations() --%>
+    <div class="modal fade" id="hasReservationsModal" tabindex="-1" role="dialog"
+         aria-labelledby="hasReservationsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger" id="hasReservationsModalLabel">Unable to make a reservation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    You can only make a single reservation at a time.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
     <%-- Container for top navigation bar --%>
     <div class="d-flex flex-row justify-content-between align-items-center sticky-top bg-dark"
@@ -233,8 +279,8 @@
                                             <rect x="0" y="0" rx="3" ry="3"
                                                   width="100%"
                                                   height="100%"
-                                                  style="fill: #d9534f; opacity: 80%">
-                                        <title>${timePortion.reservation.startDate.substring(10)} -${timePortion.reservation.endDate.substring(10)}</title>
+                                                  style="fill: ${timePortion.reservation.doRepeat ? "#ffc107" : "#dc3545"}; opacity: 80%">
+                                        <title>${timePortion.reservation.startDate.substring(10)} -${timePortion.reservation.endDate.substring(10)} ${timePortion.reservation.doRepeat ? "(Repeated)" : ""}</title>
                                             </rect>
                                         </svg>
                                     </c:forEach>
@@ -271,6 +317,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>

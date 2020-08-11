@@ -6,6 +6,7 @@ import ge.rrs.database.SearchParameter;
 import ge.rrs.database.reservation.Reservation;
 import ge.rrs.database.reservation.ReservationSearchParameters;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -104,14 +105,16 @@ public class RoomSearchParameter implements SearchParameter {
      * @throws Exception error
      */
     static RoomSearchParameter fromDateTimeRange(String dateFrom, String dateTo, DBConnection connection) throws Exception {
-        ReservationSearchParameters rParams = new ReservationSearchParameters();
-        rParams.addDateTimeRangeOverlapParameter(dateFrom, dateTo);
+        ReservationSearchParameters parameters = new ReservationSearchParameters();
+        parameters.addDateTimeRangeOverlapParameter(dateFrom, dateTo);
         Collection<Reservation> filteredReservations =
-                Reservation.getFilteredReservations(rParams, connection);
+                Reservation.getFilteredReservations(parameters, connection);
 
-        rParams = new ReservationSearchParameters();
-        rParams.addRepeatAndTimeRangeOverlapParameter(dateFrom, dateTo);
-        filteredReservations.addAll(Reservation.getFilteredReservations(rParams, connection));
+        parameters = new ReservationSearchParameters();
+        parameters.addTodaysRepeatedParameter(LocalDateTime.now());
+        filteredReservations.addAll(Reservation.compareAndFilterReservations(
+                Reservation.getFilteredReservations(parameters, connection), dateFrom, dateTo
+        ));
 
         StringBuilder valueExpression = new StringBuilder();
         List<String> args = new ArrayList<>();

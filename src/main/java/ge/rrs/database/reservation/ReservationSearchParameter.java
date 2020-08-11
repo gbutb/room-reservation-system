@@ -41,8 +41,8 @@ public class ReservationSearchParameter implements SearchParameter {
         this.args = args;
     }
 
-    static ReservationSearchParameter compareDateTime(String dateAnchor, String dateTime,
-                                                      boolean inclusive, Comparator comparator) {
+    public static ReservationSearchParameter compareDateTime(String dateAnchor, Comparator comparator,
+                                                             String dateTime, boolean inclusive) {
         String relation = (comparator == Comparator.MORE ? " >" : " <");
         if (inclusive) relation += "=";
         relation += " ";
@@ -57,32 +57,32 @@ public class ReservationSearchParameter implements SearchParameter {
                 });
     }
 
-    static ReservationSearchParameter compareTime(String dateAnchor, String time,
-                                                  boolean inclusive, Comparator comparator) {
+    public static ReservationSearchParameter compareTime(String dateAnchor, Comparator comparator,
+                                                         String dateTime, boolean inclusive) {
         String relation = (comparator == Comparator.MORE ? " >" : " <");
         if (inclusive) relation += "=";
         relation += " ";
 
         return new ReservationSearchParameter(
-                dateAnchor, relation, "TIME(?)",
+                "TIME(" + dateAnchor + ")", relation, "TIME(?)",
                 new ArrayList<String>() {
                     {
-                        add(time);
+                        add(dateTime);
                     }
                 });
     }
 
-    static ReservationSearchParameter isRepeated(boolean repeated) {
-        String repeatedStr = (repeated ? "1" : "0");
-
-        List<String> arguments = new ArrayList<>();
-        arguments.add(repeatedStr);
-
+    public static ReservationSearchParameter isRepeated(boolean repeated) {
         return new ReservationSearchParameter(
-                "do_repeat", " = ", "?", arguments);
+                "do_repeat", " = ", "?",
+                new ArrayList<String>() {
+                    {
+                        add(repeated ? "1" : "0");
+                    }
+                });
     }
 
-    static ReservationSearchParameter containsDate(String date) {
+    public static ReservationSearchParameter containsDate(String date) {
         return new ReservationSearchParameter(
                 "STR_TO_DATE(?, ?)", " BETWEEN ", "start_date AND end_date",
                 new ArrayList<String>() {
@@ -93,9 +93,9 @@ public class ReservationSearchParameter implements SearchParameter {
                 });
     }
 
-    static ReservationSearchParameter containsTime(String time) {
+    public static ReservationSearchParameter containsTime(String time) {
         return new ReservationSearchParameter(
-                "TIME(?)", " BETWEEN ", "start_date AND end_date",
+                "TIME(?)", " BETWEEN ", "TIME(start_date) AND TIME(end_date)",
                 new ArrayList<String>() {
                     {
                         add(time);
@@ -103,7 +103,7 @@ public class ReservationSearchParameter implements SearchParameter {
                 });
     }
 
-    static ReservationSearchParameter ofRoom(int roomId) {
+    public static ReservationSearchParameter ofRoom(int roomId) {
         return new ReservationSearchParameter(
                 "room_id", " = ", "?",
                 new ArrayList<String>() {

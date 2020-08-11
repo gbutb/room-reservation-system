@@ -194,3 +194,18 @@ VALUES (1, 110, STR_TO_DATE('1,6,2020 1,30,0', '%d,%m,%Y %H,%i,%s'),
        (16, 200, STR_TO_DATE('3,8,2020 6,30,0', '%d,%m,%Y %H,%i,%s'),
         STR_TO_DATE('3,8,2020 9,00,0', '%d,%m,%Y %H,%i,%s'), false, 1);
 
+INSERT INTO reservations
+VALUES (0, 105, STR_TO_DATE('3,8,2020 15,0,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('3,8,2020 21,30,0', '%d,%m,%Y %H,%i,%s'), true, 1),
+       (0, 201, STR_TO_DATE('4,8,2020 18,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('4,8,2020 19,30,0', '%d,%m,%Y %H,%i,%s'), true, 1),
+       (0, 208, STR_TO_DATE('5,8,2020 11,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('5,8,2020 14,0,0', '%d,%m,%Y %H,%i,%s'), true, 1),
+       (0, 305, STR_TO_DATE('6,8,2020 17,0,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('6,8,2020 23,0,0', '%d,%m,%Y %H,%i,%s'), true, 1),
+       (0, 311, STR_TO_DATE('7,8,2020 10,0,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('7,8,2020 11,0,0', '%d,%m,%Y %H,%i,%s'), true, 1),
+       (0, 401, STR_TO_DATE('8,8,2020 16,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('8,8,2020 17,30,0', '%d,%m,%Y %H,%i,%s'), true, 1),
+       (0, 415, STR_TO_DATE('9,8,2020 19,30,0', '%d,%m,%Y %H,%i,%s'),
+        STR_TO_DATE('9,8,2020 20,0,0', '%d,%m,%Y %H,%i,%s'), true, 1);

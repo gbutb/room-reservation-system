@@ -1,16 +1,17 @@
 // Reservation.java
 package ge.rrs.database.reservation;
 
+import ge.rrs.database.DBConnection;
+import ge.rrs.database.SearchParameters;
+import ge.rrs.database.TableEntry;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-
-// ge.rrs
-import ge.rrs.database.TableEntry;
-import ge.rrs.database.DBConnection;
-import ge.rrs.database.SearchParameters;
 
 public class Reservation extends TableEntry {
 
@@ -73,12 +74,12 @@ public class Reservation extends TableEntry {
             int accountId,
             DBConnection connection) {
         this(0,
-            roomId,
-            startDate,
-            endDate,
-            doRepeat,
-            accountId,
-            connection);
+                roomId,
+                startDate,
+                endDate,
+                doRepeat,
+                accountId,
+                connection);
         this.reservationId = null;
     }
 
@@ -108,21 +109,54 @@ public class Reservation extends TableEntry {
         return entries;
     }
 
+    public static Collection<Reservation> compareAndFilterReservations(Collection<Reservation> reservations,
+                                                                       String timeFrom, String timeTo) {
+        double from = hoursToDouble(timeFrom, false);
+        double to = hoursToDouble(timeTo, true);
+
+        Collection<Reservation> result = new ArrayList<>();
+
+        for (Reservation reservation : reservations) {
+            double reservationStart = hoursToDouble(reservation.startDate, false);
+            double reservationEnd = hoursToDouble(reservation.endDate, true);
+
+            if (to > reservationStart && from < reservationEnd) result.add(reservation);
+        }
+
+        return result;
+    }
+
+    private static double hoursToDouble(String time, boolean inclusive) {
+        // TODO inconsistent time formats
+        DateTimeFormatter dtfDate = time.length() == 16 ? DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+                : DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        TemporalAccessor temp = dtfDate.parse(time);
+
+        DateTimeFormatter dtfHour = DateTimeFormatter.ofPattern("HH");
+        DateTimeFormatter dtfMinute = DateTimeFormatter.ofPattern("mm");
+
+        double result = Integer.parseInt(dtfHour.format(temp));
+        result += Integer.parseInt(dtfMinute.format(temp)) / 60.0;
+        if (inclusive && result <= 9) result += 24;
+        if (!inclusive && result < 9) result += 24;
+
+        return result;
+    }
+
     @Override
     public void insertEntry() throws Exception {
         if (getPrimaryKey() != null)
             throw new Exception("Entry already exists!");
 
         getConnection().executeUpdate(
-            String.format(
-                "INSERT INTO %s VALUES (0, ?, ?, ?, ?, ?)",
-                getTableName()),
-            Arrays.asList(new String[] {
-                Integer.toString(getRoomId()),
-                getStartDate(),
-                getEndDate(),
-                isDoRepeat() ? "1" : "0",
-                Integer.toString(getAccountId()) }));
+                String.format(
+                        "INSERT INTO %s VALUES (0, ?, ?, ?, ?, ?)",
+                        getTableName()),
+                Arrays.asList(Integer.toString(getRoomId()),
+                        getStartDate(),
+                        getEndDate(),
+                        isDoRepeat() ? "1" : "0",
+                        Integer.toString(getAccountId())));
     }
 
     @Override
@@ -131,22 +165,21 @@ public class Reservation extends TableEntry {
             throw new Exception("No such entry exists!");
         // Update the entry
         getConnection().executeUpdate(
-            String.format(
-                "UPDATE %s SET %s=?, %s=?, %s=?, %s=?, %s=? WHERE %s=?",
-                getTableName(),
-                ROOM_ID_NAME,
-                START_DATE_NAME,
-                END_DATE_NAME,
-                DO_REPEAT_NAME,
-                ACCOUNT_ID_NAME,
-                RESERVATION_ID_NAME),
-            Arrays.asList(new String[] {
-                Integer.toString(getRoomId()),
-                getStartDate(),
-                getEndDate(),
-                isDoRepeat() ? "1" : "0",
-                Integer.toString(getAccountId()),
-                getPrimaryKey().toString() }));
+                String.format(
+                        "UPDATE %s SET %s=?, %s=?, %s=?, %s=?, %s=? WHERE %s=?",
+                        getTableName(),
+                        ROOM_ID_NAME,
+                        START_DATE_NAME,
+                        END_DATE_NAME,
+                        DO_REPEAT_NAME,
+                        ACCOUNT_ID_NAME,
+                        RESERVATION_ID_NAME),
+                Arrays.asList(Integer.toString(getRoomId()),
+                        getStartDate(),
+                        getEndDate(),
+                        isDoRepeat() ? "1" : "0",
+                        Integer.toString(getAccountId()),
+                        getPrimaryKey().toString()));
     }
 
     // Getter Methods
